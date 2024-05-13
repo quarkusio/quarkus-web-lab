@@ -1,5 +1,8 @@
 ## The Static server
 
+The static server simulate a static HTML server (like GitHub Page). On our case we will just serve all static content from a certain location. 
+Our CMS will publish static content to this location.
+
 ### Extensions
 
 - [VertX-HTTP](https://quarkus.io/guides/http-reference)
@@ -29,4 +32,4 @@ public class StaticResources {
 }
 ```
 
-TODO: Add rest of the instructions. CORS will be needed for commenting
+This mean all files in `static-server/published` will be served.
