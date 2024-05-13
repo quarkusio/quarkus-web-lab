@@ -3,6 +3,6 @@ package web.workshop;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class GreetingResourceIT extends GreetingResourceTest {
+class CommentResourceIT extends CommentResourceTest {
     // Execute the same tests but in packaged mode.
 }
