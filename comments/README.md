@@ -104,13 +104,13 @@ curl -X 'POST' \
 
 TODO: Url to app with the backend
 
-#### Start the app
+#### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
 
 ```
 mvn quarkus:dev
 ```
 
-The app runs on 7070. You can see the Dev UI on http://localhost:7070/q/dev-ui
+The app runs on port 7070 so that it does not conflict with other parts of the Lab. You can see the Dev UI on http://localhost:7070/q/dev-ui
 
 ### The UI (Workshop starts here)
 
