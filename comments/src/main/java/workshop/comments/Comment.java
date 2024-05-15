@@ -1,4 +1,4 @@
-package web.workshop.comments;
+package workshop.comments;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.panache.common.Sort;
