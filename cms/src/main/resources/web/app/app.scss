@@ -1,91 +1,39 @@
-// This style will be bundled by the Web-Bundler and available using the {#bundle /} tag
-// for more information about how to use the {#bundle /} tag, see https://docs.quarkiverse.io/quarkus-web-bundler/dev/advanced-guides.html#bundle-tag
-
 body {
-  margin: 0;
-  background-color: black;
+    background-color: white;
 }
 
-.star {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  background-color: white;
+.entries {
+    min-width: 400px;
 }
-
-.intro {
-  position: absolute;
-  top: 30%;
-  left: 35%;
-  z-index: 1;
-  animation: intro 6s ease-out 1s;
-  color: rgb(75, 213, 238);
-  font-weight: 400;
-  font-size: 300%;
-  opacity: 0;
+.entry {
+    padding: 0;
+    width: 400px;
 }
+.entry a, .entry button, .entry > i {
+    padding: .5rem 1rem;
+}
+.entry a {
+    cursor: pointer;
+    flex-grow: 1;
+    display: block;
+    color: #333;
+    text-decoration: none;
+}
+.entry button.entry-delete  { color: #ccc; visibility: hidden;  }
+.entry button.entry-delete:hover { color: red; }
+.entry:hover button.entry-delete { visibility: visible; }
 
-@keyframes intro {
-  0% {
+.entry.htmx-swapping a, .entry.htmx-swapping button {
     opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+    transition: opacity 1s ease-out;
 }
 
-p {
-  color: #FFFF82;
+.entry-form input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
 }
 
-/* Set the font, lean the board, position it */
-#board {
-  font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
-  transform: perspective(300px) rotateX(25deg);
-  transform-origin: 50% 100%;
-  text-align: justify;
-  position: absolute;
-  margin-left: -9em;
-  font-weight: bold;
-  overflow: hidden;
-  font-size: 350%;
-  height: 50em;
-  width: 18em;
-  bottom: 0;
-  left: 50%;
-
-  &:after {
-    position: absolute;
-    content: ' ';
-    bottom: 60%;
-    left: 0;
-    right: 0;
-    top: 0;
-  }
-}
-
-/* Set the scrolling animation and position it */
-#content {
-  animation: scroll 120s linear 5s;
-  position: absolute;
-  top: 100%;
-}
-
-#title, #subtitle {
-  text-align: center;
-}
-
-@keyframes scroll {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: -170%;
-  }
+.entry-form .editor-wrapper {
+    min-height: 450px;
 }

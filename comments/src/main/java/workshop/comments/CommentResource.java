@@ -1,4 +1,4 @@
-package web.workshop.comments;
+package workshop.comments;
 
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;

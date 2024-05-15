@@ -1,0 +1,8 @@
+.editor-toolbar {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.blog-editor {
+    display: none;
+}

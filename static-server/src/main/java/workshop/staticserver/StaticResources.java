@@ -1,4 +1,4 @@
-package web.workshop.staticserver;
+package workshop.staticserver;
 
 import io.quarkus.runtime.StartupEvent;
 import io.vertx.ext.web.Router;
