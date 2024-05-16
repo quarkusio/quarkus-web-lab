@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Blocking
-@Path("/blog")
+@Path("/cms/blog")
 public class Blog extends HxController {
 
     @CheckedTemplate

@@ -98,7 +98,7 @@ curl -X 'POST' \
  - [REST and Jackson](https://quarkus.io/guides/rest#json-serialisation)
  - [Bean validation](https://quarkus.io/guides/validation)
  - [Hibernate and Panache](https://quarkus.io/guides/hibernate-orm-panache)
- - [Postgresql](https://quarkus.io/guides/datasource)
+ - [H2](https://quarkus.io/guides/datasource)
 
 #### Get the initial app
 
