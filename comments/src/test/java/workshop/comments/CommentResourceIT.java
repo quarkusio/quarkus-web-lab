@@ -1,4 +1,4 @@
-package web.workshop;
+package workshop.comments;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
