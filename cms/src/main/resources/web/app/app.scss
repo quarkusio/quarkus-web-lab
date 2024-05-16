@@ -19,6 +19,9 @@ body {
     color: #333;
     text-decoration: none;
 }
+.list-group-item.active a {
+    color: white;
+}
 .entry button.entry-delete  { color: #ccc; visibility: hidden;  }
 .entry button.entry-delete:hover { color: red; }
 .entry:hover button.entry-delete { visibility: visible; }
@@ -28,12 +31,10 @@ body {
     transition: opacity 1s ease-out;
 }
 
-.entry-form input {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: 0;
-}
-
 .entry-form .editor-wrapper {
     min-height: 450px;
+}
+
+.EasyMDEContainer {
+    padding-top: 16px;
 }
