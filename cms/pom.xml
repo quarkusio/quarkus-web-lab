@@ -15,7 +15,7 @@
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
         <quarkus-renarde.version>3.0.12</quarkus-renarde.version>
-        <quarkus-web-bundler.version>1.5.0.CR1</quarkus-web-bundler.version>
+        <quarkus-web-bundler.version>1.5.0.CR2</quarkus-web-bundler.version>
     </properties>
     <dependencyManagement>
         <dependencies>
