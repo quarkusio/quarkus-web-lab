@@ -4,7 +4,6 @@
     <groupId>web.workshop</groupId>
     <artifactId>cms</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
     <properties>
         <compiler-plugin.version>3.12.1</compiler-plugin.version>
         <maven.compiler.release>17</maven.compiler.release>
@@ -15,11 +14,9 @@
         <quarkus.platform.version>3.11.0.CR1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
-        
         <quarkus-renarde.version>3.0.12</quarkus-renarde.version>
         <quarkus-web-bundler.version>1.5.0.CR1</quarkus-web-bundler.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -31,7 +28,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>io.quarkiverse.web-bundler</groupId>
@@ -99,7 +95,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -157,7 +152,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>native</id>
@@ -174,13 +168,15 @@
         <profile>
             <id>locker</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!unlocked</name>
+                </property>
             </activation>
             <dependencyManagement>
                 <dependencies>
                     <dependency>
-                        <groupId>org.acme</groupId>
-                        <artifactId>renotes-locker</artifactId>
+                        <groupId>web.workshop</groupId>
+                        <artifactId>cms-locker</artifactId>
                         <version>${project.version}</version>
                         <type>pom</type>
                         <scope>import</scope>
