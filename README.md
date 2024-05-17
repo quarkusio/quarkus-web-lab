@@ -4,11 +4,11 @@ This lab contains 3 parts
 
 ## The CMS
 
-Here we allow an blogger to create new blog entries and publish them. [Read more...](./cms/README.md)
+Here we allow an blogger to create new blog entries. [Read more...](./cms/README.md)
 
-## The Static server
+## The WebSite
 
-Here we serve the blog as static content created by the CMS. [Read more...](./static-server/README.md)
+Here we show the website created by the CMS. [Read more...](./website/README.md)
 
 ## Comments
 
