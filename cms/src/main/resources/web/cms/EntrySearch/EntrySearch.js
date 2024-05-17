@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import StimulusApp from "../../app/StimulusApp";
+import StimulusApp from "../StimulusApp";
 
 StimulusApp.register("search", class extends Controller {
     static targets = [ "open", "close", "input" ];

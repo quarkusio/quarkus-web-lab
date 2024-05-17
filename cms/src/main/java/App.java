@@ -5,8 +5,8 @@ import jakarta.ws.rs.Path;
 
 public class App extends Controller {
 
-    @Path("/cms")
+    @Path("/")
     public void home() {
-        redirect(Blog.class).blog(null, null);
+        redirect(Blog.class).index(null, null);
     }
 }

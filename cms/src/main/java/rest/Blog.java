@@ -16,25 +16,27 @@ import jakarta.ws.rs.Path;
 import java.util.Date;
 import java.util.List;
 
+import static util.Slug.toSlug;
+
 @Blocking
-@Path("/cms/blog")
+@Path("/cms")
 public class Blog extends HxController {
 
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance blog(List<Entry> entries, Long currentEntryId, Entry currentEntry, String search);
-        public static native TemplateInstance blog$entries(List<Entry> entries, Long currentEntryId);
-        public static native TemplateInstance blog$entryForm(Entry currentEntry);
+        public static native TemplateInstance index(List<Entry> entries, Long currentEntryId, Entry currentEntry, String search);
+        public static native TemplateInstance index$entries(List<Entry> entries, Long currentEntryId);
+        public static native TemplateInstance index$entryForm(Entry currentEntry);
     }
 
     @Path("")
-    public TemplateInstance blog(@RestQuery("id") Long id, @RestQuery("search") String search) {
+    public TemplateInstance index(@RestQuery("id") Long id, @RestQuery("search") String search) {
         final List<Entry> entries = Entry.search(search);
         if (isHxRequest()) {
-            return Templates.blog$entries(entries, id);
+            return Templates.index$entries(entries, id);
         }
         Entry entry = id != null ? Entry.findById(id) : null;
-        return Templates.blog(entries, id, entry, search);
+        return Templates.index(entries, id, entry, search);
     }
 
     public TemplateInstance newEntry() {
@@ -42,26 +44,26 @@ public class Blog extends HxController {
         Entry entry = new Entry();
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return  concatTemplates(Templates.blog$entries(Entry.listAllSortedByLastUpdated(), null),
-                    Templates.blog$entryForm(entry)
+            return  concatTemplates(Templates.index$entries(Entry.listAllSortedByLastUpdated(), null),
+                    Templates.index$entryForm(entry)
             );
         }
-        return Templates.blog(Entry.listAllSortedByLastUpdated(), null, entry, null);
+        return Templates.index(Entry.listAllSortedByLastUpdated(), null, entry, null);
     }
 
     public TemplateInstance editEntry(@RestPath("id") Long id) {
         final Entry entry = Entry.findById(id);
         if(entry == null) {
-            blog(null, null);
+            index(null, null);
             return null;
         }
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return  concatTemplates(Templates.blog$entries(Entry.listAllSortedByLastUpdated(), id),
-                    Templates.blog$entryForm(entry)
+            return  concatTemplates(Templates.index$entries(Entry.listAllSortedByLastUpdated(), id),
+                    Templates.index$entryForm(entry)
                     );
         }
-        return Templates.blog(Entry.listAllSortedByLastUpdated(), id, entry, null);
+        return Templates.index(Entry.listAllSortedByLastUpdated(), id, entry, null);
     }
 
     @DELETE
@@ -86,6 +88,7 @@ public class Blog extends HxController {
         entry.title = title;
         entry.content = content;
         entry.updated = new Date();
+        entry.slug = toSlug(title);
         entry.persist();
         editEntry(id);
     }
@@ -98,6 +101,7 @@ public class Blog extends HxController {
         Entry entry = new Entry();
         entry.title = title;
         entry.content = content;
+        entry.slug = toSlug(title);
         entry.persist();
         editEntry(entry.id);
     }

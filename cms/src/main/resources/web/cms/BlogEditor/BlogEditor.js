@@ -1,7 +1,7 @@
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css"
 import { Controller } from "@hotwired/stimulus";
-import StimulusApp from "../../app/StimulusApp";
+import StimulusApp from "../StimulusApp";
 
 StimulusApp.register("blog-editor", class extends Controller {
     connect() {

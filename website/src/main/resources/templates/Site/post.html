@@ -1,0 +1,7 @@
+{#include base.html}
+{#title}My Blog - {entry.title}{/title}
+
+<article>
+  <h1>{entry.title}</h1>
+  {entry.content.mdToHtml.raw}
+</article>
