@@ -1,0 +1,9 @@
+{#include base.html}
+{#title}My Blog{/title}
+<h1>Welcome to my Blog</h1>
+{#for entry in entries}
+<article>
+<h2><a href="/post/{entry.slug}">{entry.title}</a></h2>
+  <a href="/post/{entry.slug}">Read more</a>
+</article>
+{/for}
