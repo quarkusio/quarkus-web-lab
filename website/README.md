@@ -26,6 +26,9 @@ Also add Playwright as a test scoped dependency
 </dependency>
 ```
 
+TODO add instructions to create Qute website...
+
+
 Hit this url to generate the static website: http://localhost:8080/q/statiq/generate
 
 Statiq will generate files in `target/statiq`.
