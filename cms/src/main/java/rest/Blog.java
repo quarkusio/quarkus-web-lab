@@ -4,7 +4,7 @@ import io.quarkiverse.renarde.htmx.HxController;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.common.annotation.Blocking;
-import model.Entry;
+import model.BlogEntry;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestQuery;
@@ -24,67 +24,73 @@ public class Blog extends HxController {
 
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance index(List<Entry> entries, Long currentEntryId, Entry currentEntry, String search);
-        public static native TemplateInstance index$entries(List<Entry> entries, Long currentEntryId);
-        public static native TemplateInstance index$entryForm(Entry currentEntry);
+        public static native TemplateInstance index(List<BlogEntry> entries, Long currentEntryId, BlogEntry currentEntry,
+                String search);
+
+        public static native TemplateInstance index$entries(List<BlogEntry> entries, Long currentEntryId);
+
+        public static native TemplateInstance index$entryForm(BlogEntry currentEntry);
     }
 
     @Path("")
     public TemplateInstance index(@RestQuery("id") Long id, @RestQuery("search") String search) {
-        final List<Entry> entries = Entry.search(search);
+        final List<BlogEntry> entries = BlogEntry.search(search);
         if (isHxRequest()) {
             return Templates.index$entries(entries, id);
         }
-        Entry entry = id != null ? Entry.findById(id) : null;
+        BlogEntry entry = id != null ? BlogEntry.findById(id) : null;
         return Templates.index(entries, id, entry, search);
     }
 
     public TemplateInstance newEntry() {
         // not really used
-        Entry entry = new Entry();
+        BlogEntry entry = new BlogEntry();
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return  concatTemplates(Templates.index$entries(Entry.listAllSortedByLastUpdated(), null),
-                    Templates.index$entryForm(entry)
-            );
+            return concatTemplates(Templates.index$entries(BlogEntry.listAllSortedByLastUpdated(), null),
+                    Templates.index$entryForm(entry));
         }
-        return Templates.index(Entry.listAllSortedByLastUpdated(), null, entry, null);
+        return Templates.index(BlogEntry.listAllSortedByLastUpdated(), null, entry, null);
     }
 
     public TemplateInstance editEntry(@RestPath("id") Long id) {
-        final Entry entry = Entry.findById(id);
-        if(entry == null) {
+        final BlogEntry entry = BlogEntry.findById(id);
+        if (entry == null) {
             index(null, null);
             return null;
         }
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return  concatTemplates(Templates.index$entries(Entry.listAllSortedByLastUpdated(), id),
-                    Templates.index$entryForm(entry)
-                    );
+            return concatTemplates(Templates.index$entries(BlogEntry.listAllSortedByLastUpdated(), id),
+                    Templates.index$entryForm(entry));
         }
-        return Templates.index(Entry.listAllSortedByLastUpdated(), id, entry, null);
+        return Templates.index(BlogEntry.listAllSortedByLastUpdated(), id, entry, null);
     }
 
     @DELETE
     public String deleteEntry(@RestPath("id") Long id) {
         onlyHxRequest();
-        Entry entry = Entry.findById(id);
+        BlogEntry entry = BlogEntry.findById(id);
         notFoundIfNull(entry);
         entry.delete();
         // HTMX is not a fan of 204 No Content for swapping https://github.com/bigskysoftware/htmx/issues/1130
         return "";
     }
 
-
     @POST
     public void saveEntry(@RestPath("id") Long id, @RestForm @NotBlank String title, @RestForm String content) {
-        if(validationFailed()) {
+        if (validationFailed()) {
             editEntry(id);
             return;
         }
-        Entry entry = Entry.findById(id);
+        BlogEntry entry = BlogEntry.findById(id);
         notFoundIfNull(entry);
+        if (!entry.title.equals(title) && BlogEntry.getByTitle(title).isPresent()) {
+            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
+            prepareForErrorRedirect();
+            editEntry(id);
+            return;
+        }
         entry.title = title;
         entry.content = content;
         entry.updated = new Date();
@@ -95,10 +101,16 @@ public class Blog extends HxController {
 
     @POST
     public void saveNewEntry(@RestForm @NotBlank String title, @RestForm String content) {
-        if(validationFailed()) {
+        if (validationFailed()) {
             newEntry();
+            return;
+        } else if (BlogEntry.getByTitle(title).isPresent()) {
+            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
+            prepareForErrorRedirect();
+            newEntry();
+            return;
         }
-        Entry entry = new Entry();
+        BlogEntry entry = new BlogEntry();
         entry.title = title;
         entry.content = content;
         entry.slug = toSlug(title);

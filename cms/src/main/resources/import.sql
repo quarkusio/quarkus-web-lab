@@ -1,4 +1,4 @@
-INSERT INTO entry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Getting Started with Quarkus', 'getting-started-with-quarkus', '
+INSERT INTO blogentry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Getting Started with Quarkus', 'getting-started-with-quarkus', '
 Quarkus is a revolutionary framework designed to optimize Java for Kubernetes and cloud-native environments. Combining a fast startup time, low memory footprint, and a developer-friendly approach, Quarkus is rapidly gaining popularity. In this post, we will explore what makes Quarkus stand out and how to get started with it.
 
 ## What is Quarkus?
@@ -65,7 +65,7 @@ Quarkus is an exciting framework that brings Java into the cloud-native era with
 
 By exploring Quarkus, you will join a growing community of developers who are redefining what Java can do in the cloud. Happy coding!');
 
-INSERT INTO entry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Web Components with Lit', 'web-components-with-lit', '
+INSERT INTO blogentry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Web Components with Lit', 'web-components-with-lit', '
 ![Lit Logo](https://logowik.com/content/uploads/images/lit1871.logowik.com.webp#google_vignette)
 
 ## Introduction
@@ -199,7 +199,7 @@ Lit is a powerful tool for modern web development, offering a perfect blend of s
 Whether you are building a small widget or a complex application, Lit provides the tools you need to create high-quality, reusable web components. 
 Give Lit a try and see how it can revolutionize your development workflow.');
 
-INSERT INTO entry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Exploring HTMX', 'exploring-htmx', '
+INSERT INTO blogentry(id, title, slug, content) VALUES (nextval('entry_seq'), 'Exploring HTMX', 'exploring-htmx', '
 ### Introduction
 In the ever-evolving landscape of web development, HTMX has emerged as a powerful tool for creating dynamic and interactive web applications. By extending HTML with modern AJAX capabilities, HTMX simplifies the process of building sophisticated web interfaces without the need for extensive JavaScript. In this blog post, we will explore what HTMX is, its core features, and how it can revolutionize your web development workflow.
 
