@@ -1,0 +1,9 @@
+{#include base.html}
+{#title}My Blog{/title}
+<h1>Welcome to my Blog</h1>
+{#for entry in BlogEntry:listAllSortedByCreated}
+<article>
+<h2><a href="/blog/{entry.slug}">{entry.title}</a></h2>
+  <a href="/blog/{entry.slug}">Read more</a>
+</article>
+{/for}

@@ -1,5 +1,9 @@
 package web.lab;
 
+import java.util.Optional;
+
+import org.jboss.resteasy.reactive.RestResponse;
+
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.common.annotation.Blocking;
@@ -8,37 +12,26 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.WebApplicationException;
-import org.jboss.resteasy.reactive.RestResponse;
-
-import java.util.List;
-import java.util.Optional;
 
 @Path("/")
 @Blocking
 public class Site {
 
     @CheckedTemplate
-    public static class Templates {
-        public static native TemplateInstance index(List<Entry> entries);
+    static class Templates {
 
-        public static native TemplateInstance post(Entry entry);
+        static native TemplateInstance blogPost(BlogEntry entry);
 
     }
 
-    @Path("")
+    @Path("/blog/{slug}")
     @GET
-    public TemplateInstance index() {
-        return Templates.index(Entry.listAllSortedByCreated());
-    }
-
-    @Path("/post/{slug}")
-    @GET
-    public TemplateInstance post(@PathParam("slug") @NotBlank String slug) {
-        final Optional<Entry> bySlug = Entry.getBySlug(slug);
+    public TemplateInstance blogPost(@PathParam("slug") @NotBlank String slug) {
+        final Optional<BlogEntry> bySlug = BlogEntry.getBySlug(slug);
         if (bySlug.isEmpty()) {
             throw new WebApplicationException(RestResponse.notFound().toResponse());
         }
-        return Templates.post(bySlug.get());
+        return Templates.blogPost(bySlug.get());
     }
 
 }
