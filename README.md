@@ -10,6 +10,6 @@ Here we allow an blogger to create new blog entries. [Read more...](./cms/README
 
 Here we show the blog created by the CMS. [Read more...](./website/README.md)
 
-## Comments
+## The Comments
 
 Here we allow users to add comments on the blog. [Read more...](./comments/README.md)
