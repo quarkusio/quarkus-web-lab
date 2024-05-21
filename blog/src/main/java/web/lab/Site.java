@@ -6,15 +6,11 @@ import org.jboss.resteasy.reactive.RestResponse;
 
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
-import io.smallrye.common.annotation.Blocking;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.WebApplicationException;
 
 @Path("/")
-@Blocking
 public class Site {
 
     @CheckedTemplate
@@ -26,12 +22,12 @@ public class Site {
 
     @Path("/blog/{slug}")
     @GET
-    public TemplateInstance blogPost(@PathParam("slug") @NotBlank String slug) {
-        final Optional<BlogEntry> bySlug = BlogEntry.getBySlug(slug);
-        if (bySlug.isEmpty()) {
-            throw new WebApplicationException(RestResponse.notFound().toResponse());
+    public TemplateInstance blogPost(String slug) {
+        final Optional<BlogEntry> blogEntry = BlogEntry.getBySlug(slug);
+        if (blogEntry.isEmpty()) {
+            throw new WebApplicationException(RestResponse.StatusCode.NOT_FOUND);
         }
-        return Templates.blogPost(bySlug.get());
+        return Templates.blogPost(blogEntry.get());
     }
 
 }

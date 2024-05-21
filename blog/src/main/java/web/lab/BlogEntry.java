@@ -30,6 +30,9 @@ public class BlogEntry extends PanacheEntity {
     }
 
     public static Optional<BlogEntry> getBySlug(String slug) {
+        if (slug.isBlank()) {
+            return Optional.empty();
+        }
         return BlogEntry.find("LOWER(slug) = LOWER(?1)", slug).firstResultOptional();
     }
 

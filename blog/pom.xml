@@ -60,10 +60,6 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest</artifactId>
         </dependency>
         <dependency>
@@ -72,13 +68,11 @@
             <version>5.3.3</version>
             <scope>provided</scope>
         </dependency>
+        <!-- This should be a conditional dependency but it does not work due to "big reactive rename" -->
+        <!-- https://github.com/quarkiverse/quarkus-qute-web/issues/90 -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-qute</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-arc</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
