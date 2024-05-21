@@ -1,4 +1,4 @@
-## The WebSite
+## The Blog
 
 In this part, we are going to prepare:
 - the blog index page with all the posts
@@ -12,7 +12,7 @@ On our case we will just serve all static using a jbang script.
 ### Create initial app
 
 ```
-quarkus create app web.workshop:website -x quarkus-rest-qute -x quarkus-web-bundler -x quarkus-statiq -x jdbc-h2 -x hibernate-orm-panache --no-code
+quarkus create app web.workshop:blog -x quarkus-rest-qute -x quarkus-web-bundler -x quarkus-statiq -x jdbc-h2 -x hibernate-orm-panache --no-code
 ```
 
 Also add Playwright as a test scoped dependency

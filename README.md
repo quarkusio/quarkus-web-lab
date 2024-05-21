@@ -6,9 +6,9 @@ This lab contains 3 parts
 
 Here we allow an blogger to create new blog entries. [Read more...](./cms/README.md)
 
-## The WebSite
+## The Blog
 
-Here we show the website created by the CMS. [Read more...](./website/README.md)
+Here we show the blog created by the CMS. [Read more...](./website/README.md)
 
 ## Comments
 
