@@ -8,7 +8,7 @@ Here we allow an blogger to create new blog entries. [Read more...](./cms/README
 
 ## The Blog
 
-Here we show the blog created by the CMS. [Read more...](./website/README.md)
+Here we show the blog created by the CMS. [Read more...](./blog/README.md)
 
 ## The Comments
 
