@@ -1,5 +1,5 @@
 import io.quarkiverse.renarde.Controller;
-import rest.Blog;
+import rest.Cms;
 
 import jakarta.ws.rs.Path;
 
@@ -7,6 +7,6 @@ public class App extends Controller {
 
     @Path("/")
     public void home() {
-        redirect(Blog.class).index(null, null);
+        redirect(Cms.class).index(null, null);
     }
 }

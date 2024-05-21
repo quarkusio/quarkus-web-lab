@@ -20,40 +20,40 @@ import static util.Slug.toSlug;
 
 @Blocking
 @Path("/cms")
-public class Blog extends HxController {
+public class Cms extends HxController {
 
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance index(List<BlogEntry> entries, Long currentEntryId, BlogEntry currentEntry,
+        public static native TemplateInstance index(List<BlogEntry> blogEntries, Long currentBlogEntryId, BlogEntry currentBlogEntry,
                 String search);
 
-        public static native TemplateInstance index$entries(List<BlogEntry> entries, Long currentEntryId);
+        public static native TemplateInstance index$blogEntries(List<BlogEntry> blogEntries, Long currentBlogEntryId);
 
-        public static native TemplateInstance index$entryForm(BlogEntry currentEntry);
+        public static native TemplateInstance index$blogEntryForm(BlogEntry currentBlogEntry);
     }
 
     @Path("")
     public TemplateInstance index(@RestQuery("id") Long id, @RestQuery("search") String search) {
         final List<BlogEntry> entries = BlogEntry.search(search);
         if (isHxRequest()) {
-            return Templates.index$entries(entries, id);
+            return Templates.index$blogEntries(entries, id);
         }
         BlogEntry entry = id != null ? BlogEntry.findById(id) : null;
         return Templates.index(entries, id, entry, search);
     }
 
-    public TemplateInstance newEntry() {
+    public TemplateInstance newBlogEntry() {
         // not really used
         BlogEntry entry = new BlogEntry();
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return concatTemplates(Templates.index$entries(BlogEntry.listAllSortedByLastUpdated(), null),
-                    Templates.index$entryForm(entry));
+            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByLastUpdated(), null),
+                    Templates.index$blogEntryForm(entry));
         }
         return Templates.index(BlogEntry.listAllSortedByLastUpdated(), null, entry, null);
     }
 
-    public TemplateInstance editEntry(@RestPath("id") Long id) {
+    public TemplateInstance editBlogEntry(@RestPath("id") Long id) {
         final BlogEntry entry = BlogEntry.findById(id);
         if (entry == null) {
             index(null, null);
@@ -61,14 +61,14 @@ public class Blog extends HxController {
         }
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return concatTemplates(Templates.index$entries(BlogEntry.listAllSortedByLastUpdated(), id),
-                    Templates.index$entryForm(entry));
+            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByLastUpdated(), id),
+                    Templates.index$blogEntryForm(entry));
         }
         return Templates.index(BlogEntry.listAllSortedByLastUpdated(), id, entry, null);
     }
 
     @DELETE
-    public String deleteEntry(@RestPath("id") Long id) {
+    public String deleteBlogEntry(@RestPath("id") Long id) {
         onlyHxRequest();
         BlogEntry entry = BlogEntry.findById(id);
         notFoundIfNull(entry);
@@ -78,9 +78,9 @@ public class Blog extends HxController {
     }
 
     @POST
-    public void saveEntry(@RestPath("id") Long id, @RestForm @NotBlank String title, @RestForm String content) {
+    public void saveBlogEntry(@RestPath("id") Long id, @RestForm @NotBlank String title, @RestForm String content) {
         if (validationFailed()) {
-            editEntry(id);
+            editBlogEntry(id);
             return;
         }
         BlogEntry entry = BlogEntry.findById(id);
@@ -88,7 +88,7 @@ public class Blog extends HxController {
         if (!entry.title.equals(title) && BlogEntry.getByTitle(title).isPresent()) {
             validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
             prepareForErrorRedirect();
-            editEntry(id);
+            editBlogEntry(id);
             return;
         }
         entry.title = title;
@@ -96,18 +96,18 @@ public class Blog extends HxController {
         entry.updated = new Date();
         entry.slug = toSlug(title);
         entry.persist();
-        editEntry(id);
+        editBlogEntry(id);
     }
 
     @POST
-    public void saveNewEntry(@RestForm @NotBlank String title, @RestForm String content) {
+    public void saveNewBlogEntry(@RestForm @NotBlank String title, @RestForm String content) {
         if (validationFailed()) {
-            newEntry();
+            newBlogEntry();
             return;
         } else if (BlogEntry.getByTitle(title).isPresent()) {
             validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
             prepareForErrorRedirect();
-            newEntry();
+            newBlogEntry();
             return;
         }
         BlogEntry entry = new BlogEntry();
@@ -115,6 +115,6 @@ public class Blog extends HxController {
         entry.content = content;
         entry.slug = toSlug(title);
         entry.persist();
-        editEntry(entry.id);
+        editBlogEntry(entry.id);
     }
 }
