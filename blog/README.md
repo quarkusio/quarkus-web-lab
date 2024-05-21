@@ -21,7 +21,7 @@ Also add Playwright as a test scoped dependency
 <dependency>
     <groupId>io.quarkiverse.playwright</groupId>
     <artifactId>quarkus-playwright</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <scope>test</scope>
 </dependency>
 ```
