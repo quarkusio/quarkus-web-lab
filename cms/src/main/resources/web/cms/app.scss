@@ -2,17 +2,17 @@ body {
     background-color: white;
 }
 
-.entries {
+.blogEntries {
     min-width: 400px;
 }
-.entry {
+.blogEntry {
     padding: 0;
     width: 400px;
 }
-.entry a, .entry button, .entry > i {
+.blogEntry a, .blogEntry button, .blogEntry > i {
     padding: .5rem 1rem;
 }
-.entry a {
+.blogEntry a {
     cursor: pointer;
     flex-grow: 1;
     display: block;
@@ -22,16 +22,16 @@ body {
 .list-group-item.active a {
     color: white;
 }
-.entry button.entry-delete  { color: #ccc; visibility: hidden;  }
-.entry button.entry-delete:hover { color: red; }
-.entry:hover button.entry-delete { visibility: visible; }
+.blogEntry button.blogEntry-delete  { color: #ccc; visibility: hidden;  }
+.blogEntry button.blogEntry-delete:hover { color: red; }
+.blogEntry:hover button.blogEntry-delete { visibility: visible; }
 
-.entry.htmx-swapping a, .entry.htmx-swapping button {
+.blogEntry.htmx-swapping a, .blogEntry.htmx-swapping button {
     opacity: 0;
     transition: opacity 1s ease-out;
 }
 
-.entry-form .editor-wrapper {
+.blogEntry-form .editor-wrapper {
     min-height: 450px;
 }
 
