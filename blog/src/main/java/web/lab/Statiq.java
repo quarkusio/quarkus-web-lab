@@ -13,7 +13,7 @@ public class Statiq {
     @Singleton
     @Transactional
     StatiqPages produce() {
-        return new StatiqPages(BlogEntry.<BlogEntry>listAll().stream().map(e -> new StatiqPage("/post/"+ e.slug + "/")).toList());
+        return new StatiqPages(BlogEntry.<BlogEntry>listAll().stream().map(e -> new StatiqPage("/blog/"+ e.slug + "/")).toList());
     }
 
 }
