@@ -29,5 +29,6 @@ replay_pid*
 
 db.mv.db
 db.trace.db
+db.lock.db
 
 target/

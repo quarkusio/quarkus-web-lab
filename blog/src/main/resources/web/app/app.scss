@@ -1,0 +1,82 @@
+@import "bootstrap/scss/bootstrap.scss";
+
+
+body {
+  background-color: #F0F0F0;
+}
+
+main {
+  position: relative;
+}
+
+article {
+  background-color: #FFFFFF;
+  padding: 10px 25px;
+  margin-bottom: 30px;
+
+  .info {
+
+
+    .date {
+      background-color: #FFFFFF;
+      font-size: 16px;
+      display: flex;
+      div {
+        padding: 8px 0 0 12px;
+        font-weight: 600;
+
+        &.number {
+          padding: 4px 10px;
+          font-size: 20px;
+        }
+      }
+    }
+
+
+  }
+
+  a {
+    color: #337ab7;
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+.articles {
+  border-left: 3px solid #BBBBBB;
+  margin-left: 110px;
+  padding-left: 25px;
+  max-width: 700px;
+
+  .info {
+    position: absolute;
+    left: 0;
+    margin-top: -10px;
+    width: 100px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .info:after {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: -22px;
+    top: 21px;
+    content: "";
+    text-align: center;
+    border-radius: 50%;
+    border: 5px solid #F0F0F0;
+  }
+}
+
+.blog-post {
+  .info {
+    border-bottom: 3px solid #BBBBBB;
+    margin-bottom: 20px;
+  }
+
+
+}

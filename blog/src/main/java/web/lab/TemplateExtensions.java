@@ -26,7 +26,7 @@ public class TemplateExtensions {
     public static String toAbstract(BlogEntry entry) {
         Document doc = Jsoup.parse(mdToHtml(entry.content));
         String text = doc.body().text();
-        return text.length() > 150 ? text.substring(0, 150) + "..." : text;
+        return text.length() > 400 ? text.substring(0, 400) + "..." : text;
     }
 
 }
