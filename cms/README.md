@@ -1269,7 +1269,6 @@ And to your controller at `src/main/java/rest/Cms.java`:
 package rest;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.resteasy.reactive.RestForm;
