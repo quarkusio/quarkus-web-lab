@@ -30,6 +30,8 @@ OpenJDK Runtime Environment (Red_Hat-21.0.3.0.9-1) (build 21.0.3+9)
 OpenJDK 64-Bit Server VM (Red_Hat-21.0.3.0.9-1) (build 21.0.3+9, mixed mode, sharing)
  ```
 
+---
+
  ### Git
 
  Install Git (to get the code from the lab, alternatively, you can download the starter project as a zip from GitHub)
@@ -43,6 +45,8 @@ OpenJDK 64-Bit Server VM (Red_Hat-21.0.3.0.9-1) (build 21.0.3+9, mixed mode, sha
 git version 2.45.0
  ```
 
+---
+
  ### IDE
 
  You can use any IDE you want, example:
@@ -51,6 +55,8 @@ git version 2.45.0
  - [Eclipse](https://eclipseide.org/)
  - [VS Code](https://code.visualstudio.com/)
  - [Netbeans](https://netbeans.apache.org)
+
+---
 
  ### Getting the code:
 
