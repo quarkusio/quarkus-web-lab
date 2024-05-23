@@ -2,12 +2,12 @@
 {#title}My Blog{/title}
 <main>
 <div class="articles">
-{#for entry in BlogEntry:listAllSortedByCreated}
+{#for entry in BlogEntry:listAllSortedByPublished}
 <article>
   <div class="info"><img src="/static/assets/images/default_image.png">
     <div class="date">
-      <div class="number">18</div>
-      <div>Dec</div>
+      <div class="number">{entry.published.getDayOfMonth}</div>
+      <div>{entry.monthStr}</div>
     </div>
   </div>
 <h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>

@@ -27,7 +27,7 @@
                         hx-target="#blog-editor"
                         hx-swap="innerHTML"
                 >
-                {blogEntry.title}
+                {blogEntry.published}: {blogEntry.title}
                 </a>
                 {#if blogEntry.id != currentBlogEntry.id??}
                 <button class="btn blogEntry-delete"
@@ -59,9 +59,17 @@
                 hx-push-url="true"
                 >
                     <div class="editor-wrapper">
-                        <div>
+                        <div class="mb-3">
                             <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
                             {#ifError 'title'}
+                            <div class="invalid-feedback">
+                                Error: {#error 'title'/}
+                            </div>
+                            {/ifError}
+                        </div>
+                        <div class="mb-3">
+                            <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" />
+                            {#ifError 'published'}
                             <div class="invalid-feedback">
                                 Error: {#error 'title'/}
                             </div>

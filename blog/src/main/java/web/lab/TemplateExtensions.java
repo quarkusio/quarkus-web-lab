@@ -1,5 +1,8 @@
 package web.lab;
 
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -27,6 +30,10 @@ public class TemplateExtensions {
         Document doc = Jsoup.parse(mdToHtml(entry.content));
         String text = doc.body().text();
         return text.length() > 400 ? text.substring(0, 400) + "..." : text;
+    }
+
+    public static String monthStr(BlogEntry entry) {
+        return entry.published.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
     }
 
 }

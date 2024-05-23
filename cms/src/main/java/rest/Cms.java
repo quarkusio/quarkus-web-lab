@@ -1,5 +1,6 @@
 package rest;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -41,18 +42,18 @@ public class Cms extends HxController {
     @Path("")
     public TemplateInstance index() {
         if (isHxRequest()) {
-            return Templates.index$blogEntries(BlogEntry.listAll(), null);
+            return Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null);
         }
-        return Templates.index(BlogEntry.listAll(), null);
+        return Templates.index(BlogEntry.listAllSortedByPublished(), null);
     }
 
     public TemplateInstance newBlogEntry() {
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAll(), null),
+            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublisheds(), null),
                     Templates.index$blogEntryForm(new BlogEntry()));
         }
-    	return Templates.index(BlogEntry.listAll(), new BlogEntry());
+    	return Templates.index(BlogEntry.listAllSortedByPublished(), new BlogEntry());
     }
 
     public TemplateInstance editBlogEntry(@RestPath Long id) {
@@ -60,16 +61,17 @@ public class Cms extends HxController {
         notFoundIfNull(blogEntry);
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAll(), blogEntry),
+            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), blogEntry),
                     Templates.index$blogEntryForm(blogEntry));
         }
-        return Templates.index(BlogEntry.listAll(), blogEntry);
+        return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
     }
 
     @POST
     public void saveBlogEntry(@RestPath Long id, 
     		@RestForm @NotBlank String title, 
-    		@RestForm String content) {
+    		@RestForm String content,
+            @RestForm LocalDate published) {
         if (validationFailed()) {
             editBlogEntry(id);
         }
@@ -83,7 +85,7 @@ public class Cms extends HxController {
         }
         blogEntry.title = title;
         blogEntry.content = content;
-        blogEntry.updated = new Date();
+        blogEntry.published = published;
         blogEntry.slug = Slug.toSlug(title);
         // save is automatic for managed entities
         editBlogEntry(id);
