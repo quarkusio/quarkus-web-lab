@@ -44,15 +44,351 @@ Martin
 
 ---
 
-## Renarde
+## Renarde 🦊
 
-Stef
+- An old-school Web Framework
+- Server-side rendering for views (Qute)
+- Model with Hibernate with Panache
+- Controllers with RESTEasy Reactive and magic
+
+---
+
+### Your first controller
+
+```java
+public class Application extends Controller {
+
+	@CheckedTemplate
+	public static class Templates {
+		public static native TemplateInstance index(String message);
+	}
+
+	@Path("/")
+	public TemplateInstance index(){
+		return Templates.index("Hello Slovenia");
+	}
+}
+```
+
+---
+
+### Your first view
+
+```html
+{#include main.html}
+{#title}Index page{/title}
+
+<h1>We have a message for you: {message}</h1>
+```
+
+---
+
+### Your first entity
+
+```java
+@Entity
+public class Todo extends PanacheEntity {
+	public String task;
+	public LocalDate done;
+	
+	public static List<Todo> listTodos(){
+		return listAll(Sort.by("id"));
+	}
+
+	public static List<Todo> listDone(){
+		return list("done is not null", Sort.by("done"));
+	}
+}
+```
+
+---
+
+### Using the model, controller side
+
+```java
+public class Todos extends Controller {
+
+	@CheckedTemplate
+	public static class Templates {
+		public static native TemplateInstance index(List<Todo> todos);
+	}
+
+	public TemplateInstance index(){
+		return Templates.index(Todo.listTodos());
+	}
+}
+```
+
+---
+
+### Using the model, view side
+
+```html
+{#include main.html}
+{#title}List of tasks{/title}
+
+<ul>
+{#for todo in todos}
+	<li>{todo.task} done: {todo.done}</li>
+{/for}
+</ul>
+```
+
+---
+
+### Need an controller action? 1/2
+
+```java
+public class Todos extends Controller {
+
+	@CheckedTemplate
+	public static class Templates {
+		public static native TemplateInstance edit(Todo todo);
+	}
+
+	public TemplateInstance edit(@RestPath String id){
+		Todo todo = Todo.findById(id);
+		notFoundIfNull(id);
+		return Templates.edit(todo);
+	}
+
+	…
+```
+---
+
+### Need an controller action? 2/2
+
+```java
+	…
+	
+	@POST
+	public void save(@RestPath String id, 
+	                 @RestForm task, 
+	                 @RestForm LocalDate done){
+		Todo todo = Todo.findById(id);
+		notFoundIfNull(id);
+		todo.task = task;
+		todo.done = done;
+		index();
+	}
+}
+```
+---
+
+### The view side
+
+```html
+{#include main.html}
+{#title}Edit task{/title}
+
+<form action="{uri:Todos.save(todo.id)}" method="POST">
+	{#authenticityToken/}
+	<input name="task" value="{todo.task}"/>
+	<input name="done" type="date" value="{todo.done}"/>
+	<button>Save</button>
+</form>
+```
+
+---
+
+### Validation, in your controller
+
+```java
+	@POST
+	public void save(@RestPath String id,
+		             @RestForm @NotBlank task,
+		             @RestForm LocalDate done){
+		Todo todo = Todo.findById(id);
+		notFoundIfNull(id);
+		if(validationFailed()) {
+			edit(id);
+		}
+		todo.task = task;
+		todo.done = done;
+		index();
+	}
+```
+
+---
+
+### Validation, in your view
+
+```html
+	{#ifError 'task'}Error: {#error 'task'/}{/ifError}
+	<input name="task" value="{flash:task ?: todo.task}"/>
+```
+
+---
+
+### Localisation: configuration
+
+Configure it in your `application.properties`:
+
+```properties
+# This is the default locale for your application
+quarkus.default-locale=en
+# These are the supported locales (should include the default locale,
+# but order is not important)
+quarkus.locales=en,fr
+```
+---
+
+### Localisation: default messages
+
+Set your messages in `messages.properties`:
+
+```properties
+# A simple message
+hello=Hello World
+# A parameterised message for your view
+views_Application_index_greet=Hello %s
+```
+
+---
+
+### Localisation: localised messages
+
+Set your messages in `messages_fr.properties`:
+
+```properties
+hello=Bonjour Monde
+views_Application_index_greet=Salut %s
+```
+
+---
+
+### Localisation: use it from your controller
+
+```java
+public String hello() {
+    return i18n.formatMessage("hello");
+}
+```
+---
+
+### Localisation: use it from your view
+
+```html
+With no parameter:
+{m:hello}
+
+With parameters:
+{m:views_Application_index_greet(name)}
+```
+
+---
+
+### Emails: declaring them
+
+```java
+public class Emails {
+
+    @CheckedTemplate
+    static class Templates {
+        public static native MailTemplateInstance notify(User user);
+    }
+
+    public static void notify(Todo todo) {
+        Templates.notify(todo)
+        .subject("[Todos] We wanted to let you know")
+        .to(todo.owner.email)
+        .from("Todos <todos@example.com>")
+        .send().await().indefinitely();
+    }
+}
+```
+---
+### Emails: the controller
+
+```java
+@POST
+public void saveTodo(…){
+	…
+	Emails.notify(todo);
+	index();
+}
+```
+---
+
+### Emails: the view
+
+```html
+{#include email.html}
+
+<p>
+ We got a notification about {todo.task}
+</p>
+
+<p>
+ <a href="{uriabs:Todos.view(todo.id)}">View it online</a>.
+</p>
+```
+
+\* Also supports the plain text variant
+
+---
+
+### Other features
+
+- Generating PDFs from views
+- Generating barcodes
+- A generated backoffice for your entities
+- A Database transporter
+- Helper methods for password or webauthn authentication, OIDC
 
 ---
 
 ## HTMX
 
-Stef
+All this is fine, and old-school, but if what if you want to do partial page updates, get some
+of this AJAX action going?
+
+HTMX allows you to turn your pages into AJAX pages without writing JavaScript, by declaring AJAX
+actions and consequences as custom HTML attributes.
+
+For example `<a hx-get="{uri:Application.hello()}">Click me</a>` will do an AJAX `GET` of that
+controller and replace the contents with what it returns.
+
+You can use other HTMX attributes to define what to do with the results.
+
+---
+
+## HTMX fragments
+
+You can declare fragments of your template:
+
+```html
+{#fragment id="blogEntries"}
+<ul>
+    {#for blogEntry in blogEntries}
+    <li>{blogEntry.published}: {blogEntry.title}</li>
+    {/for}
+</ul>
+{/fragment}
+```
+
+---
+
+## HTMX fragments
+
+```java
+public class Cms extends HxController {
+    
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance index(List<BlogEntry> blogEntries);
+
+        public static native TemplateInstance index$blogEntries(List<BlogEntry> blogEntries);
+    }
+
+    public TemplateInstance index() {
+        if (isHxRequest()) {
+            return Templates.index$blogEntries(BlogEntry.listAllSortedByPublished());
+        }
+        return Templates.index(BlogEntry.listAllSortedByPublished());
+    }
+}
+```
 
 ---
 
