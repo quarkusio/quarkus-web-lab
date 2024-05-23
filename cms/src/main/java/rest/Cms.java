@@ -1,7 +1,6 @@
 package rest;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.resteasy.reactive.RestForm;
@@ -49,7 +48,6 @@ public class Cms extends HxController {
 
     public TemplateInstance newBlogEntry() {
         if (isHxRequest()) {
-            this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
             return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null),
                     Templates.index$blogEntryForm(new BlogEntry()));
         }
@@ -60,7 +58,6 @@ public class Cms extends HxController {
         BlogEntry blogEntry = BlogEntry.findById(id);
         notFoundIfNull(blogEntry);
         if (isHxRequest()) {
-            this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
             return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), blogEntry),
                     Templates.index$blogEntryForm(blogEntry));
         }
