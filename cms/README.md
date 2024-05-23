@@ -6,8 +6,12 @@ For now we need to use Quarkus 3.11.0.CR1
 
  - [Renarde](https://docs.quarkiverse.io/quarkus-renarde/dev/index.html)
  - [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
+ - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
+ - [JDBC driver for H2](https://quarkus.io/guides/datasource)
 
 ### Create initial app
+
+Use the Quarkus Maven plugin to create an application with the required extensions
 
 ```
 mvn io.quarkus.platform:quarkus-maven-plugin:3.11.0.CR1:create -DplatformVersion=3.11.0.CR1 -DprojectGroupId=web.workshop -DprojectArtifactId=cms \
@@ -16,7 +20,8 @@ mvn io.quarkus.platform:quarkus-maven-plugin:3.11.0.CR1:create -DplatformVersion
 
 ### Configure some things
 
-Open the `src/main/resources/application.properties` file and set these:
+Open the `src/main/resources/application.properties` file and set these settings, allowing
+us to run on a custom port, connect to a shared H2 database, and re-create our data every time.
 
 ```
 # Start serving on port 9090
@@ -31,7 +36,20 @@ quarkus.hibernate-orm.database.generation=drop-and-create
 
 ### Set up your model
 
-Open the `src/main/java/model/Todo.java` file and rename it to `BlogEntry.java`:
+The first thing to do is to represent our persistent model, that will be our Java representation of the
+blog entry database table.
+
+Open the `src/main/java/model/Todo.java` file and rename it to `BlogEntry.java`. This
+contains our main entity for the lab, representing a blog entry. It will have the following attributes:
+
+- Title (must be unique)
+- Slug (derived from the title)
+- Content (the blog contents, in Markdown)
+- Created (the creation date)
+- Updated (the modification date)
+
+This is a Panache entity, so it extends `PanacheEntity` to get a lot of useful methods, and its fields
+are public. We will need a default constructor and a constructor with `title` and `content`:
 
 ```java
 package model;
@@ -70,7 +88,8 @@ public class BlogEntry extends PanacheEntity {
 }
 ```
 
-Add the `src/main/java/util/Slug.java` file:
+Add the `src/main/java/util/Slug.java` class. This is a utility method used to derive
+a Slug from a blog entry title:
 
 ```java
 package util;
@@ -95,6 +114,18 @@ public final class Slug {
 Remove the unwanted `src/main/java/web/` package and its contents.
 
 ### Set up your controller
+
+Now that we have our database model, let's work on our controller, which is responsible for
+mapping HTTP URIs to Java actions, and defining our list of views in a type-safe manner, so
+we know from the Java side what parameters they require.
+
+We do this by declaring a `rest/Cms` class which extends `Controller`. It will serve endpoints
+under the `/cms` path, and because its endpoints use a database, they are `@Blocking`.
+
+Here, we start by defining our index endpoint, which lists all blog entries, and pass them to
+the `Cms/index.html` view, which takes a list of such blog entries. This is done via the
+`@CheckedTemplate` annotation on a nested `Templates` class with `static native` methods,
+one for each view we want to define.
 
 Open the `src/main/java/rest/Todos.java` file and rename it to `Cms.java`:
 
@@ -153,6 +184,10 @@ public class Application extends Controller {
 
 ## Set up initial data
 
+Traditionally, startup actions belong in a `util/Startup` class, and we can use that to create and
+save test database values. To that end, we mark the method as `@Transactional`, and only create
+the test data in DEV mode.
+
 Open the `src/main/java/util/Startup.java` file and edit it:
 
 ```java
@@ -186,6 +221,11 @@ public class Startup {
 
 ## Now display the blogs
 
+In Qute, all views live in `templates/<Controller>/<method>.html`, so for `Cms.index` we need to
+create a `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
+structure, we recommend using template composition, so every endpoint template extends a main template called
+`main.html` by convention:
+
 - Remove the `src/main/resources/templates/Todos/todo.html`
 - Rename the `src/main/resources/templates/Todos/` folder to `src/main/resources/templates/Cms/`
 
@@ -210,6 +250,8 @@ Edit the `src/main/resources/templates/main.html` file to:
     </body>
 </html>
 ```
+
+Now let's make our `Cms.index` template so that we can display our list of blog entries:
 
 Edit the `src/main/resources/templates/Cms/index.html` file to:
 
@@ -237,7 +279,7 @@ Edit the `src/main/resources/templates/Cms/index.html` file to:
 
 ### Give it a spin!
 
-Now start Quarkus:
+Now start Quarkus in DEV mode, run this in your terminal in your application's folder:
 
 ```shell
 $ ./mvnw quarkus:dev
@@ -249,7 +291,11 @@ Press `w` and observe your web page.
 
 // At 5 minutes
 
+Let's add a logo for our blog.
+
 Download https://quarkus.io/assets/images/brand/quarkus_icon_reverse.svg and save it at `src/main/resources/web/static/assets/images/logo.svg`.
+
+Now let's use mvnpm to download NPM modules packaged as Maven modules, so that we have Stimulus and Bootstrap in our application.
 
 Add the bootstrap dependencies to the `pom.xml`:
 
@@ -273,6 +319,10 @@ Add the bootstrap dependencies to the `pom.xml`:
             <scope>provided</scope>
         </dependency>
 ```
+
+Thanks to Web Bundler, we can write our style in SCSS, and it will be compiled on-the-fly to CSS.
+
+In our case, we will create a `cms` bundle, so our styles and javascript must go under `web/cms` resources.
 
 Rename the `src/main/resources/web/app` to `src/main/resources/web/cms`.
 
@@ -321,8 +371,10 @@ body {
 }
 ```
 
-Edit the `app.js`:
+In order for the Web Bundler to know what JavaScript and CSS dependencies must be packaged,
+you must import them from your bundle's JavaScript.
 
+Edit the `app.js`:
 
 ```javascript
 import "bootstrap/scss/bootstrap.scss";
@@ -333,6 +385,8 @@ const StimulusApp = Application.start();
 export default StimulusApp;
 ```
 
+Now we must configure the Web Bundler to know about our `cms` bundle.
+
 Add this to `src/main/resources/application.properties`:
 
 ```properties
@@ -340,6 +394,9 @@ Add this to `src/main/resources/application.properties`:
 quarkus.web-bundler.bundle.cms=true
 quarkus.web-bundler.bundle.cms.qute-tags=true
 ```
+
+The last bit missing is that we must reference the `cms` bundle from our main template
+in order to get it injected in every page's `<head>` element.
 
 Add this to the start of your `src/main/resources/templates/main.html`:
 
@@ -360,6 +417,11 @@ Now reload your main page and observe!
 
 Now, we want to click on a blog entry to show its contents,
 so let's add the ability to show a blog content per id on the index page.
+We do this by adding a `Cms.editBlogEntry` method which has a `id` path parameter,
+representing the blog entry we want to show. Notice that it can use the same template
+as the `index` method, so they both share the same view. The main difference is that
+one will have a `currentBlogEntry` set to `null` and the other to the blog entry
+we want to display.
 
 Edit the `src/main/java/rest/Cms.java` class:
 
@@ -406,6 +468,13 @@ public class Cms extends Controller {
     }
 }
 ```
+
+Now let's edit the view to display the blog entry's contents, in a `<textarea>` (not editable for now),
+and add a link for each blog title, pointing to the blog entry page. In Renarde, you can use `uri:Controller.method(parameters)`
+in order to create a URI to an endpoint method, making it extra easy to create links.
+
+Note: here we start creating the `<form>` for later, but don't worry about it. The `{#authenticityToken/}` is required to make
+sure all forms are not subject to CSRF attacks.
 
 Now edit the view at `src/main/resources/templates/Cms/index.html`:
 
@@ -470,6 +539,10 @@ Go observe the page!
 
 // At 9:30
 
+In order to validate that we're not creating two entries with the same title, we must add a
+query method to our model, we do this by declaring `static` methods on our model class, for
+easier access and encapsulation.
+
 Add the `getByTitle` method to `src/main/java/model/BlogEntry.java`:
 
 ```java
@@ -477,6 +550,29 @@ Add the `getByTitle` method to `src/main/java/model/BlogEntry.java`:
         return BlogEntry.find("LOWER(title) = LOWER(?1)", title).firstResultOptional();
     }
 ```
+
+Now we have to add our first mutating endpoint on our controller. Traditionally this is not done in `GET`
+methods, so we have to add the `@POST` annotation. This method takes an `id` as path parameter, and
+`title` and `content` form parameters. We use the `@NotBlank` annotation to add a validation constraint,
+but keep in mind that you have to check for validation failure by calling the `validationFailed()` method,
+and then trigger a redirect to the view containing the `<form>` in case of error.
+
+You can trigger redirects from endpoints by just calling the endpoint you want to redirect to. Don't worry,
+this never returns, so your endpoint is done the minute you call another endpoint method.
+
+Often, as is the case here, we need to compose a mix of validation that can be described as annotations (with `@NotBlank`),
+and code (with `BlogEntry.getByTitle`), so we proceed step by step, making sure we call `validationFailed()` until
+we're ready to do our mutation, by modifying our entity.
+
+Finally, we will redirect to the edited blog's view. It is always recommended to redirect to a `GET` method from a `POST`
+method, to make sure page reloads don't trigger actions multiple times.
+
+NOTE: `validationFailed()` will make sure all errors are pushed to the views which can render them using the `#ifError` and `#error`
+tags, and will also push all endpoint parameters to the "flash" scope. This "flash" scope has the particularity of surviving
+the next redirect. This makes sure that after you redirect to the page containing your `<form>`, you can then display every
+validation error, and re-fill your form with the previous data, because it's bad form to throw away user values. This is what
+we do in our views with `inject:flash.get('title') ?: currentBlogEntry.title`, which looks for a flashed value for `title`,
+and if not, displays the unmodified database value from `currentBlogEntry.title`.
 
 Add the `saveBlogEntry` method to `src/main/java/rest/Cms.java`:
 
@@ -505,7 +601,7 @@ Add the `saveBlogEntry` method to `src/main/java/rest/Cms.java`:
     }
 ```
 
-Now, plug the `form` in `src/main/resources/templates/Cms/index.html`:
+Now, make sure we tell our `form` where to find its action `Cms.saveBlogEntry` in `src/main/resources/templates/Cms/index.html`:
 
 
 ```html
@@ -521,6 +617,12 @@ Go observe the page, try validation!
 ### Now let's do the new action
 
 // At 11:00m
+
+We want to add a button to add new blog entries, so we also need a controller endpoint to show a blank
+blog entry in the `textarea`, as well as an action for when want to save this new blog entry: `saveNewBlogEntry`.
+
+This action is very similar to `saveBlogEntry` except it does not require an `id` (this is a new entry), and
+we create a new `BlogEntry` instance and make it persistent before redirecting to its view.
 
 Add the `newBlogEntry` and `saveNewBlogEntry` methods to `src/main/java/rest/Cms.java`:
 
@@ -549,7 +651,7 @@ Add the `newBlogEntry` and `saveNewBlogEntry` methods to `src/main/java/rest/Cms
     } 
 ```
 
-Now replace `Top menu` with a link to create a new blog page in `src/main/resources/templates/Cms/index.html`:
+Now replace `Top menu` with a button to create a new blog page in `src/main/resources/templates/Cms/index.html`:
 
 ```html
 {#include main.html}
@@ -564,7 +666,8 @@ Now replace `Top menu` with a link to create a new blog page in `src/main/resour
         </div>
 ```
 
-And in the same file, plug in the `saveNewBlogEntry` method for our `form`:
+And in the same file, make sure the `form` knows to call our `saveNewBlogEntry` action
+in the case of new blog entries:
 
 ```html
                 <form
@@ -584,11 +687,17 @@ Now observe the page!
 
 // At 12:20m
 
+For deletion, since it's being called by HTML, and we want to put the action in a `<form>`, it
+must be a `POST` method (we cannot call anything else than `GET` and `POST` in plain HTML).
+
+We will define a new `deleteBlogEntry` endpoint, also parameterised by `id`, and call `delete()`
+on the blog entry, before redirecting to the index page.
+
 Add this method to your controller in `src/main/java/rest/Cms.java`:
 
 ```java
     @POST
-    public void deleteBlogEntry(@RestPath("id") Long id) {
+    public void deleteBlogEntry(@RestPath Long id) {
         BlogEntry blogEntry = BlogEntry.findById(id);
         notFoundIfNull(blogEntry);
         blogEntry.delete();
@@ -640,6 +749,9 @@ Go observe the page!
 
 // At 13:40m
 
+We would like to improve our `textarea` with an interactive Markdown editor. For that we will re-use and extend EasyMDE,
+which is an NPM module.
+
 Add this dependency to your `pom.xml`:
 
 ```xml
@@ -650,6 +762,10 @@ Add this dependency to your `pom.xml`:
             <scope>provided</scope>
         </dependency>
 ```
+
+Thanks to Qute and Web Bundler, we can create Qute components that are defined as a combination of CSS, JavaScript and HTML.
+To do that, we have to create three files in a folder with the following name convention `src/main/resources/web/<bundle-name>/<component-name>/`.
+We will name our component `BlogEditor`.
 
 Create a folder `src/main/resources/web/cms/BlogEditor` and add `src/main/resources/web/cms/BlogEditor/BlogEditor.css`:
 
@@ -706,6 +822,9 @@ Go observe the page!
 
 // At 16:00m
 
+At this point, we have our CMS ready, but it's all regular old-style HTML. We can turn it into a dynamic AJAX application by
+using HTMX, without writing any JavaScript! Since HTMX is an NPM package, let's import it.
+
 Add this dependency to your `pom.xml`:
 
 ```xml
@@ -717,17 +836,45 @@ Add this dependency to your `pom.xml`:
         </dependency>
 ```
 
-Add this import to your `app.js`:
+To make sure your bundle uses it, add this import to your `app.js`:
 
 ```javascript
 import "htmx.org"
 ```
+
+The way HTMX works is that it defines a number of HTML custom tags that add dynamic behaviours to your HTML elements. 
+
+For example, the `hx-ext` attribute allows us to define a transition for when content is swapped.
+
+NOTE: Due to the CSRF mitigation explained before, we have to protect our AJAX/HTMX calls, and because `{#authenticityToken/}`
+only works with regular `form` elements, we have to set up CSRF mitigation using headers, via the `hx-headers` attribute.
 
 Replace the `body` tag in `src/main/resources/templates/main.html`:
 
 ```html
     <body hx-ext="morphdom-swap" hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
 ```
+
+Now let's turn our blog page into a dynamic page.
+
+The `hx-get` attribute will cause a click on your element to trigger an AJAX `GET` method to be called (instead of a regular `GET`
+which would refresh the entire page). The same is true for other methods such as `hx-delete` and `hx-post`.
+
+The `hx-target` attribute is a selector which defines what we do with the response of the AJAX
+`GET`. For example, we could replace the current element, or another element. This allows for partial page updates.
+
+The `hx-swap` attribute allows us to define how to replace the target, between replacing it entirely, or its contents, or its parent,
+siblings, or deleting it.
+
+The `hx-push-url` attribute makes sure that clicking on a dynamic action will update the current browser URL so that we have a history
+to get back to. This is useful if you refresh your page. What is important to understand is that your page changes state on dynamic
+actions, but if the user reloads the entire page, it should get in the same state with a full page rendering. This is easy when
+the controller for a given URI has two outcomes: one for regular page loads, and one for HTMX requests (partial updates).
+
+The last very important feature to understand is Qute fragments. Those are defined with `#fragment` and allow us to delineate sections
+of our views that we want to be able to render dynamically. This is used for partial rendering. We specify the sections in the view, and
+give them an `id` attribute. Then later in the controller we will show how to render them. During full page loads, these sections are
+always rendered as normal.
 
 Now add htmx to your `src/main/resources/templates/Cms/index.html` file:
 
@@ -817,6 +964,21 @@ Now add htmx to your `src/main/resources/templates/Cms/index.html` file:
     </div>
 </div>
 ```
+
+Our controller now has to be updated for HTMX. For convenience, we make it extend `HxController`, which has a number
+of useful methods to help.
+
+We start by defining signatures for our template fragments. The convention is that they will be named `<view>$<fragment-id>`,
+so for example we have `index$blogEntries`, and again we define which parameters they take.
+
+Then, we have to alter some of our endpoints so they can do partial rendering. You can use the `isHxRequest()` method to
+check if we're doing a full page load, or a partial update. For HTMX requests, you can render fragments. You can also use
+`concatTemplates` to render more than one fragment. HTMX will then place one fragment where specified by `hx-target`,
+and the other will find its place using `hx-swap-oob`: this technique is called "out-of-bounds" replacement, and is very
+handy to update several parts of the page at once.
+
+The last thing we can do is turn our `deleteBlogEntry` action from a `POST` method to a `DELETE` method since we can
+invoke those using HTMX/AJAX (unlike HTML `form`).
 
 And to your controller at `src/main/java/rest/Cms.java`:
 
