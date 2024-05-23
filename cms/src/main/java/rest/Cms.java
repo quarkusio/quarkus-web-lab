@@ -50,7 +50,7 @@ public class Cms extends HxController {
     public TemplateInstance newBlogEntry() {
         if (isHxRequest()) {
             this.hx(HxResponseHeader.TRIGGER, "refreshEntries");
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublisheds(), null),
+            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null),
                     Templates.index$blogEntryForm(new BlogEntry()));
         }
     	return Templates.index(BlogEntry.listAllSortedByPublished(), new BlogEntry());
