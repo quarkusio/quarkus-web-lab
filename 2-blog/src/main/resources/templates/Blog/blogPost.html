@@ -1,0 +1,13 @@
+{#include base.html}
+{#title}My Quarkus Blog - {entry.title}{/title}
+
+<main class="blog-post">
+  <article>
+    <header>
+      {#entryDate entry=entry/}
+    </header>
+    <img loading="lazy" src="{entry.title.randomImg}">
+    <h1>{entry.title}</h1>
+    {entry.content.mdToHtml.raw}
+  </article>
+</main>

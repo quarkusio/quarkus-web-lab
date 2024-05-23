@@ -1,0 +1,43 @@
+.navbar {
+  --bs-navbar-brand-color: white;
+  --bs-navbar-brand-hover-color: #0d6efd;
+}
+
+body {
+    background-color: white;
+}
+
+.blogEntries {
+    min-width: 400px;
+}
+.blogEntry {
+    padding: .5rem 1rem;
+    width: 400px;
+}
+
+.blogEntry a {
+    cursor: pointer;
+    flex-grow: 1;
+    display: block;
+    color: #333;
+    text-decoration: none;
+}
+.list-group-item.active a {
+    color: white;
+}
+.blogEntry button.blogEntry-delete  { color: #ccc; visibility: hidden;  }
+.blogEntry button.blogEntry-delete:hover { color: red; }
+.blogEntry:hover button.blogEntry-delete { visibility: visible; }
+
+.blogEntry.htmx-swapping a, .blogEntry.htmx-swapping button {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+.blogEntry-form .editor-wrapper {
+    min-height: 450px;
+}
+
+.EasyMDEContainer {
+    padding-top: 16px;
+}
