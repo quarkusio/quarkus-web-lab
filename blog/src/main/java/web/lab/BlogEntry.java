@@ -6,7 +6,7 @@ import io.quarkus.qute.TemplateData;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +21,10 @@ public class BlogEntry extends PanacheEntity {
     @Column(columnDefinition="text")
     public String content;
     
-    public Date created = new Date();
+    public LocalDate published = LocalDate.now();
     
-    public Date updated = new Date();
-
-    public static List<BlogEntry> listAllSortedByCreated() {
-        return BlogEntry.listAll(Sort.by("created").descending());
+    public static List<BlogEntry> listAllSortedByPublished() {
+        return BlogEntry.listAll(Sort.by("published").descending());
     }
 
     public static Optional<BlogEntry> getBySlug(String slug) {
