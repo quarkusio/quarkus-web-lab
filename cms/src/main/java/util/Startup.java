@@ -209,9 +209,6 @@ public class Startup {
             blogEntry.persist();
 
             blogEntry = new BlogEntry("Web Components with Lit", """
-
-                    ![Lit Logo](https://logowik.com/content/uploads/images/lit1871.logowik.com.webp#google_vignette)
-
                     ## Introduction
 
                     In the ever-evolving world of web development, staying ahead of the curve is essential. One library that has been making waves in the realm of Web Components is **Lit**. Designed to simplify the creation of fast, lightweight, and reusable web components, Lit has quickly become a favorite among developers. In this blog post, we will explore what makes Lit stand out, how it works, and why you should consider it for your next project.
