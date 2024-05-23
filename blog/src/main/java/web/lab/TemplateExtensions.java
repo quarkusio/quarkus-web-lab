@@ -1,5 +1,9 @@
 package web.lab;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -32,8 +36,16 @@ public class TemplateExtensions {
         return text.length() > 400 ? text.substring(0, 400) + "..." : text;
     }
 
-    public static String monthStr(BlogEntry entry) {
-        return entry.published.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
+    public static String monthStr(LocalDate date) {
+        return date.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
+    }
+
+    public static String randomThumb(String title) {
+        return "https://source.unsplash.com/random/100x75?" + URLEncoder.encode(title, StandardCharsets.UTF_8);
+    }
+
+    public static String randomImg(String title) {
+        return "https://source.unsplash.com/random/1024x768?" + URLEncoder.encode(title, StandardCharsets.UTF_8);
     }
 
 }

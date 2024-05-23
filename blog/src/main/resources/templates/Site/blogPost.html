@@ -4,12 +4,11 @@
 <main class="blog-post">
   <article>
     <div class="info">
-      <div class="date">
-        <div class="number">{entry.published.getDayOfMonth}</div>
-        <div>{entry.monthStr}</div>
-      </div>
+      {#entryDate entry=entry/}
     </div>
+    <img src="{entry.title.randomImg}">
     <h3>{entry.title}</h3>
+
     {entry.content.mdToHtml.raw}
   </article>
 </main>

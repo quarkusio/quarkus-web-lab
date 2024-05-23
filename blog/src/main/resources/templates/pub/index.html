@@ -1,19 +1,16 @@
 {#include base.html}
 {#title}My Blog{/title}
-<main>
-<div class="articles">
-{#for entry in BlogEntry:listAllSortedByPublished}
-<article>
-  <div class="info"><img src="/static/assets/images/default_image.png">
-    <div class="date">
-      <div class="number">{entry.published.getDayOfMonth}</div>
-      <div>{entry.monthStr}</div>
-    </div>
+<main class="articles">
+  <div>
+  {#for entry in BlogEntry:listAllSortedByPublished}
+    <article>
+      <div class="info"><img src="{entry.title.randomThumb}">
+        {#entryDate entry=entry/}
+      </div>
+    <h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>
+      <p>{entry.toAbstract}</p>
+      <a href="/blog/{entry.slug}">Read more</a>
+    </article>
+  {/for}
   </div>
-<h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>
-  <p>{entry.toAbstract}</p>
-  <a href="/blog/{entry.slug}">Read more</a>
-</article>
-{/for}
-</div>
 </main>
