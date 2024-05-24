@@ -186,6 +186,10 @@ For example, it’s possible to use _non-blocking clients_ directly from a templ
 
 ---
 
+![Renarde Avalanche](deck-assets/renarde-avalanche.png)
+
+---
+
 ## Renarde 🦊
 
 - An old-school Web Framework
@@ -485,10 +489,18 @@ public void saveTodo(…){
 All this is fine, and old-school, but if what if you want to do partial page updates, get some
 of this AJAX action going?
 
+---
+
 HTMX allows you to turn your pages into AJAX pages without writing JavaScript, by declaring AJAX
 actions and consequences as custom HTML attributes.
 
-For example `<a hx-get="{uri:Application.hello()}">Click me</a>` will do an AJAX `GET` of that
+---
+
+```html
+<a hx-get="{uri:Application.hello()}">Click me</a>
+```
+
+This will do an AJAX `GET` of that
 controller and replace the contents with what it returns.
 
 You can use other HTMX attributes to define what to do with the results.
@@ -515,22 +527,33 @@ You can declare fragments of your template:
 
 ```java
 public class Cms extends HxController {
-    
-    @CheckedTemplate
-    public static class Templates {
-        public static native TemplateInstance index(List<BlogEntry> blogEntries);
+  
+  @CheckedTemplate
+  public static class Templates {
+    public static native TemplateInstance index(List<BlogEntry> entries);
 
-        public static native TemplateInstance index$blogEntries(List<BlogEntry> blogEntries);
-    }
+    public static native TemplateInstance index$entries(List<BlogEntry> entries);
+  }
 
-    public TemplateInstance index() {
-        if (isHxRequest()) {
-            return Templates.index$blogEntries(BlogEntry.listAllSortedByPublished());
-        }
-        return Templates.index(BlogEntry.listAllSortedByPublished());
+  public TemplateInstance index() {
+    if (isHxRequest()) {
+        return Templates.index$blogEntries(BlogEntry.listAll());
     }
+    return Templates.index(BlogEntry.listAll());
+  }
 }
 ```
+
+---
+
+## Turning HTML into HTMX
+
+- Add `hx-get`, `hx-post` and other attributes to your views
+- Add `#fragment` to your views
+- Make your controller extend `HxController`
+- Declare the fragments in your controller
+- Define partial-rendering outcomes from your endpoints
+- Profit!
 
 ---
 
