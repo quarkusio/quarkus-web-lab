@@ -28,13 +28,27 @@ Martin
 
 ### Why use Quarkus for the Web?
 
-Andy
+Its advanced and versatile stack makes it the best choice for your Web projects!
+
+➕ the Dev-Joy!
+
+--
+
+![Quarkus for the Web](deck-assets/quarkus-web-dev.png)<!-- .element width="70%"  -->
 
 ---
 
 ## Web Bundler
 
-Andy
+`zero conf` bundling and minification for:
+- your web app scripts (js, ts, jsx, tsx)
+- dependencies (Lit, Htmx, Bootstrap, React, ...)
+- and styles (css, scss, sass).
+
+--
+
+![QWB](deck-assets/web-bundler.png)<!-- .element width="100%"  -->
+
 
 ---
 
