@@ -46,7 +46,7 @@ public class Cms extends Controller {
     }
 
     public TemplateInstance editBlogEntry(@RestPath Long id) {
-        // TODO 3: find the blog entry, return an error if null
+        // TODO: find the blog entry, return an error if null
         BlogEntry blogEntry = new BlogEntry();
         return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
     }
@@ -89,9 +89,8 @@ public class Cms extends Controller {
         // TODO: make it persistent and redirect to edition
     }
 
-    @DELETE
-    public String deleteBlogEntry(@RestPath("id") Long id) {
+    @POST
+    public void deleteBlogEntry(@RestPath("id") Long id) {
         // TODO: find the entry, return an error if null, delete it
-        return "";
     }
 }

@@ -22,10 +22,11 @@
     <div id="blog-editor" class="flex-grow-1 p-2">
         {#if currentBlogEntry}
             {#fragment id="blogEntryForm"}
-                <form {#if currentBlogEntry.id}{uri:Cms.saveBlogEntry(currentBlogEntry.id)}{#else}{uri:Cms.saveNewBlogEntry()}{/if} class="blogEntry-form">
+                <form action="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}" method="post" class="blogEntry-form">
+                    {#authenticityToken/}
                     <div class="editor-wrapper">
                         <div class="mb-3">
-                            <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
+                            <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title" required/>
                             {#ifError 'title'}
                             <div class="invalid-feedback">
                                 Error: {#error 'title'/}
@@ -33,7 +34,7 @@
                             {/ifError}
                         </div>
                         <div class="mb-3">
-                            <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" />
+                            <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" required/>
                             {#ifError 'published'}
                             <div class="invalid-feedback">
                                 Error: {#error 'title'/}

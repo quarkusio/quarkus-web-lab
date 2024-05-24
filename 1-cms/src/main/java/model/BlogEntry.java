@@ -40,12 +40,12 @@ public class BlogEntry extends PanacheEntity {
     }
 
     public static List<BlogEntry> listAllSortedByPublished() {
-        // TODO 1: return all entries sorted by published date descending
+        // TODO : return all entries sorted by published date descending
         return List.of();
     }
 
     public static Optional<BlogEntry> getByTitle(String title) {
-        // TODO 2: return the entry with the given title
+        // TODO: return the entry with the given title
         return Optional.empty();
     }
 }

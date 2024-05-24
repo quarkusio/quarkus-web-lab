@@ -80,8 +80,8 @@ structure, we recommend using template composition, so every endpoint template e
 For this:
 
 - open `src/main/resources/templates/Cms/index.html`
-- find the blog post nav
-- add a link to edit the post, we want the "published: title" as text
+- find the blog posts `{#for}` loop
+- add the Qute expressions to print something like "2024-03-02: My blog post"  in the loop
 
 <details>
 <summary>See hint</summary>
@@ -191,13 +191,16 @@ Use one of the `BlogEntry` static methods to find the right entry and `notFoundI
 ```
 </details>
 
-Nothing should change in the browser because we didn't add the link to access this.
+Even if there is already a base `<form>` to get you started, nothing should change in the browser because we didn't add the link to access this.
 
 Let's add it in `src/main/resources/templates/Cms/index.html` (where we added the title previously):
 <details>
 <summary>See hint</summary>
-    
-`{uri:Cms.editBlogEntry(blogEntry.id)}` will automatically resolve to the link of the blog entry edition
+
+In Renarde, you can use `uri:Controller.method(parameters)`
+in order to create a URI to an endpoint method, making it extra easy to create links.
+
+`{uri:Cms.editBlogEntry(blogEntry.id)}` resolves to the link of the blog entry edition.
 </details>
 
 <details>
@@ -208,101 +211,70 @@ Let's add it in `src/main/resources/templates/Cms/index.html` (where we added th
 ```
 </details>
 
+Hop over to your browser, click on one blog post, you should see the editor now (with the content printed for now).
 
------------ NEXT PART IS NOT DONE YET
+_So far so good, you are doing great, keep up 🚀!_
 
 
-Now let's edit the view to display the blog entry's contents, in a `<textarea>` (not editable for now),
-and add a link for each blog title, pointing to the blog entry page. In Renarde, you can use `uri:Controller.method(parameters)`
-in order to create a URI to an endpoint method, making it extra easy to create links.
+### The Markdown Editor (Qute Components)
 
-Note: here we start creating the `<form>` for later, but don't worry about it. The `{#authenticityToken/}` is required to make
+Now let's display the blog entry's markdown editor.
+
+> [!WARNING]  
+> The `{#authenticityToken/}` is required in the `<form>` to make
 sure all forms are not subject to CSRF attacks.
 
-Now edit the view at `src/main/resources/templates/Cms/index.html`:
+If you have a look to `src/main/resources/web/cms/BlogEditor/`, you will find a style, html and js for what we call a qute-component. 
+You can use it like any Qute tag: `{#BlogEditor id=... name=... value=... /}`
+
+> [!NOTE] 
+> This BlogEditor uses 'Easymde'  to provide the Markdown editor.
+> 'Stimulus' a light library to help binding the Markdown editor with dom lifecycle (in the js file), it requires some initialization done in app.js.
+> Both of those libraries are in the pom.xml and already bundled through the Quarkus Web Bundler.
+
+**››› CODING TIME**
+
+Use the `{#BlogEditor /}` in the edition `<form>`.
+
+<details>
+<summary>See hint</summary>
+
+- You can directly pass arguments to Qute tags `{#tag foo=myObj.foo /}`.
+- `id` is not the blog post id, but the html element id (needed by Easymde).
+- `value=currentBlogEntry.content` would have worked, but `value=inject:flash.get('content').or(currentBlogEntry.content)` will allow to keep the state in case of error (no worries, this is covered later).
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```html
-{#include main.html}
-{#title}Blogger CMS{/title}
-<div class="left-bar d-flex justify-content-between">
-    <div class="p-2">
-        <div class="mb-3 d-flex">
-			Top menu
-        </div>
-
-        <ul
-                class="blogEntries list-group"
-        >
-            {#for blogEntry in blogEntries}
-            <li class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center" >
-                <a
-                        href="{uri:Cms.editBlogEntry(blogEntry.id)}"
-                >
-                {blogEntry.published}: {blogEntry.title}
-                </a>
-            </li>
-            {/for}
-        </ul>
-    </div>
-    <div id="blog-editor" class="flex-grow-1 p-2">
-        {#if currentBlogEntry}
-                <form
-                class="blogEntry-form" 
-                method="post" 
-                enctype='multipart/form-data'>
-                    {#authenticityToken/}
-                    <div class="editor-wrapper">
-                        <div>
-                            <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
-                            {#ifError 'title'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'title'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                        <div class="mb-3">
-                            <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" />
-                            {#ifError 'published'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'title'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                        <div class="mb-3">
-                            <textarea cols="50" rows="20" name="content" class="form-control {#ifError 'content'}is-invalid{/}" placeholder="Enter new content">{inject:flash.get('content') ?: currentBlogEntry.content}</textarea>
-                            {#ifError 'content'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'content'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                    </div>
-                    <button class="btn btn-primary">Save</button>
-                </form>
-        {/if}
-    </div>
-</div>
+     {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
 ```
+</details>
 
-Go observe the page!
+There you go, check your browser and find a nice Markdown editor for your blog post!
 
 ### Now let's do the save action
-
-// At 9:30
 
 In order to validate that we're not creating two entries with the same title, we must add a
 query method to our model, we do this by declaring `static` methods on our model class, for
 easier access and encapsulation.
 
-Add the `getByTitle` method to `src/main/java/model/BlogEntry.java`:
+**››› CODING TIME**
+
+Implement the `getByTitle` method in `src/main/java/model/BlogEntry.java`:
+
+<details>
+<summary>See solution</summary>
 
 ```java
     public static Optional<BlogEntry> getByTitle(String title) {
         return BlogEntry.find("LOWER(title) = LOWER(?1)", title).firstResultOptional();
     }
 ```
+</details>
 
-Now we have to add our first mutating endpoint on our controller. Traditionally this is not done in `GET`
+Now we need to use our first mutating endpoint on our controller. Traditionally this is not done in `GET`
 methods, so we have to add the `@POST` annotation. This method takes an `id` as path parameter, and
 `title` and `content` form parameters. We use the `@NotBlank` annotation to add a validation constraint,
 but keep in mind that you have to check for validation failure by calling the `validationFailed()` method,
@@ -318,130 +290,100 @@ we're ready to do our mutation, by modifying our entity.
 Finally, we will redirect to the edited blog's view. It is always recommended to redirect to a `GET` method from a `POST`
 method, to make sure page reloads don't trigger actions multiple times.
 
-NOTE: `validationFailed()` will make sure all errors are pushed to the views which can render them using the `#ifError` and `#error`
-tags, and will also push all endpoint parameters to the "flash" scope. This "flash" scope has the particularity of surviving
-the next redirect. This makes sure that after you redirect to the page containing your `<form>`, you can then display every
-validation error, and re-fill your form with the previous data, because it's bad form to throw away user values. This is what
-we do in our views with `inject:flash.get('title') ?: currentBlogEntry.title`, which looks for a flashed value for `title`,
-and if not, displays the unmodified database value from `currentBlogEntry.title`.
+> [!NOTE] 
+> `validationFailed()` will make sure all errors are pushed to the views which can render them using the `#ifError` and `#error`
+> tags, and will also push all endpoint parameters to the "flash" scope. This "flash" scope has the particularity of surviving
+> the next redirect. This makes sure that after you redirect to the page containing your `<form>`, you can then display every
+> validation error, and re-fill your form with the previous data, because it's bad form to throw away user values. This is what
+> we do in our views with `inject:flash.get('title') ?: currentBlogEntry.title`, which looks for a flashed value for `title`,
+> and if not, displays the unmodified database value from `currentBlogEntry.title`.
 
-Add the `saveBlogEntry` method to `src/main/java/rest/Cms.java`:
+**››› CODING TIME**
+
+Edit the `saveBlogEntry` method in `src/main/java/rest/Cms.java`:
+
+<details>
+<summary>See hint</summary>
+
+- You already implemented the `BlogEntry.getByTitle` so no need to touch the check.
+- As explained above, to redirect, just call the instance endpoint method you wish to redirect to.
+- The `src/main/java/util/Slug.java` class is a utility class used to derive
+  a Slug (for the url) from a blog entry title.
+- To save the data, just assign it to your `blogEntry`, it will be saved automatically.
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```java
-    @POST
-    public void saveBlogEntry(@RestPath Long id, 
-    		@RestForm @NotBlank String title, 
-    		@RestForm String content,
-    		@RestForm LocalDate published) {
-        if (validationFailed()) {
-            editBlogEntry(id);
-        }
-        BlogEntry blogEntry = BlogEntry.findById(id);
-        notFoundIfNull(blogEntry);
-        if (BlogEntry.getByTitle(title).filter(other -> other.id != id).isPresent()) {
-            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
-        }
-        if (validationFailed()) {
-            editBlogEntry(id);
-        }
-        blogEntry.title = title;
-        blogEntry.content = content;
-        blogEntry.published = published;
-        blogEntry.slug = Slug.toSlug(title);
-        // save is automatic for managed entities
+    if (validationFailed()) {
         editBlogEntry(id);
     }
+    blogEntry.title = title;
+    blogEntry.content = content;
+    blogEntry.published = published;
+    blogEntry.slug = Slug.toSlug(title);
+    // save is automatic for managed entities
+    editBlogEntry(id);
+}
 ```
+</details>
 
-> [!NOTE]
-> The `src/main/java/util/Slug.java` class is a utility method used to derive
-a Slug (for the url) from a blog entry title:
+Now, make sure we tell our `<form>` where to find its action `{uri:Cms.saveBlogEntry(currentBlogEntry.id)}` in `src/main/resources/templates/Cms/index.html`. As you can see it's already done, and it also deals with new post creation (the next part).
 
-Now, make sure we tell our `form` where to find its action `Cms.saveBlogEntry` in `src/main/resources/templates/Cms/index.html`:
+Go observe the page, save, try validation!
 
-
-```html
-                <form
-                action="{uri:Cms.saveBlogEntry(currentBlogEntry.id)}"
-                class="blogEntry-form" 
-                method="post" 
-                enctype='multipart/form-data'>
-```
-
-Go observe the page, try validation!
-
-### Now let's do the new action
-
-// At 11:00m
+### Now let's do the action to create new post
 
 We want to add a button to add new blog entries, so we also need a controller endpoint to show a blank
-blog entry in the `textarea`, as well as an action for when want to save this new blog entry: `saveNewBlogEntry`.
+blog entry in the editor `newBlogEntry`, as well as a POST action for when want to save this new blog entry: `saveNewBlogEntry`.
+
+**››› CODING TIME**
+
+Now replace `Top menu` icon with a link to create a new blog page in `src/main/resources/templates/Cms/index.html`:
+
+<details>
+<summary>See hint</summary>
+
+Use a `<a>` with `class="btn btn-outline-dark"`, the link should point to `Cms.newBlogEntry`.
+</details>
+
+<details>
+<summary>See solution</summary>
+
+```html
+    <a class="btn btn-outline-dark" href="{uri:Cms.newBlogEntry()}"><i class="bi bi-plus"></i> Post</a>
+```
+</details>
+
+In the page, click on the new button and find a blank editor for your new post. 
+It's not done yet though, we need to wire the save.
 
 This action is very similar to `saveBlogEntry` except it does not require an `id` (this is a new entry), and
 we create a new `BlogEntry` instance and make it persistent before redirecting to its view.
 
 Add the `newBlogEntry` and `saveNewBlogEntry` methods to `src/main/java/rest/Cms.java`:
 
-```java
-    public TemplateInstance newBlogEntry() {
-    	return Templates.index(BlogEntry.listAllSortedByPublished(), new BlogEntry());
-    }
-    
-    @POST
-    public void saveNewBlogEntry( 
-    		@RestForm @NotBlank String title, 
-    		@RestForm String content) {
-        if (validationFailed()) {
-            newBlogEntry();
-        }
-        if (BlogEntry.getByTitle(title).isPresent()) {
-            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
-        }
-        if (validationFailed()) {
-            newBlogEntry();
-        }
-        BlogEntry blogEntry = new BlogEntry(title, content);
-        // make it persistent
-        blogEntry.persist();
-        editBlogEntry(blogEntry.id);
-    } 
+<details>
+<summary>See hint</summary>
+
+Calling `persist()` on your hibernate entity will make it persisted
+</details>
+
+<details>
+<summary>See solution</summary>
+
+```java 
+    BlogEntry blogEntry = new BlogEntry(title, content, published);
+    // make it persistent
+    blogEntry.persist();
+    editBlogEntry(blogEntry.id);
 ```
+</details>
 
-Now replace `Top menu` with a button to create a new blog page in `src/main/resources/templates/Cms/index.html`:
-
-```html
-{#include main.html}
-{#title}Blogger CMS{/title}
-<div class="left-bar d-flex justify-content-between">
-    <div class="p-2">
-        <div class="mb-3 d-flex">
-            <a
-                    class="btn btn-outline-dark"
-                    href="{uri:Cms.newBlogEntry()}"
-            ><i class="bi bi-plus"></i> Post</a>
-        </div>
-```
-
-And in the same file, make sure the `form` knows to call our `saveNewBlogEntry` action
-in the case of new blog entries:
-
-```html
-                <form
-                {#if currentBlogEntry.id}
-                action="{uri:Cms.saveBlogEntry(currentBlogEntry.id)}"
-                {#else}
-                action="{uri:Cms.saveNewBlogEntry()}"
-                {/if}
-                class="blogEntry-form" 
-                method="post" 
-                enctype='multipart/form-data'>
-```
-
-Now observe the page!
+In the browser, now, add some content and save your first new post 🍿
 
 ### Add a way to delete entries
-
-// At 12:20m
 
 For deletion, since it's being called by HTML, and we want to put the action in a `<form>`, it
 must be a `POST` method (we cannot call anything else than `GET` and `POST` in plain HTML).
@@ -449,7 +391,18 @@ must be a `POST` method (we cannot call anything else than `GET` and `POST` in p
 We will define a new `deleteBlogEntry` endpoint, also parameterised by `id`, and call `delete()`
 on the blog entry, before redirecting to the index page.
 
-Add this method to your controller in `src/main/java/rest/Cms.java`:
+**››› CODING TIME**
+
+Implement the `deleteBlogEntry` method to your controller in `src/main/java/rest/Cms.java`:
+
+<details>
+<summary>See hint</summary>
+
+Call `delete()` on your hibernate entity to delete it and redirect to index.
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```java
     @POST
@@ -460,128 +413,40 @@ Add this method to your controller in `src/main/java/rest/Cms.java`:
         index();
     }
 ```
+</details>
 
-Now add a link to the action to your view at `src/main/resources/templates/Cms/index.html`:
+Now add the action to your view at `src/main/resources/templates/Cms/index.html`:
 
-```html
-{#include main.html}
-{#title}Blogger CMS{/title}
-<div class="left-bar d-flex justify-content-between">
-    <div class="p-2">
-        <div class="mb-3 d-flex">
-            <a
-                    class="btn btn-outline-dark"
-                    href="{uri:Cms.newBlogEntry()}"
-            ><i class="bi bi-plus"></i> Post</a>
-        </div>
-
-        <ul
-                class="blogEntries list-group"
-        >
-            {#for blogEntry in blogEntries}
-            <li class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center" >
-                <a
-                        href="{uri:Cms.editBlogEntry(blogEntry.id)}"
-                >
-                {blogEntry.published}: {blogEntry.title}
-                </a>
-                <form action="{uri:Cms.deleteBlogEntry(blogEntry.id)}" method="post">
-					{#authenticityToken/}
-                    <button class="btn blogEntry-delete"
-                    />
-                        <i class="bi bi-trash"></i>
-                    </button>
-				</form>
-            </li>
-            {/for}
-        </ul>
-    </div>
-…
-```
-
-Go observe the page!
-
-### Add a Qute Component for Markdown
-
-// At 13:40m
-
-We would like to improve our `textarea` with an interactive Markdown editor. For that we will re-use and extend EasyMDE,
-which is an NPM module.
-
-Add this dependency to your `pom.xml`:
-
-```xml
-        <dependency>
-            <groupId>org.mvnpm</groupId>
-            <artifactId>easymde</artifactId>
-            <version>2.18.0</version>
-            <scope>provided</scope>
-        </dependency>
-```
-
-Thanks to Qute and Web Bundler, we can create Qute components that are defined as a combination of CSS, JavaScript and HTML.
-To do that, we have to create three files in a folder with the following name convention `src/main/resources/web/<bundle-name>/<component-name>/`.
-We will name our component `BlogEditor`.
-
-Create a folder `src/main/resources/web/cms/BlogEditor` and add `src/main/resources/web/cms/BlogEditor/BlogEditor.css`:
-
-```css
-.editor-toolbar {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    padding: 5px 10px !important;
-    background: lightgray;
-}
-
-.blog-editor {
-    display: none;
-}
-```
-
-Now add `src/main/resources/web/cms/BlogEditor/BlogEditor.html`:
+<details>
+<summary>See solution</summary>
 
 ```html
-<textarea id="{id}" name="{name}" data-controller="blog-editor" class="form-control blog-editor {#ifError name}is-invalid{/}">{value}</textarea>
+<form action="{uri:Cms.deleteBlogEntry(blogEntry.id)}" method="post" onsubmit="return confirm('Do you really want to delete this blog post?');">
+  {#authenticityToken/}
+  <button class="btn blogEntry-delete"
+  />
+  <i class="bi bi-trash"></i>
+  </button>
+</form>
 ```
+</details>
 
-And add `src/main/resources/web/cms/BlogEditor/BlogEditor.js`:
+Go play with your homemade CMS!
 
-```javascript
-import EasyMDE from "easymde";
-import "easymde/dist/easymde.min.css"
-import { Controller } from "@hotwired/stimulus";
-import StimulusApp from "../app";
+You achieved the CMS part 👍, time to show the content in a blog website.
 
-StimulusApp.register("blog-editor", class extends Controller {
-    connect() {
-        console.log("init new editor")
-        this.editor = new EasyMDE({ element: this.element, forceSync: true, spellChecker: false });
-    }
 
-    disconnect() {
-        this.editor.toTextArea();
-        this.editor.cleanup();
-        console.log("cleanup");
-    }
-})
-```
 
-Now replace the `textarea` in `src/main/resources/templates/Cms/index.html` with:
-
-```html
-                            {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
-```
-
-Go observe the page!
+---
 
 ### Make it HTMX
 
-// At 16:00m
+_If you feel like it, we added an extra section to add HTMX power to your CMS. This part is not as detailed, this is more something to play with at home._
 
 At this point, we have our CMS ready, but it's all regular old-style HTML. We can turn it into a dynamic AJAX application by
 using HTMX, without writing any JavaScript! Since HTMX is an NPM package, let's import it.
 
-Add this dependency to your `pom.xml`:
+Add this dependency to your `pom.xml` to make it part of your bundle:
 
 ```xml
         <dependency>
@@ -592,23 +457,18 @@ Add this dependency to your `pom.xml`:
         </dependency>
 ```
 
-To make sure your bundle uses it, add this import to your `app.js`:
-
-```javascript
-import "htmx.org"
-```
-
 The way HTMX works is that it defines a number of HTML custom tags that add dynamic behaviours to your HTML elements. 
 
 For example, the `hx-ext` attribute allows us to define a transition for when content is swapped.
 
-NOTE: Due to the CSRF mitigation explained before, we have to protect our AJAX/HTMX calls, and because `{#authenticityToken/}`
-only works with regular `form` elements, we have to set up CSRF mitigation using headers, via the `hx-headers` attribute.
+> [!NOTE] 
+> Due to the CSRF mitigation explained before, we have to protect our AJAX/HTMX calls, and because `{#authenticityToken/}`
+> only works with regular `form` elements, we have to set up CSRF mitigation using headers, via the `hx-headers` attribute.
 
 Replace the `body` tag in `src/main/resources/templates/main.html`:
 
 ```html
-    <body hx-ext="morphdom-swap" hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
+    <body hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
 ```
 
 Now let's turn our blog page into a dynamic page.
@@ -632,102 +492,7 @@ of our views that we want to be able to render dynamically. This is used for par
 give them an `id` attribute. Then later in the controller we will show how to render them. During full page loads, these sections are
 always rendered as normal.
 
-Now add htmx to your `src/main/resources/templates/Cms/index.html` file:
-
-```html
-{#include main.html}
-{#title}Blogger CMS{/title}
-<div class="left-bar d-flex justify-content-between">
-    <div class="p-2">
-        <div class="mb-3 d-flex">
-            <a
-                    class="btn btn-outline-dark"
-                    href="{uri:Cms.newBlogEntry()}"
-                    hx-get="{uri:Cms.newBlogEntry()}"
-                    hx-push-url="true"
-                    hx-target="#blog-editor"
-            ><i class="bi bi-plus"></i> Post</a>
-        </div>
-
-        {#fragment id="blogEntries"}
-        <ul
-                id="blogEntries"
-                hx-swap-oob="true"
-                class="blogEntries list-group"
-        >
-            {#for blogEntry in blogEntries}
-            <li class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center" >
-                <a
-                        href="{uri:Cms.editBlogEntry(blogEntry.id)}"
-                        hx-get="{uri:Cms.editBlogEntry(blogEntry.id)}"
-                        hx-push-url="true"
-                        hx-target="#blog-editor"
-                        hx-swap="innerHTML"
-                >
-                {blogEntry.published}: {blogEntry.title}
-                </a>
-                {#if blogEntry.id != currentBlogEntry.id??}
-                <button class="btn blogEntry-delete"
-                        hx-delete="{uri:Cms.deleteBlogEntry(blogEntry.id)}"
-                        hx-confirm="Are you sure?"
-                        hx-target="closest .blogEntry"
-                        hx-swap="outerHTML swap:0.5s"
-                />
-                    <i class="bi bi-trash"></i>
-                </button>
-                {/if}
-            </li>
-            {/for}
-        </ul>
-        {/fragment}
-    </div>
-    <div id="blog-editor" class="flex-grow-1 p-2">
-        {#if currentBlogEntry}
-            {#fragment id="blogEntryForm"}
-                <form
-                {#if currentBlogEntry.id}
-                hx-post="{uri:Cms.saveBlogEntry(currentBlogEntry.id)}"
-                {#else}
-                hx-post="{uri:Cms.saveNewBlogEntry()}"
-                {/if}
-                class="blogEntry-form" 
-                hx-encoding='multipart/form-data'
-                hx-target="this"
-                hx-push-url="true"
-                >
-                    <div class="editor-wrapper">
-                        <div>
-                            <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
-                            {#ifError 'title'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'title'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                        <div class="mb-3">
-                            <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" />
-                            {#ifError 'published'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'title'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                        <div class="mb-3">
-                            {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
-                            {#ifError 'content'}
-                            <div class="invalid-feedback">
-                                Error: {#error 'content'/}
-                            </div>
-                            {/ifError}
-                        </div>
-                    </div>
-                    <button class="btn btn-primary">Save</button>
-                </form>
-            {/fragment}
-        {/if}
-    </div>
-</div>
-```
+See solution in: [solution/1-cms/src/main/resources/templates/Cms/index.html](solution/1-cms/src/main/resources/templates/Cms/index.html)
 
 Our controller now has to be updated for HTMX. For convenience, we make it extend `HxController`, which has a number
 of useful methods to help.
@@ -744,130 +509,7 @@ handy to update several parts of the page at once.
 The last thing we can do is turn our `deleteBlogEntry` action from a `POST` method to a `DELETE` method since we can
 invoke those using HTMX/AJAX (unlike HTML `form`).
 
-And to your controller at `src/main/java/rest/Cms.java`:
-
-```java
-package rest;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.jboss.resteasy.reactive.RestForm;
-import org.jboss.resteasy.reactive.RestPath;
-
-import io.quarkiverse.renarde.htmx.HxController;
-import io.quarkus.qute.CheckedTemplate;
-import io.quarkus.qute.TemplateInstance;
-import io.smallrye.common.annotation.Blocking;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import model.BlogEntry;
-import util.Slug;
-
-// Define a new controller, blocking (DB operations), at /cms
-@Blocking
-@Path("/cms")
-public class Cms extends HxController {
-    
-    /**
-     * This defines templates available in src/main/resources/templates/Classname/method.html by convention
-     */
-    @CheckedTemplate
-    public static class Templates {
-        /**
-         * This specifies that the Cms/index.html template takes a list of blogEntries as parameter
-         */
-        public static native TemplateInstance index(List<BlogEntry> blogEntries, BlogEntry currentBlogEntry);
-
-        public static native TemplateInstance index$blogEntries(List<BlogEntry> blogEntries, BlogEntry currentBlogEntry);
-
-        public static native TemplateInstance index$blogEntryForm(BlogEntry currentBlogEntry);
-    }
-
-    // set up our blog index page at /cms
-    @Path("")
-    public TemplateInstance index() {
-        if (isHxRequest()) {
-            return Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null);
-        }
-        return Templates.index(BlogEntry.listAllSortedByPublished(), null);
-    }
-
-    public TemplateInstance newBlogEntry() {
-        if (isHxRequest()) {
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null),
-                    Templates.index$blogEntryForm(new BlogEntry()));
-        }
-    	return Templates.index(BlogEntry.listAllSortedByPublished(), new BlogEntry());
-    }
-
-    public TemplateInstance editBlogEntry(@RestPath Long id) {
-        BlogEntry blogEntry = BlogEntry.findById(id);
-        notFoundIfNull(blogEntry);
-        if (isHxRequest()) {
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), blogEntry),
-                    Templates.index$blogEntryForm(blogEntry));
-        }
-        return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
-    }
-
-    @POST
-    public void saveBlogEntry(@RestPath Long id, 
-    		@RestForm @NotBlank String title, 
-    		@RestForm String content,
-            @RestForm LocalDate published) {
-        if (validationFailed()) {
-            editBlogEntry(id);
-        }
-        BlogEntry blogEntry = BlogEntry.findById(id);
-        notFoundIfNull(blogEntry);
-        if (BlogEntry.getByTitle(title).filter(other -> other.id != id).isPresent()) {
-            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
-        }
-        if (validationFailed()) {
-            editBlogEntry(id);
-        }
-        blogEntry.title = title;
-        blogEntry.content = content;
-        blogEntry.published = published;
-        blogEntry.slug = Slug.toSlug(title);
-        // save is automatic for managed entities
-        editBlogEntry(id);
-    }
-    
-    @POST
-    public void saveNewBlogEntry( 
-    		@RestForm @NotBlank String title, 
-    		@RestForm String content) {
-        if (validationFailed()) {
-            newBlogEntry();
-        }
-        if (BlogEntry.getByTitle(title).isPresent()) {
-            validation.addError("title", String.format("A blog entry with the title [%s] already exists", title));
-        }
-        if (validationFailed()) {
-            newBlogEntry();
-        }
-        BlogEntry blogEntry = new BlogEntry(title, content);
-        // make it persistent
-        blogEntry.persist();
-        editBlogEntry(blogEntry.id);
-    }
-
-    @DELETE
-    public String deleteBlogEntry(@RestPath("id") Long id) {
-        onlyHxRequest();
-        BlogEntry blogEntry = BlogEntry.findById(id);
-        notFoundIfNull(blogEntry);
-        blogEntry.delete();
-        // HTMX is not a fan of 204 No Content for swapping https://github.com/bigskysoftware/htmx/issues/1130
-        return "";
-    }
-}
-```
+See solution in: [solution/1-cms/src/main/java/rest/Cms.java](solution/1-cms/src/main/java/rest/Cms.java)
 
 Now observe the page!
 
-// At 19:00m
