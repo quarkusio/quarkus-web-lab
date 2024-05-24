@@ -13,12 +13,7 @@ import jakarta.ws.rs.WebApplicationException;
 @Path("/")
 public class Blog {
 
-    @CheckedTemplate
-    static class Templates {
-
-        static native TemplateInstance blogPost(BlogEntry entry);
-
-    }
+    // TODO: define a type-safe template
 
     @Path("/blog/{slug}")
     @GET
@@ -27,7 +22,8 @@ public class Blog {
         if (blogEntry.isEmpty()) {
             throw new WebApplicationException(RestResponse.StatusCode.NOT_FOUND);
         }
-        return Templates.blogPost(blogEntry.get());
+        // TODO: use the type-safe template to render the blog post
+        return null;
     }
 
 }

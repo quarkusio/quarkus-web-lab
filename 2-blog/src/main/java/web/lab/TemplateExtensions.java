@@ -36,9 +36,7 @@ public class TemplateExtensions {
         return text.length() > 400 ? text.substring(0, 400) + "..." : text;
     }
 
-    public static String monthStr(LocalDate date) {
-        return date.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
-    }
+    // TODO: define a template extension method to return the textual representation of the month value from a LocalDate
 
     public static String randomThumb(String title) {
         return "https://source.unsplash.com/random/100x75?" + URLEncoder.encode(title, StandardCharsets.UTF_8);

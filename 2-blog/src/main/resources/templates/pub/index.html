@@ -2,8 +2,9 @@
 {#title}My Quarkus Blog{/title}
 <main class="articles">
   <div>
-  {#for entry in BlogEntry:listAllSortedByPublished}
-    <article>
+  <!-- Iterate over all blog entries sorted by the published date in desc order -->
+  <!-- start of the loop -->
+  <article>
       <header>
         <img src="{entry.title.randomThumb}" loading="lazy">
         {#entryDate entry=entry/}
@@ -12,6 +13,6 @@
       <p>{entry.toAbstract}</p>
       <a href="/blog/{entry.slug}">Read more</a>
     </article>
-  {/for}
+   <!-- end of the loop -->
   </div>
 </main>
