@@ -55,13 +55,13 @@ the test data in DEV mode.
 Let's implement the query method for getting all entries sorted by publishing date (descending) `listAllSortedByPublished`:
 
 <details>
-    <summary>See hint</summary>
+<summary>See hint</summary>
 
-    Use `BlogEntry.listAll` combined with `Sort.by("published").descending()`
+Use `BlogEntry.listAll` combined with `Sort.by("published").descending()`
 </details>
 
 <details>
-    <summary>See solution</summary>
+<summary>See solution</summary>
 
 ```java
     public static List<BlogEntry> listAllSortedByPublished() {
@@ -84,7 +84,13 @@ For this:
 - add a link to edit the post, we want the "published: title" as text
 
 <details>
-    <summary>See solution</summary>
+<summary>See hint</summary>
+
+Use `{blogEntry.field}` to print a field value.
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```html
 {blogEntry.published}: {blogEntry.title}
@@ -168,7 +174,13 @@ we want to display.
 Open the `src/main/java/rest/Cms.java` and look at `editBlogEntry`.. nothing wrong?
 
 <details>
-    <summary>See solution</summary>
+<summary>See hint</summary>
+
+Use one of the `BlogEntry` static methods to find the right entry and `notFoundIfNull` from the parent Controller to return an error if null.
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```java
     public TemplateInstance editBlogEntry(@RestPath Long id) {
@@ -183,13 +195,13 @@ Nothing should change in the browser because we didn't add the link to access th
 
 Let's add it in `src/main/resources/templates/Cms/index.html` (where we added the title previously):
 <details>
-    <summary>See hint</summary>
+<summary>See hint</summary>
     
-    {uri:Cms.editBlogEntry(blogEntry.id)} will automatically resolve to the link of the blog entry edition
+`{uri:Cms.editBlogEntry(blogEntry.id)}` will automatically resolve to the link of the blog entry edition
 </details>
 
 <details>
-    <summary>See solution</summary>
+<summary>See solution</summary>
 
 ```html
     <a href="{uri:Cms.editBlogEntry(blogEntry.id)}">{blogEntry.published}: {blogEntry.title}</a>
