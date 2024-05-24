@@ -13,18 +13,20 @@ For now we need to use Quarkus 3.11.0.CR1
 
 We could start from scratch, but it is nicer to start with a few things ready.
 
-TODO: Url to app with the backend
+The directory which contains this README also contains the _initial version_ of the app.
+There are some comments starting with `TODO:` in the code.
+It's up to you to remove these comments with appropriate code!
 
 It's time to start Quarkus dev:
 ```shell
 mvn quarkus:dev
 ```
 
-Press `w` and observe your web page.
+🚀 Press `w` and observe your web page.
 
 ### Let's have a look to the Quarkus config
 
-Open the `src/main/resources/application.properties` file, those setting are allowing
+👀  Open the `src/main/resources/application.properties` file, those setting are allowing
 us to run on a custom port, connect to a shared H2 database, and update our schema when needed.
 
 ### The Model
@@ -32,7 +34,7 @@ us to run on a custom port, connect to a shared H2 database, and update our sche
 The first thing to do is to represent our persistent model, that will be our Java representation of the
 blog entry database table.
 
-Open the `src/main/java/model/BlogEntry.java`. This
+👀 Open the `src/main/java/model/BlogEntry.java`. This
 contains our main entity for the lab, representing a blog entry. It will have the following attributes:
 
 - Title (must be unique)
@@ -46,7 +48,7 @@ are public. We will need a default constructor and a constructor with `title`, `
 
 ### Time to show blog posts (The View)
 
-The app is set up with initial data. Traditionally, startup actions belong in a `util/Startup` class (`src/main/java/util/Startup.java`), and we can use that to create and
+👀 The app is set up with initial data. Traditionally, startup actions belong in a `util/Startup` class (`src/main/java/util/Startup.java`), and we can use that to create and
 save test database values. To that end, we mark the method as `@Transactional`, and only create
 the test data in DEV mode.
 
@@ -70,7 +72,7 @@ Use `BlogEntry.listAll` combined with `Sort.by("published").descending()`
 ```
 </details>
 
-On the browser you should now have a list of "foo", let's show the actual posts.
+🚀 On the browser you should now have a list of "foo", let's show the actual posts.
 
 In Renarde, by default, all views live in `templates/<Controller>/<method>.html`, so for `Cms.index` we need to
 open `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
@@ -97,7 +99,7 @@ Use `{blogEntry.field}` to print a field value.
 ```
 </details>
 
-You now see the blog post... Nice right? What about continuing with a touch of style?
+🚀 You now see the blog post... Nice right? What about continuing with a touch of style?
 
 
 ### Style it up
@@ -137,14 +139,14 @@ Add this to the start of your `src/main/resources/templates/main.html`:
     </head>
 ```
 
-Now reload your main page and observe, better right 🎉?
+🚀 Now observe in the browser, better right 🎉?
 
 
 Thanks to Web Bundler, we can write our style in SCSS, and it will be compiled on-the-fly to CSS. We also added a configuration to auto-import web dependencies scripts and style when it is possible. So nothing more to do.
 
 In our case, we generate a `cms` bundle, so our styles and javascript must go under `web/cms` resources.
 
-Have a look to `src/main/resources/web/cms/app.scss`, there is already a few things there.
+👀 Have a look to `src/main/resources/web/cms/app.scss`, there is already a few things there.
 
 ### Editing blog entries (The Controller)
 
@@ -211,9 +213,9 @@ in order to create a URI to an endpoint method, making it extra easy to create l
 ```
 </details>
 
-Hop over to your browser, click on one blog post, you should see the editor now (with the content printed for now).
+🚀 Hop over to your browser, click on one blog post, you should see the editor now (with the content printed for now).
 
-_So far so good, you are doing great, keep up 🚀!_
+_So far so good, you are doing great, keep up 👍!_
 
 
 ### The Markdown Editor (Qute Components)
@@ -224,7 +226,7 @@ Now let's display the blog entry's markdown editor.
 > The `{#authenticityToken/}` is required in the `<form>` to make
 sure all forms are not subject to CSRF attacks.
 
-If you have a look to `src/main/resources/web/cms/BlogEditor/`, you will find a style, html and js for what we call a qute-component. 
+👀 If you have a look to `src/main/resources/web/cms/BlogEditor/`, you will find a style, html and js for what we call a qute-component. 
 You can use it like any Qute tag: `{#BlogEditor id=... name=... value=... /}`
 
 > [!NOTE] 
@@ -252,7 +254,7 @@ Use the `{#BlogEditor /}` in the edition `<form>`.
 ```
 </details>
 
-There you go, check your browser and find a nice Markdown editor for your blog post!
+🚀 There you go, check your browser and find a nice Markdown editor for your blog post!
 
 ### Now let's do the save action
 
@@ -307,7 +309,7 @@ Edit the `saveBlogEntry` method in `src/main/java/rest/Cms.java`:
 
 - You already implemented the `BlogEntry.getByTitle` so no need to touch the check.
 - As explained above, to redirect, just call the instance endpoint method you wish to redirect to.
-- The `src/main/java/util/Slug.java` class is a utility class used to derive
+- 👀 The `src/main/java/util/Slug.java` class is a utility class used to derive
   a Slug (for the url) from a blog entry title.
 - To save the data, just assign it to your `blogEntry`, it will be saved automatically.
 </details>
@@ -331,7 +333,7 @@ Edit the `saveBlogEntry` method in `src/main/java/rest/Cms.java`:
 
 Now, make sure we tell our `<form>` where to find its action `{uri:Cms.saveBlogEntry(currentBlogEntry.id)}` in `src/main/resources/templates/Cms/index.html`. As you can see it's already done, and it also deals with new post creation (the next part).
 
-Go observe the page, save, try validation!
+🚀 Go observe the page, save, try validation!
 
 ### Now let's do the action to create new post
 
@@ -356,7 +358,7 @@ Use a `<a>` with `class="btn btn-outline-dark"`, the link should point to `Cms.n
 ```
 </details>
 
-In the page, click on the new button and find a blank editor for your new post. 
+🚀 In the page, click on the new button and find a blank editor for your new post. 
 It's not done yet though, we need to wire the save.
 
 This action is very similar to `saveBlogEntry` except it does not require an `id` (this is a new entry), and
@@ -381,7 +383,7 @@ Calling `persist()` on your hibernate entity will make it persisted
 ```
 </details>
 
-In the browser, now, add some content and save your first new post 🍿
+🚀 In the browser, now, add some content and save your first new post 🍿
 
 ### Add a way to delete entries
 
@@ -431,7 +433,7 @@ Now add the action to your view at `src/main/resources/templates/Cms/index.html`
 ```
 </details>
 
-Go play with your homemade CMS!
+🚀 Go play with your homemade CMS!
 
 You achieved the CMS part 👍, time to show the content in a blog website.
 
