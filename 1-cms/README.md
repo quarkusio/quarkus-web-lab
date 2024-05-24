@@ -492,7 +492,7 @@ of our views that we want to be able to render dynamically. This is used for par
 give them an `id` attribute. Then later in the controller we will show how to render them. During full page loads, these sections are
 always rendered as normal.
 
-See solution in: [solution/1-cms/src/main/resources/templates/Cms/index.html](solution/1-cms/src/main/resources/templates/Cms/index.html)
+See solution in: [../solution/1-cms/src/main/resources/templates/Cms/index.html](../solution/1-cms/src/main/resources/templates/Cms/index.html)
 
 Our controller now has to be updated for HTMX. For convenience, we make it extend `HxController`, which has a number
 of useful methods to help.
@@ -509,7 +509,7 @@ handy to update several parts of the page at once.
 The last thing we can do is turn our `deleteBlogEntry` action from a `POST` method to a `DELETE` method since we can
 invoke those using HTMX/AJAX (unlike HTML `form`).
 
-See solution in: [solution/1-cms/src/main/java/rest/Cms.java](solution/1-cms/src/main/java/rest/Cms.java)
+See solution in: [../solution/1-cms/src/main/java/rest/Cms.java](../solution/1-cms/src/main/java/rest/Cms.java)
 
 Now observe the page!
 
