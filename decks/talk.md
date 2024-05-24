@@ -38,9 +38,151 @@ Andy
 
 ---
 
-## Qute and Qute Web
+# Qute
 
-Martin
+Qute is a _templating engine_ designed to meet Quarkus needs.
+
+---
+
+### Qute - goals
+
+- Simple but powerful syntax 
+- Easily extensible API
+- Type-safe templates to enable build-time validation (optional)
+- Minimize reflection usage
+- Support async data types (`Uni`, `CompletionStage`) out-of-the-box
+- ... a first-class Quarkus citizen!
+
+--
+
+### Qute - simple syntax
+
+ The dynamic parts of a template include _comments_, _output expressions_, _sections_ and _unparsed character data_.
+
+```html
+{! A simple comment !}
+<h1>{item.name ?: 'Dummy'}</h1>
+{#if item.active}
+<p>{item.description}</p>
+{/if}
+{| <script>if(true){alert('Qute is cute!')};</script> |}
+```
+
+--
+
+### Qute - extensible API example
+
+Template extension methods can be used to extend the data classes with new functionality.
+
+For example, it is possible to add _computed properties_ and _virtual methods_ to existing Java types.
+
+```java
+@TemplateExtension
+public static String toMonthStr(LocalDate date) {
+   return date.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
+}
+```
+
+--
+
+### Qute - type-safe templates
+
+The goal is to catch user errors during the build and fail fast.
+
+There are several ways to bind the "type info" to output expressions...
+
+---
+
+### Qute - type-safe templates
+
+#1 - directly in the template.
+
+```html
+{@java.lang.String name} 
+<html>
+<body>
+  Hello {name.toLowerCase}!
+</body>
+</html>
+```
+
+---
+
+### Qute - type-safe templates
+
+#2 - directly in the code. 
+
+```java
+@CheckedTemplate
+class Templates {
+    static native TemplateInstance hello(String name);  
+}
+```
+
+---
+
+### Qute - type-safe templates
+
+#3 - records (Java 14+)
+
+```java
+record Hello(String name) implements TemplateInstance {}
+```
+
+---
+
+### Qute - type-safe templates
+
+#4 - `@Named` CDI beans
+
+```html
+<html>
+<body>
+  Hello {cdi:bean.name.toLowerCase}!
+</body>
+</html>
+```
+
+---
+
+### Qute - type-safe templates
+
+#5 - `@TemplateData`, `@TemplateEnum`, `@TemplateGlobal`, ...
+
+--
+
+### Qute - async data resolution API
+
+Allows for better resource utilization and fits the Quarkus reactive model.
+
+For example, it’s possible to use _non-blocking clients_ directly from a template.
+
+--
+
+### Qute - tight Quarkus integration
+
+- Dev mode and UI
+- CDI integration (`{cdi:myBean.foo}`, `@Inject Template`, ...)
+- `quarkus-rest-qute`
+- `quarkus-mailer`
+- ...
+
+---
+
+## Qute Web
+
+ It's a Quarkiverse extension. The goal is to expose the Qute templates located in the `src/main/resource/templates/pub` directory via HTTP. Automatically, no controllers needed.
+
+--
+
+### Qute Web - accesible data
+
+- `@Named` CDI beans; `{cdi:myBean.name}`
+- static members of a class annotated with `@TemplateData`
+- enums annotated with `@TemplateEnum`
+- the current HTTP request and query parameters; `{http:request.path}` and `{http:param('name')}`
+- global variables
+- ...
 
 ---
 

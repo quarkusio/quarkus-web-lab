@@ -27,6 +27,11 @@ replay_pid*
 .vscode
 .factorypath
 
+# Eclipse
+.settings
+.project
+.classpath
+
 db.mv.db
 db.trace.db
 db.lock.db
