@@ -200,7 +200,7 @@ For example, it’s possible to use _non-blocking clients_ directly from a templ
 
 ---
 
-![Renarde Avalanche](deck-assets/renarde-avalanche.png)
+![Renarde Avalanche](deck-assets/renarde-avalanche.png)<!-- .element width="60%"  -->
 
 ---
 
@@ -230,7 +230,7 @@ public class Application extends Controller {
 }
 ```
 
----
+--
 
 ### Your first view
 
@@ -241,7 +241,7 @@ public class Application extends Controller {
 <h1>We have a message for you: {message}</h1>
 ```
 
----
+--
 
 ### Your first entity
 
@@ -279,7 +279,7 @@ public class Todos extends Controller {
 }
 ```
 
----
+--
 
 ### Using the model, view side
 
@@ -314,7 +314,7 @@ public class Todos extends Controller {
 
 	…
 ```
----
+--
 
 ### Need an controller action? 2/2
 
@@ -333,7 +333,7 @@ public class Todos extends Controller {
 	}
 }
 ```
----
+--
 
 ### The view side
 
@@ -369,7 +369,7 @@ public class Todos extends Controller {
 	}
 ```
 
----
+--
 
 ### Validation, in your view
 
@@ -391,7 +391,7 @@ quarkus.default-locale=en
 # but order is not important)
 quarkus.locales=en,fr
 ```
----
+--
 
 ### Localisation: default messages
 
@@ -404,7 +404,7 @@ hello=Hello World
 views_Application_index_greet=Hello %s
 ```
 
----
+--
 
 ### Localisation: localised messages
 
@@ -415,7 +415,7 @@ hello=Bonjour Monde
 views_Application_index_greet=Salut %s
 ```
 
----
+--
 
 ### Localisation: use it from your controller
 
@@ -424,7 +424,7 @@ public String hello() {
     return i18n.formatMessage("hello");
 }
 ```
----
+--
 
 ### Localisation: use it from your view
 
@@ -457,7 +457,7 @@ public class Emails {
     }
 }
 ```
----
+--
 ### Emails: the controller
 
 ```java
@@ -468,7 +468,7 @@ public void saveTodo(…){
 	index();
 }
 ```
----
+--
 
 ### Emails: the view
 
@@ -503,12 +503,12 @@ public void saveTodo(…){
 All this is fine, and old-school, but if what if you want to do partial page updates, get some
 of this AJAX action going?
 
----
+--
 
 HTMX allows you to turn your pages into AJAX pages without writing JavaScript, by declaring AJAX
 actions and consequences as custom HTML attributes.
 
----
+--
 
 ```html
 <a hx-get="{uri:Application.hello()}">Click me</a>
@@ -516,6 +516,7 @@ actions and consequences as custom HTML attributes.
 
 This will do an AJAX `GET` of that
 controller and replace the contents with what it returns.
+
 
 You can use other HTMX attributes to define what to do with the results.
 
@@ -535,9 +536,7 @@ You can declare fragments of your template:
 {/fragment}
 ```
 
----
-
-## HTMX fragments
+--
 
 ```java
 public class Cms extends HxController {
@@ -573,7 +572,17 @@ public class Cms extends HxController {
 
 ## Quinoa
 
-Andy
+<div style="display: flex; align-items: center;justify-content: center;gap:30px ">
+<img src="./deck-assets/quarkus.png" width="67" height="70" > ➕ <img src="./deck-assets/npm.png" height="70" >
+</div>
+
+--
+
+![Quiona](deck-assets/quinoa-dev.png)
+
+--
+
+![Quiona](deck-assets/quinoa-build.png)<!-- .element width="70%"  -->
 
 ---
 
