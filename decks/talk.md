@@ -16,7 +16,18 @@
 
 ### What is Quarkus?
 
-Stef
+- Open Source framework for…
+- Cloud-Native, Serverless, Micro-Services, Lambdas, Command-Lines…
+- And Web Applications!
+
+---
+
+### Why Quarkus?
+
+- Developer Joy
+- Container First
+- Community and Standards
+- Imperative and Reactive
 
 ---
 
