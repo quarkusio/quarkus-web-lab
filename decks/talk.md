@@ -527,10 +527,10 @@ You can use other HTMX attributes to define what to do with the results.
 You can declare fragments of your template:
 
 ```html
-{#fragment id="blogEntries"}
+{#fragment id="entries"}
 <ul>
-    {#for blogEntry in blogEntries}
-    <li>{blogEntry.published}: {blogEntry.title}</li>
+    {#for entry in entries}
+    <li>{entry.published}: {entry.title}</li>
     {/for}
 </ul>
 {/fragment}
@@ -540,18 +540,16 @@ You can declare fragments of your template:
 
 ```java
 public class Cms extends HxController {
-  
   @CheckedTemplate
   public static class Templates {
-    public static native TemplateInstance index(List<BlogEntry> entries);
+    static native TemplateInstance index(List<BlogEntry> entries);
 
-    public static native TemplateInstance index$entries(List<BlogEntry> entries);
+    static native TemplateInstance 
+                           index$entries(List<BlogEntry> entries);
   }
-
   public TemplateInstance index() {
-    if (isHxRequest()) {
-        return Templates.index$blogEntries(BlogEntry.listAll());
-    }
+    if (isHxRequest())
+        return Templates.index$entries(BlogEntry.listAll());
     return Templates.index(BlogEntry.listAll());
   }
 }
