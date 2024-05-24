@@ -97,7 +97,7 @@ Parameters of type-safe templates are used to bind type-safe expressions which a
 In our case, the parameter has name `entry` and type `web.lab.BlogEntry`.
 Therefore, any top-level expression that starts with `entry` will be validated against the `web.lab.BlogEntry` type (and additional template extension methods).
 
-👀 Have a look to `src/main/java/web/lab/Blog.java`.
+👀 Have a look at `src/main/java/web/lab/Blog.java`.
 
 **››› CODING TIME**
 
