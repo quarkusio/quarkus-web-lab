@@ -13,10 +13,13 @@ import jakarta.ws.rs.WebApplicationException;
 @Path("/")
 public class Blog {
 
+    // You can also use template records with JDK 14+
+    // record blogPost(BlogEntry entry) implements TemplateInstance {}
+
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance blogPost(BlogEntry entry);
+       static native TemplateInstance blogPost(BlogEntry entry);
 
     }
 
@@ -28,6 +31,8 @@ public class Blog {
             throw new WebApplicationException(RestResponse.StatusCode.NOT_FOUND);
         }
         return Templates.blogPost(blogEntry.get());
+        // You can also use template records with JDK 14+
+        // return new blogPost(blogEntry.get());
     }
 
 }
