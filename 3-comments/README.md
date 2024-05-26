@@ -6,70 +6,44 @@ using Markdown.
 
 ![screenshot](screenshot.png)
 
-### Technologies
+### Get the initial app
 
-#### Backend
-The backend is an existing Quarkus REST App that store and retrieve comments from a database.
+We don't start from scratch.
+The directory which contains this README also contains the _initial version_ of the app.
 
-```java
-package web.workshop.comments;
 
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import java.time.LocalDateTime;
-import java.util.List;
+### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
 
-@Path("/comment")
-public class CommentResource {
-
-    @GET
-    @Path("/{ref}")
-    public List<Comment> comments(String ref) {
-        return Comment.findRefComments(ref);
-    }
-    
-    @POST
-    @Transactional
-    public List<Comment> addComment(Comment comment) {
-        if(comment.time == null){
-            comment.time = LocalDateTime.now();
-        }
-        comment.persist();
-        
-        return comments(comment.ref);
-    }
-}
-``` 
-
-```java
-package web.workshop.comments;
-
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.panache.common.Sort;
-import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.util.List;
-
-@Entity
-public class Comment extends PanacheEntity {
-    @NotBlank(message="Ref may not be blank")
-    public String ref;
-    public LocalDateTime time;
-    @NotBlank(message="Name may not be blank")
-    public String name;
-    @NotBlank(message="Comment may not be blank")
-    public String comment;
-    
-    public static List<Comment> findRefComments(String ref){
-        return list("ref", Sort.by("time", Sort.Direction.Descending),ref);
-    }
-}
+```
+mvn quarkus:dev
 ```
 
+🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
+
+The app runs on port 7070 so that it does not conflict with other parts of the Lab. You can see the Dev UI on http://localhost:7070/q/dev-ui
+
+### Backend
+
+
+The backend is an existing Quarkus REST App that store and retrieve comments from a database. Now that you have coded the CMS and the blog, we provide it in the initial app to let you focus on the web-component part.
+
+👀 See the REST resource: `src/main/java/workshop/comments/CommentResource.java`
+
+and
+
+👀 The database entity: `src/main/java/workshop/comments/Comment.java`
+
+#### Extensions used for the backend
+
+- [REST and Jackson](https://quarkus.io/guides/rest#json-serialisation)
+- [Bean validation](https://quarkus.io/guides/validation)
+- [Hibernate and Panache](https://quarkus.io/guides/hibernate-orm-panache)
+- [H2](https://quarkus.io/guides/datasource)
+
+
 This gives us two REST Api's to use:
+
+**››› COMMAND TIME**
 
 1) Getting all the comments for a certain blog entry, for example blog entry with reference 123:
 
@@ -93,26 +67,7 @@ curl -X 'POST' \
 }'
 ```
 
-#### Extensions for  the backend
-
- - [REST and Jackson](https://quarkus.io/guides/rest#json-serialisation)
- - [Bean validation](https://quarkus.io/guides/validation)
- - [Hibernate and Panache](https://quarkus.io/guides/hibernate-orm-panache)
- - [H2](https://quarkus.io/guides/datasource)
-
-#### Get the initial app
-
-TODO: Url to app with the backend
-
-#### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
-
-```
-mvn quarkus:dev
-```
-
-The app runs on port 7070 so that it does not conflict with other parts of the Lab. You can see the Dev UI on http://localhost:7070/q/dev-ui
-
-### The UI (Workshop starts here)
+### The UI (Workshop really starts here)
 
 Add the [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html) extension:
 
@@ -139,31 +94,7 @@ We are going to use Lit[https://lit.dev/] to build a web component. You can navi
 
 > **_NOTE:_** The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
 
-Now we can start with a basic component. In `src/main/resources/web/app`, create a file called `comment-box.js`;
-
-```js
-import {LitElement, html, css} from 'lit';
-
-class CommentBox extends LitElement {
-
-    static styles = css``;    
-    
-    static properties = {};
-
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
-    render() {
-        return html`<span>Hello world</span>`;
-    }
-}
-customElements.define('comment-box', CommentBox);
-```
+👀 Now we can start with a basic component. In `src/main/resources/web/app`, see a file called `comment-box.js`;
 
 This is the basic structure of a Lit component:
 
@@ -176,34 +107,20 @@ This is the basic structure of a Lit component:
 
 #### Test
 
-This component will be used on the static site, but to do some manual testing , add a HTML that use this. In `src/main/resources/web/` 
+👀This component will be used on the static site, but to do some manual testing , add a HTML that use this. In `src/main/resources/web/` 
 create `test.html`:
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="shortcut icon" type="image/png" href="static/favicon.ico">
-        
-        {#bundle /}
-
-        <title>Test Comment component</title>
-    </head>
-    <body>
-        <comment-box ref="test"></comment-box>
-    </body>
-</html>
-```
-
-Throughout the workshop, you can refresh the http://localhost:7070/test.html page to see the progress
+🚀 Throughout the workshop, you can check the http://localhost:7070/test.html page to see the progress
 
 #### Allow the component to take a ref param
 
+**››› CODING TIME**
+
 We need to link each comment section to a blog entry. Add a element attribute that the user of the component can set
 to indicate the reference to the blog entry
+
+<details>
+<summary>See solution</summary>
 
 ```js
 static properties = {
@@ -216,12 +133,25 @@ constructor() {
 }
 
 ```
+</details>
 
-This will allow users of the this component to use it :
+This will allow users of this component to use it in the `test.html` page :
+
+<details>
+<summary>See hint</summary>
+
+You may now use your component like a normal html tag `<comment-box .../>`, use `test` as example ref.
+</details>
+
+<details>
+<summary>See solution</summary>
 
 ```html
-<comment-box ref="some_blog_entry_ref"></comment-box>
+<comment-box ref="test"></comment-box>
 ```
+</details>
+
+
 
 #### Fetch the initial list of comments
 
