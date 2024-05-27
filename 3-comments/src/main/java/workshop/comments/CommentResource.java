@@ -9,13 +9,13 @@ import java.util.List;
 
 @Path("/comment")
 public class CommentResource {
-
+    
     @GET
     @Path("/{ref}")
     public List<Comment> comments(String ref) {
         return Comment.findRefComments(ref);
     }
-    
+
     @POST
     @Transactional
     public List<Comment> addComment(Comment comment) {

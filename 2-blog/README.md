@@ -26,12 +26,12 @@ It's up to you to remove these comments with appropriate code!
 
 #### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
 
+The app runs on port 8080 so that it does not conflict with other parts of the Lab.
+It's time to start Quarkus dev:
+
 ```
 mvn quarkus:dev
 ```
-
-The app runs on port 8080 so that it does not conflict with other parts of the Lab.
-It's time to start Quarkus dev:
 
 🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
 
@@ -41,7 +41,7 @@ First, we'll need a _base_ template.
 All other templates will extend this template and provide the content for the `title` and `body` insert sections.
 This feature is called _template inheritance_ and makes it possible to reuse template layouts.
 
-👀  This file is located in `src/main/resource/templates/base.html`.
+👀 This file is located in `src/main/resource/templates/base.html`.
 
 `{#insert /}` defines no name and so the main block of the relevant `{#include}` section is used.
 
