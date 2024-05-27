@@ -33,7 +33,21 @@
 
 ### What is an extension?
 
-Martin
+- Adds _functionality_ to a Quarkus application
+- Not just a "plain" dependency
+- Consists of two parts: _build-time_ module and _runtime_ module
+
+--
+
+### Where can I find extentions?
+
+Various dev tools (CLI, Maven/Gradle plugins, [code.quarkus.io](http://code.quarkus.io)) can be used  search the Quarkus ecosystem for extensions. 
+
+--
+
+### Can I contribute a new extension? Quarkiverse Hub!
+
+A GitHub organization that provides repository hosting (including build, CI and release publishing setup) for Quarkus extensions contributed by the community.
 
 ---
 
