@@ -85,7 +85,7 @@ class CommentBox extends LitElement {
 
     constructor() {
         super();
-        this.serverUrl = ''; // Default server URL
+        this.serverUrl = SERVER_URL; // Default server URL
         this.ref = null;
         this._comments = [];
         this.md = new MarkdownIt();

@@ -24,7 +24,6 @@ The app runs on port 7070 so that it does not conflict with other parts of the L
 
 ### Backend
 
-
 The backend is an existing Quarkus REST App that store and retrieve comments from a database. Now that you have coded the CMS and the blog, we provide it in the initial app to let you focus on the web-component part.
 
 👀 See the REST resource: `src/main/java/workshop/comments/CommentResource.java`
@@ -69,28 +68,11 @@ curl -X 'POST' \
 
 ### The UI (Workshop really starts here)
 
-Add the [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html) extension:
-
-```xml
-<dependency>
-    <groupId>io.quarkiverse.web-bundler</groupId>
-    <artifactId>quarkus-web-bundler</artifactId>
-    <version>1.5.0.CR1</version>
-</dependency>
-```
-
 #### Lit 
 
 We are going to use Lit[https://lit.dev/] to build a web component. You can navigate to mvnpm[https://mvnpm.org] to find any UI library:
 
-```xml
-<dependency>
-    <groupId>org.mvnpm</groupId>
-    <artifactId>lit</artifactId>
-    <version>3.1.3</version>
-    <scope>provided</scope>
-</dependency>
-```
+👀 Have a look to the `pom.xml`, we declared Lit and some ready-to-use web-components to help us.
 
 > **_NOTE:_** The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
 
@@ -101,13 +83,13 @@ This is the basic structure of a Lit component:
  - extends LitElement (that extends HTMLElement)
  - styles css: here we can add CSS
  - properties: here we can add element attributes and state properties
- - contructer: here we set the initial values for properties
+ - constructor: here we set the initial values for properties
  - connectedCallback: this gets called when the element is added to the DOM. Here we can make calls to the server to fetch initial values for state properties
  - render: this gets called to render the element (or re-render in case a state property change)
 
 #### Test
 
-👀This component will be used on the static site, but to do some manual testing , add a HTML that use this. In `src/main/resources/web/` 
+👀 This component will be used on the static site, but to do some manual testing , add a HTML that use this. In `src/main/resources/web/` 
 create `test.html`:
 
 🚀 Throughout the workshop, you can check the http://localhost:7070/test.html page to see the progress
@@ -116,7 +98,7 @@ create `test.html`:
 
 **››› CODING TIME**
 
-We need to link each comment section to a blog entry. Add a element attribute that the user of the component can set
+We need to link each comment section to a blog entry. Add an element attribute that the user of the component can set
 to indicate the reference to the blog entry
 
 <details>
