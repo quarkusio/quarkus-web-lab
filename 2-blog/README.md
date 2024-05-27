@@ -35,6 +35,8 @@ mvn quarkus:dev
 
 🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
 
+You should see a `TemplateException`, it's part of the plan :)
+
 ### Base template
 
 First, we'll need a _base_ template.
@@ -60,7 +62,7 @@ For example, it is possible to add computed properties and virtual methods.
 
 **››› CODING TIME**
 
-Let's implement the loop to iterate over all blog entries.
+Let's implement the loop to iterate over all blog entries (and fix the template exception).
 
 <details>
 <summary>See hint</summary>

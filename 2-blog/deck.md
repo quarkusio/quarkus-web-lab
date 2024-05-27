@@ -2,14 +2,19 @@
 
 ---
 
-## Qute Web
+## Part 2 - The Blog
 
-In this part, we are going to prepare:
-- the blog index page with all the posts
-- the post page to show the content
+With the blog posts from db, use Qute and Web-Bundler to show:
+- A page with all the blog posts
+- A detail page with the content
 
----
+And Generate a static website to be deployed on a static server.
 
-## Generate statiq
+--
 
-Let's generate our blog to a static site and try to serve it locally (for testing purpose).
+👀 Tour of the base code
+
+--
+
+👻 Have fun!
+

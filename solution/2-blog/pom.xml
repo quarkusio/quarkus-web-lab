@@ -15,7 +15,7 @@
         <quarkus.platform.version>3.11.0.CR1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
-        <quarkus-web-bundler.version>1.5.0.CR6</quarkus-web-bundler.version>
+        <quarkus-web-bundler.version>1.5.0</quarkus-web-bundler.version>
         <quarkus-statiq.version>0.0.2</quarkus-statiq.version>
     </properties>
 
