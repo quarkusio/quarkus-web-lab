@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>web.workshop</groupId>
+    <groupId>quarkus.web.lab</groupId>
     <artifactId>blog</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
@@ -15,7 +15,7 @@
         <quarkus.platform.version>3.11.0.CR1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
-        <quarkus-web-bundler.version>1.5.0</quarkus-web-bundler.version>
+        <quarkus-web-bundler.version>1.5.1</quarkus-web-bundler.version>
         <quarkus-statiq.version>0.0.2</quarkus-statiq.version>
     </properties>
 

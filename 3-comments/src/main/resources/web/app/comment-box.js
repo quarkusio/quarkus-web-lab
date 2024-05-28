@@ -1,19 +1,22 @@
 import {LitElement, html, css} from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 class CommentBox extends LitElement {
 
     static styles = css``;
 
     static properties = {
-        // TODO: add ref property
+        // TODO: add properties definition
     };
 
     constructor() {
         super();
+        // TODO: add properties initialization
     }
 
     connectedCallback() {
         super.connectedCallback();
+        // TODO: fetch the comments from the backend
     }
 
     render() {
