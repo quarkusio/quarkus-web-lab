@@ -53,7 +53,8 @@ public class Cms extends Controller {
 
     @POST
     public void saveBlogEntry(@RestPath Long id, 
-    		@RestForm @NotBlank String title, 
+    		@RestForm @NotBlank String title,
+            @RestForm @NotBlank String picture,
     		@RestForm String content,
             @RestForm LocalDate published) {
         if (validationFailed()) {
@@ -73,8 +74,9 @@ public class Cms extends Controller {
     
     @POST
     public void saveNewBlogEntry( 
-    		@RestForm @NotBlank String title, 
-    		@RestForm String content,
+    		@RestForm @NotBlank String title,
+            @RestForm @NotBlank String picture,
+            @RestForm String content,
             @RestForm LocalDate published) {
         if (validationFailed()) {
             newBlogEntry();
@@ -85,7 +87,7 @@ public class Cms extends Controller {
         if (validationFailed()) {
             newBlogEntry();
         }
-        BlogEntry blogEntry = new BlogEntry(title, content, published);
+        BlogEntry blogEntry = new BlogEntry(title, picture, content, published);
         // TODO: make it persistent and redirect to edition
     }
 

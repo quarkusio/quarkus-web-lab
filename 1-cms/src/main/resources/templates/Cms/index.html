@@ -42,6 +42,14 @@
                             {/ifError}
                         </div>
                         <div class="mb-3">
+                          <input name="picture" class="form-control {#ifError 'picture'}is-invalid{/}" value="{inject:flash.get('picture') ?: currentBlogEntry.picture}" placeholder="Enter picture name" required/>
+                          {#ifError 'picture'}
+                          <div class="invalid-feedback">
+                            Error: {#error 'picture'/}
+                          </div>
+                          {/ifError}
+                        </div>
+                        <div class="mb-3">
                               <!-- TODO: Use Markdown qute-component -->
                             {currentBlogEntry.content}
                             {#ifError 'content'}

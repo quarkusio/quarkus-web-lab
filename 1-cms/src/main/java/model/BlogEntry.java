@@ -19,6 +19,8 @@ public class BlogEntry extends PanacheEntity {
     @Column(unique = true)
     public String slug;
 
+    public String picture;
+
     @Column(columnDefinition = "text")
     public String content;
 
@@ -28,12 +30,13 @@ public class BlogEntry extends PanacheEntity {
         super();
     }
 
-    public BlogEntry(String title, String content) {
-        this(title, content, LocalDate.now());
+    public BlogEntry(String title, String picture, String content) {
+        this(title, picture, content, LocalDate.now());
     }
-    
-    public BlogEntry(String title, String content, LocalDate published) {
+
+    public BlogEntry(String title, String picture, String content, LocalDate published) {
         this.title = title;
+        this.picture = picture;
         this.content = content;
         this.slug = Slug.toSlug(title);
         this.published = published;

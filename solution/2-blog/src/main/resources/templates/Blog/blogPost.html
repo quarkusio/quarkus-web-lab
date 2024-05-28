@@ -6,7 +6,7 @@
     <header>
       {#entryDate entry=entry/}
     </header>
-    <img loading="lazy" src="{entry.title.randomImg}">
+    <img loading="lazy" src="/static/assets/blog/pictures/{entry.picture}">
     <h1>{entry.title}</h1>
     {entry.content.mdToHtml.raw}
   </article>
