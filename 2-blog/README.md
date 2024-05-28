@@ -15,7 +15,7 @@ In our case, we will just serve all static pages using a jbang script.
  - [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
  - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
  - [JDBC driver for H2](https://quarkus.io/guides/datasource)
-  - [Statiq](https://github.com/quarkiverse/quarkus-statiq)
+ - [Statiq](https://github.com/quarkiverse/quarkus-statiq)
 
 #### The initial app
 

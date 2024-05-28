@@ -27,7 +27,13 @@ Qute is a _templating engine_ designed to meet Quarkus needs.
 
 ### MVNPM
 
-TODO Phillip
+- Use npm like any other Maven dependency
+- Auto sync and update to maven central
+- importmap support
+
+--
+
+![mvnpm](deck-assets/mvnpm.png)<!-- .element width="100%"  -->
 
 ---
 
