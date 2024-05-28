@@ -11,6 +11,7 @@ class CommentBox extends LitElement {
 
     constructor() {
         super();
+        this.serverUrl = SERVER_URL;  // This is defined through web-bundler envs in application.properties
         // TODO: add properties initialization
     }
 

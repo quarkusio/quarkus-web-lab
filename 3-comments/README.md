@@ -44,15 +44,9 @@ This gives us two REST Api's to use:
 
 **››› COMMAND TIME**
 
-1) Getting all the comments for a certain blog entry, for example blog entry with reference 123:
 
-```
-curl -X 'GET' \
-  'http://localhost:7070/comment/123' \
-  -H 'accept: application/json'
-```
 
-2) Adding a comment to a blog entry, for example blog entry with reference 123:
+1) Adding a comment to a blog entry, for example blog entry with reference 123:
 
 ```
 curl -X 'POST' \
@@ -64,6 +58,14 @@ curl -X 'POST' \
   "name": "Foo Bar",
   "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 }'
+```
+
+2) Getting all the comments for a certain blog entry, for example blog entry with reference 123:
+
+```
+curl -X 'GET' \
+  'http://localhost:7070/comment/123' \
+  -H 'accept: application/json'
 ```
 
 ### The UI (Workshop really starts here)
@@ -105,12 +107,15 @@ to indicate the reference to the blog entry
 
 ```js
 static properties = {
-    ref: { type: String }
+    ref: { type: String },
+    _comments: {state: true}
 };
 
 constructor() {
     super();
+    this.serverUrl = SERVER_URL;  // This is defined through web-bundler envs in application.properties
     this.ref = null;
+    
 }
 
 ```
@@ -145,12 +150,14 @@ Add a new string state property called `_comments` that will contain the comment
 
 ```js
 static properties = {
-    [...]
+    ref: { type: String },
     _comments: {state: true}
 };
 
 constructor() {
-    [...]
+    super();
+    this.serverUrl = SERVER_URL;  // This is defined through web-bundler envs in application.properties
+    this.ref = null;
     this._comments = [];
 }
 ```
@@ -165,8 +172,7 @@ Add a method that call the REST endpoint to fetch all comments, the set the `_co
 
 ```js
 _fetchAllComments(){
-    let serverUrl = SERVER_URL; // This is defined through web-bundler envs in application.properties
-    fetch(`${serverUrl}/comment/${this.ref}`)
+    fetch(`${this.serverUrl}/comment/${this.ref}`)
         .then(response => response.json())
         .then(response => this._comments = response);
 }
@@ -187,7 +193,8 @@ connectedCallback() {
 ```
 </details>
 
-Now we have the comments for a certain blog reference when the component is added to the DOM. Let's render it:
+Now we have the comments for a certain blog reference when the component is added to the DOM. Let's render it. We will loop through all comments and render them. Each time the `comments` state property change, this will re-render.
+
 
 <details>
 <summary>See solution</summary>
@@ -211,7 +218,6 @@ render(){
 ```
 </details>
 
-Above will loop through all comments and render them. Each time the `comments` state property change, this will re-render. 
 
 🚀 Go observe the test page, you should see the list of comments.
 
@@ -385,26 +391,21 @@ static styles = css`
 
 #### CORS
 
-We need to make sure this can be used from the static server application.
 
-Add this to `application.properties`:
 
-```properties
-quarkus.web-bundler.bundle-redirect=true
-quarkus.http.cors=true
-quarkus.http.cors.origins=http://localhost:8080,http://localhost:7070
-```
-(provided that static server runs on 8080)
+👀 check the `application.properties` provided that static server runs on 8080, it makes sure this can be used from the static server application.
 
-Now when adding it to a blog page in static server:
+Now when add this ⬇️ to the blog page 'src/main/resources/templates/Blog/blogPost.html' (just after the `</main>).
 
 ```html
 <script crossorigin src="http://localhost:7070/static/bundle/main.js" type="module"></script>
 
-
-<comment-box ref="test"></comment-box>
+<comment-box ref="{entry.slug}"></comment-box>
 ```
 
+🚀 Open the blog in dev or static mode, you now have comments for the blog posts !!!
+
+🥳🎉 You just finished the lab!
 
 #### Add markdown support (optional)
 
