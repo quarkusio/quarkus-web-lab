@@ -219,19 +219,32 @@ Above will loop through all comments and render them. Each time the `comments` s
 
 Change the current `render` method to rather call 2 methods. One to render the "add comment", and another with the "existing comments".
 
+
+
+<details>
+<summary>See hint</summary>
+
+Move the current `render` to `_renderExistingComments` and add a new `_renderNewComment` with this html content:
+```html
+<div class="comment-box">
+    <input id="name" class="input" type="text" placeholder="Your name">
+    <textarea id="comment" class="input" placeholder="Your comment. You can use Markdown for formatting" rows="5"></textarea>
+    <button class="button" @click="${this._postComment}"><fas-icon icon="comment-dots" color="white"></fas-icon> Post Comment</button>
+</div>
+```
+</details>
+
+<details>
+<summary>See solution</summary>
+
 ```js
 render() {
     return html`${this._renderNewComment()}
                 ${this._renderExistingComments()}
       `;
 }
-```
 
-(move the current `render` to `_renderExistingComments`.
 
-Now add `_renderNewComment`:
-
-```js
 _renderNewComment() {
     return html`
       <div class="comment-box">
@@ -241,7 +254,24 @@ _renderNewComment() {
       </div>
     `;
 }
+
+_renderExistingComments(){
+    if(this._comments){
+        return html`${this._comments.map((comment) =>
+            html`<div class="existingcomment">
+                    <div class="comment">${comment.comment}</div>
+                    <div class="right">
+                        <div class="commentByAndTime">
+                            by ${comment.name} on ${comment.time}
+                        </div>
+                    </div>
+                </div>`
+        )}
+        `;
+    }
+}
 ```
+</details>
 
 Add a method to do a POST when the button is clicked (we already added a `@click` handler to the button)
 
@@ -275,7 +305,108 @@ The POST method return the list of (new) responses, so we can set the `_comments
 > **_NOTE:_** 
 > Technically, the more correct REST way to do this is to not return data on a POST, but add a header that contains where the newly added comment can be found. You can then make another call to fetch the latest comment and update the `_comments` array.
 
-#### Add markdown support
+🚀 Go observe the test page, you should be able to post comments.
+
+#### CSS
+
+Add some CSS to make the layout better:
+
+```css
+static styles = css`
+    :host {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 5px;
+        gap: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    }
+    .comment-box {
+        display: flex;
+        flex-direction: column;
+        gap:2px;
+    }
+    .existingcomment {
+        border: 1px solid #C0C2CD;
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .right {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    .commentByAndTime {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .time {
+        color: gray;
+        font-size: small;
+    }
+
+    .input {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        resize: none;
+        border: 2px solid #ccc;
+    }
+
+    .button {
+        background-color: #04AA6D; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    markdown-toolbar {
+        display: flex;
+        gap: 10px;
+    }
+
+    fas-icon {
+        color: gray;
+        cursor: pointer;
+    }
+    fas-icon:hover {
+        color: #212f80;
+    }
+`;    
+```
+
+#### CORS
+
+We need to make sure this can be used from the static server application.
+
+Add this to `application.properties`:
+
+```properties
+quarkus.web-bundler.bundle-redirect=true
+quarkus.http.cors=true
+quarkus.http.cors.origins=http://localhost:8080,http://localhost:7070
+```
+(provided that static server runs on 8080)
+
+Now when adding it to a blog page in static server:
+
+```html
+<script crossorigin src="http://localhost:7070/static/bundle/main.js" type="module"></script>
+
+
+<comment-box ref="test"></comment-box>
+```
+
+
+#### Add markdown support (optional)
 
 We want users to be able to comment using markdown and then render the markup.
 
@@ -448,102 +579,4 @@ _renderExistingComments(){
         `;
     }
 }
-```
-
-#### CSS
-
-Add some CSS to make the layout better:
-
-```css
-static styles = css`
-    :host {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        padding: 5px;
-        gap: 10px;
-        font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    }
-    .comment-box {
-        display: flex;
-        flex-direction: column;
-        gap:2px;
-    }
-    .existingcomment {
-        border: 1px solid #C0C2CD;
-        border-radius: 12px;
-        padding: 10px;
-    }
-
-    .right {
-        display: flex;
-        flex-direction: row-reverse;
-    }
-
-    .commentByAndTime {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .time {
-        color: gray;
-        font-size: small;
-    }
-
-    .input {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-        resize: none;
-        border: 2px solid #ccc;
-    }
-
-    .button {
-        background-color: #04AA6D; /* Green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    markdown-toolbar {
-        display: flex;
-        gap: 10px;
-    }
-
-    fas-icon {
-        color: gray;
-        cursor: pointer;
-    }
-    fas-icon:hover {
-        color: #212f80;
-    }
-`;    
-```
-
-#### CORS
-
-We need to make sure this can be used from the static server application.
-
-Add this to `application.properties`:
-
-```properties
-quarkus.web-bundler.bundle-redirect=true
-quarkus.http.cors=true
-quarkus.http.cors.origins=http://localhost:8080,http://localhost:7070
-```
-(provided that static server runs on 8080)
-
-Now when adding it to a blog page in static server:
-
-```html
-<script crossorigin src="http://localhost:7070/static/bundle/main.js" type="module"></script>
-
-
-<comment-box ref="test"></comment-box>
 ```
