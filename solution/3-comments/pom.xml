@@ -176,7 +176,7 @@
             <dependencyManagement>
                 <dependencies>
                     <dependency>
-                        <groupId>web.workshop</groupId>
+                        <groupId>quarkus.web.lab</groupId>
                         <artifactId>comments-locker</artifactId>
                         <version>${project.version}</version>
                         <type>pom</type>
