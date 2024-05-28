@@ -89,8 +89,7 @@ This is the basic structure of a Lit component:
 
 #### Test
 
-👀 This component will be used on the static site, but to do some manual testing , add a HTML that use this. In `src/main/resources/web/` 
-create `test.html`:
+👀 This component will be used on the static site, but to do some manual testing, we created a page that use this in `src/main/resources/web/test.html`.
 
 🚀 Throughout the workshop, you can check the http://localhost:7070/test.html page to see the progress
 
@@ -133,34 +132,52 @@ You may now use your component like a normal html tag `<comment-box .../>`, use 
 ```
 </details>
 
-
+🚀 Go observe the test page, you should see the "Hello World"
 
 #### Fetch the initial list of comments
 
-Add a new state property called `_comments` that will contain the comments.
+**››› CODING TIME**
+
+Add a new string state property called `_comments` that will contain the comments.
+
+<details>
+<summary>See solution</summary>
 
 ```js
 static properties = {
+    [...]
     _comments: {state: true}
 };
 
 constructor() {
-    super();
+    [...]
     this._comments = [];
 }
 ```
+</details>
 
-Add a method that call the REST endpoint to fetch all comments, the set the `_comments` state property to the response
+
+
+Add a method that call the REST endpoint to fetch all comments, the set the `_comments` state property to the response. Changing the state will automatically trigger a new `render()`.
+
+<details>
+<summary>See solution</summary>
 
 ```js
 _fetchAllComments(){
-    fetch(`comment/${this.ref}`)
+    let serverUrl = SERVER_URL; // This is defined through web-bundler envs in application.properties
+    fetch(`${serverUrl}/comment/${this.ref}`)
         .then(response => response.json())
         .then(response => this._comments = response);
 }
 ```
+</details>
+
 
 Now call that method in the `connectedCallback`:
+
+<details>
+<summary>See solution</summary>
 
 ```js
 connectedCallback() {
@@ -168,8 +185,12 @@ connectedCallback() {
     this._fetchAllComments();
 }
 ```
+</details>
 
-Now we have the comments for a centain blog reference when the component is added to the DOM. Let's render it:
+Now we have the comments for a certain blog reference when the component is added to the DOM. Let's render it:
+
+<details>
+<summary>See solution</summary>
 
 ```js
 render(){
@@ -183,13 +204,16 @@ render(){
                         </div>
                     </div>
                 </div>`
-          )}
+        )}
         `;
     }
 }
 ```
+</details>
 
 Above will loop through all comments and render them. Each time the `comments` state property change, this will re-render. 
+
+🚀 Go observe the test page, you should see the list of comments.
 
 #### Allow adding a comment
 
@@ -248,34 +272,32 @@ Here we post a new Comment Object to the `/comment` endpoint in Json format.
 
 The POST method return the list of (new) responses, so we can set the `_comments` state property that will result in a re-render with the updated info.
 
-> **_NOTE:_** Technocally, the more correct REST way to do this is to not return data on a POST, but add a header that contains where the newly added comment can be found. You can then make another call to fetch the latest comment and update the `_comments` array.
+> **_NOTE:_** 
+> Technically, the more correct REST way to do this is to not return data on a POST, but add a header that contains where the newly added comment can be found. You can then make another call to fetch the latest comment and update the `_comments` array.
 
 #### Add markdown support
 
 We want users to be able to comment using markdown and then render the markup.
 
-To render the markup we will use [Markdown-it](https://github.com/markdown-it/markdown-it), add the following:
+To render the markup we will use [Markdown-it](https://github.com/markdown-it/markdown-it), it is already in the pom.xml
 
-```xml
-<dependency>
-    <groupId>org.mvnpm</groupId>
-    <artifactId>markdown-it</artifactId>
-    <version>14.1.0</version>
-    <scope>provided</scope>
-</dependency>
-```
-
-Now we can import it:
+We can import it:
 
 ```js
 import MarkdownIt from 'markdown-it';
 ```
 
-and create an instance in the contructor:
+and create an instance in the constructor:
 
 ```js
-this.md = new MarkdownIt();
+ constructor() {
+    [...]
+    this.md = new MarkdownIt({breaks: true});
+ }
 ```
+
+> **_NOTE:_**
+> It doesn't have to be specified as a state because it is not altering the view depending on the state of its data.
 
 Create a new method that will render an existing comment using Markup:
 
@@ -523,5 +545,5 @@ Now when adding it to a blog page in static server:
 <script crossorigin src="http://localhost:7070/static/bundle/main.js" type="module"></script>
 
 
-<comment-box serverUrl="http://localhost:7070/" ref="test"></comment-box>
+<comment-box ref="test"></comment-box>
 ```
