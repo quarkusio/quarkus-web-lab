@@ -21,7 +21,7 @@ import util.Slug;
 @Blocking
 @Path("/cms")
 public class Cms extends HxController {
-    
+
     /**
      * This defines templates available in src/main/resources/templates/Classname/method.html by convention
      */
@@ -65,8 +65,9 @@ public class Cms extends HxController {
     }
 
     @POST
-    public void saveBlogEntry(@RestPath Long id, 
-    		@RestForm @NotBlank String title, 
+    public void saveBlogEntry(@RestPath Long id,
+    		@RestForm @NotBlank String title,
+            @RestForm @NotBlank String picture,
     		@RestForm String content,
             @RestForm LocalDate published) {
         if (validationFailed()) {
@@ -81,16 +82,18 @@ public class Cms extends HxController {
             editBlogEntry(id);
         }
         blogEntry.title = title;
+        blogEntry.picture = picture;
         blogEntry.content = content;
         blogEntry.published = published;
         blogEntry.slug = Slug.toSlug(title);
         // save is automatic for managed entities
         editBlogEntry(id);
     }
-    
+
     @POST
-    public void saveNewBlogEntry( 
-    		@RestForm @NotBlank String title, 
+    public void saveNewBlogEntry(
+    		@RestForm @NotBlank String title,
+            @RestForm @NotBlank String picture,
     		@RestForm String content,
             @RestForm LocalDate published) {
         if (validationFailed()) {
@@ -102,7 +105,7 @@ public class Cms extends HxController {
         if (validationFailed()) {
             newBlogEntry();
         }
-        BlogEntry blogEntry = new BlogEntry(title, content, published);
+        BlogEntry blogEntry = new BlogEntry(title, picture, content, published);
         // make it persistent
         blogEntry.persist();
         editBlogEntry(blogEntry.id);

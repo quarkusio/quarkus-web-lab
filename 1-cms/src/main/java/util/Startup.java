@@ -18,7 +18,7 @@ public class Startup {
     public void start(@Observes StartupEvent evt) {
         // in DEV mode we seed some data
         if (LaunchMode.current() == LaunchMode.DEVELOPMENT && BlogEntry.count() == 0) {
-            BlogEntry blogEntry = new BlogEntry("How to make cheese?", """
+            BlogEntry blogEntry = new BlogEntry("How to make cheese?", "make-cheese.jpg", """
                     ## The Process is Easy, Here's How to Set it Up in 12 Steps. The Last One Will Surprise You.
                                         
                     1. **Gather Your Ingredients and Tools:** \s
@@ -62,7 +62,7 @@ public class Startup {
                     """, LocalDate.of(2024, 5, 22));
             blogEntry.persist();
 
-            blogEntry = new BlogEntry("How to eat cheese? The Ultimate Guide to Enjoying Cheese", """
+            blogEntry = new BlogEntry("How to eat cheese? The Ultimate Guide to Enjoying Cheese", "eat-cheese.jpg", """
                     Cheese is a versatile and delicious food that can be enjoyed in many different ways. Whether you’re a cheese connoisseur or just starting to explore the world of cheese, here are some tips on how to eat and enjoy cheese to the fullest.
                                         
                     ### 1. Choose the Right Cheese
@@ -137,7 +137,7 @@ public class Startup {
                     """, LocalDate.of(2024, 2, 12));
             blogEntry.persist();
 
-            blogEntry = new BlogEntry("Getting Started with Quarkus", """
+            blogEntry = new BlogEntry("Getting Started with Quarkus", "start-quarkus.jpg", """
 
                     Quarkus is a revolutionary framework designed to optimize Java for Kubernetes and cloud-native environments. Combining a fast startup time, low memory footprint, and a developer-friendly approach, Quarkus is rapidly gaining popularity. In this post, we will explore what makes Quarkus stand out and how to get started with it.
 
@@ -206,7 +206,7 @@ public class Startup {
                     By exploring Quarkus, you will join a growing community of developers who are redefining what Java can do in the cloud. Happy coding!""", LocalDate.of(2024, 4, 8));
             blogEntry.persist();
 
-            blogEntry = new BlogEntry("Web Components with Lit", """
+            blogEntry = new BlogEntry("Web Components with Lit", "lit.jpg", """
                     ## Introduction
 
                     In the ever-evolving world of web development, staying ahead of the curve is essential. One library that has been making waves in the realm of Web Components is **Lit**. Designed to simplify the creation of fast, lightweight, and reusable web components, Lit has quickly become a favorite among developers. In this blog post, we will explore what makes Lit stand out, how it works, and why you should consider it for your next project.
@@ -339,7 +339,7 @@ public class Startup {
                     Give Lit a try and see how it can revolutionize your development workflow.""", LocalDate.of(2024, 3, 14));
             blogEntry.persist();
 
-            blogEntry = new BlogEntry("Exploring HTMX", """
+            blogEntry = new BlogEntry("Exploring HTMX", "htmx.jpg", """
 
                     ### Introduction
                     In the ever-evolving landscape of web development, HTMX has emerged as a powerful tool for creating dynamic and interactive web applications. By extending HTML with modern AJAX capabilities, HTMX simplifies the process of building sophisticated web interfaces without the need for extensive JavaScript. In this blog post, we will explore what HTMX is, its core features, and how it can revolutionize your web development workflow.

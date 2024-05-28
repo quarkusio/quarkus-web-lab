@@ -76,6 +76,14 @@
                             {/ifError}
                         </div>
                         <div class="mb-3">
+                            <input name="picture" class="form-control {#ifError 'picture'}is-invalid{/}" value="{inject:flash.get('picture') ?: currentBlogEntry.picture}" placeholder="Enter picture name" required/>
+                            {#ifError 'picture'}
+                              <div class="invalid-feedback">
+                                Error: {#error 'picture'/}
+                              </div>
+                            {/ifError}
+                        </div>
+                        <div class="mb-3">
                             {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
                             {#ifError 'content'}
                             <div class="invalid-feedback">

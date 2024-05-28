@@ -5,7 +5,7 @@
   {#for entry in BlogEntry:listAllSortedByPublished}
     <article>
       <header>
-        <img src="{entry.title.randomThumb}" loading="lazy">
+        <img src="/static/assets/blog/pictures/{entry.picture}" loading="lazy">
         {#entryDate entry=entry/}
       </header>
       <h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>
