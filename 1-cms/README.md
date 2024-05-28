@@ -19,7 +19,7 @@ It's up to you to remove these comments with appropriate code!
 
 It's time to start Quarkus dev:
 ```shell
-mvn quarkus:dev
+./mvnw quarkus:dev
 ```
 
 🚀 Press `w` and observe your web page.

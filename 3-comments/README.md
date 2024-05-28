@@ -15,7 +15,7 @@ The directory which contains this README also contains the _initial version_ of 
 ### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
 
 ```
-mvn quarkus:dev
+./mvnw quarkus:dev
 ```
 
 🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.

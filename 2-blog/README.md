@@ -30,7 +30,7 @@ The app runs on port 8080 so that it does not conflict with other parts of the L
 It's time to start Quarkus dev:
 
 ```
-mvn quarkus:dev
+./mvnw quarkus:dev
 ```
 
 🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
@@ -242,8 +242,13 @@ Once edited, there is no point of reloading all the data from the db and renderi
 
 Statiq will generate files in `target/statiq`.
 
+Restart Quarkus Dev without live reload:
+```shell
+./mvnw quarkus:dev -Dquarkus.web-bundler.browser-live-reload=false
+```
+
 Now in the Dev UI (press `d` in your terminal):
-- click on `Pages` in the `statiq` extension box.
+- click on `Statiq files` in the `statiq` extension box.
 - have a look to the list of file to generate.
 - Click on Generate
 
