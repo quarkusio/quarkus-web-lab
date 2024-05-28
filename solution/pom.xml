@@ -11,6 +11,7 @@
     <modules>
         <module>1-cms</module>
         <module>2-blog</module>
+        <module>3-comments/locker</module>
         <module>3-comments</module>
     </modules>
 
