@@ -193,7 +193,7 @@ Use one of the `BlogEntry` static methods to find the right entry and `notFoundI
 <details>
 <summary>See solution</summary>
 
-In ``src/main/java/rest/Cms.java`, find the `editBlogEntry` and replace what's needed: 
+In `src/main/java/rest/Cms.java`, find the `editBlogEntry` and replace what's needed: 
 
 ```java
 // Find the blog entry
