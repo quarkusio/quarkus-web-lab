@@ -46,8 +46,7 @@ public class Cms extends Controller {
     }
 
     public TemplateInstance editBlogEntry(@RestPath Long id) {
-        // TODO: find the blog entry, return an error if null
-        BlogEntry blogEntry = new BlogEntry();
+        BlogEntry blogEntry = new BlogEntry(); // TODO: find the blog entry, return an error if null
         return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
     }
 

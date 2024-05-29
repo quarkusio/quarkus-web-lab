@@ -6,7 +6,7 @@
   <!-- start of the loop -->
   <article>
       <header>
-        <img src="{entry.title.randomThumb}" loading="lazy">
+        <img loading="lazy" src="/static/assets/blog/pictures/{entry.picture}">
         {#entryDate entry=entry/}
       </header>
       <h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>

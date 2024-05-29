@@ -1,4 +1,6 @@
-## The Blog
+## 2- The Blog (~30m)
+
+If you haven't, complete the [CMS part](../1-cms) before this.
 
 In this part, we are going to prepare:
 - the index page with all the blog posts
@@ -6,7 +8,7 @@ In this part, we are going to prepare:
 
 Then we are going to use the Statiq extension to generate a static website which could be deployed on any static server (like GitHub Pages). 
 
-In our case, we will just serve all static pages using a jbang script. 
+In our case, we will just serve all static pages using a [Jbang](https://www.jbang.dev/) script. 
 
 ### Extensions
 
@@ -21,6 +23,13 @@ In our case, we will just serve all static pages using a jbang script.
 
 We don't start from scratch.
 The directory which contains this README also contains the _initial version_ of the app.
+
+Open a new tab in your terminal in the project root (and keep the CMS running):
+
+```shell
+cd 2-blog
+```
+
 There are some comments starting with `TODO:` in the code.
 It's up to you to remove these comments with appropriate code!
 
@@ -33,9 +42,9 @@ It's time to start Quarkus dev:
 ./mvnw quarkus:dev
 ```
 
-🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
+🚀 Press `w` and observe your web page.
 
-You should see a `TemplateException`, it's part of the plan :)
+**You should see a `TemplateException`, it's part of the plan :)**
 
 ### Base template
 
@@ -55,10 +64,11 @@ For the index page we'll use the `quarkus-qute-web` extension that exposes the Q
 
 The index page includes the `base.html` and defines the content for the title and body.
 
-Note that `BlogEntry` does not define the `toAbstract` property but we're still able to use it in type-safe manner.
-The `toAbstract` property is actually resolved by a [_template extension method_](https://quarkus.io/guides/qute-reference#template_extension_methods) declared on `web.lab.TemplateExtensions`.
-Template extension methods can be used to extend the data classes with new functionality.
-For example, it is possible to add computed properties and virtual methods.
+> [!NOTE] 
+> `BlogEntry` does not define the `toAbstract` property but we're still able to use it in type-safe manner.
+> The `toAbstract` property is actually resolved by a [_template extension method_](https://quarkus.io/guides/qute-reference#template_extension_methods) declared on `web.lab.blog.TemplateExtensions`.
+> Template extension methods can be used to extend the data classes with new functionality.
+> For example, it is possible to add computed properties and virtual methods.
 
 **››› CODING TIME**
 
@@ -74,6 +84,8 @@ We will use the `BlogEntry#listAllSortedByPublished()` method to obtain the blog
 <details>
 <summary>See solution</summary>
 
+In `src/main/resource/templates/pub/index.html`:
+
 ```html
   {#for entry in BlogEntry:listAllSortedByPublished}
     <article>
@@ -81,10 +93,9 @@ We will use the `BlogEntry#listAllSortedByPublished()` method to obtain the blog
     </article>
   {/for}
   </div>
-</main>
 ```
 
-The `BlogEntry:listAllSortedByCreated` is an expression that calls the static method `web.lab.BlogEntry#listAllSortedByCreated()`.
+The `BlogEntry:listAllSortedByCreated` is an expression that calls the static method `web.lab.blog.BlogEntry#listAllSortedByCreated()`.
 That's why we need to annotate the `BlogEntry` with `@TemplateData(namespace = "BlogEntry")`.
 
 </details>
@@ -96,79 +107,52 @@ That's why we need to annotate the `BlogEntry` with `@TemplateData(namespace = "
 For the blog entry page we'll need a simple JAX-RS resource.
 This controller will use a [_type-safe template_](https://quarkus.io/guides/qute-reference#typesafe_templates).
 Parameters of type-safe templates are used to bind type-safe expressions which are then validated at build time.
-In our case, the parameter has name `entry` and type `web.lab.BlogEntry`.
-Therefore, any top-level expression that starts with `entry` will be validated against the `web.lab.BlogEntry` type (and additional template extension methods).
+In our case, the parameter has name `entry` and type `web.lab.blog.BlogEntry`.
+Therefore, any top-level expression that starts with `entry` will be validated against the `web.lab.blog.BlogEntry` type (and additional template extension methods).
 
-👀 Have a look at `src/main/java/web/lab/Blog.java`.
+👀 Have a look at `src/main/java/web/lab/blog/Blog.java`.
 
 **››› CODING TIME**
 
 Let's define a type-safe template.
 Either with [`@CheckedTemplate` and static method](https://quarkus.io/guides/qute-reference#nested-type-safe-templates) or by means of [template records (JDK 14+)](https://quarkus.io/guides/qute-reference#template-records).
 
+
 <details>
-<summary>See solutions</summary>
+<summary>See solution</summary>
 
-#### Solution #1:
+In `src/main/java/web/lab/blog/Blog.java`, add this:
 
 ```java
-public class Blog {
 
-    @CheckedTemplate
-    static class Templates {
-        static native TemplateInstance blogPost(BlogEntry entry);
-    }
+@CheckedTemplate
+static class Templates {
+    static native TemplateInstance blogPost(BlogEntry entry);
 }
 ```
 
-#### Solution #2:
-
-```java
-public class Blog {
-
-    record blogPost(BlogEntry entry) implements TemplateInstance {}
-}
-```
 </details>
 
 Then we'll use the type-safe template in the resource method.
 
 <details>
-<summary>See solutions</summary>
+<summary>See solution</summary>
 
-#### Solution #1:
-
-```java
-    @Path("/blog/{slug}")
-    @GET
-    public TemplateInstance blogPost(String slug) {
-        final Optional<BlogEntry> blogEntry = BlogEntry.getBySlug(slug);
-        if (blogEntry.isEmpty()) {
-            throw new WebApplicationException(RestResponse.StatusCode.NOT_FOUND);
-        }
-        return Templates.blogPost(blogEntry.get());
-    }
-```
-
-#### Solution #2:
+In `Blog#blogPost()`, return this:
 
 ```java
-    @Path("/blog/{slug}")
-    @GET
-    public TemplateInstance blogPost(String slug) {
-        final Optional<BlogEntry> blogEntry = BlogEntry.getBySlug(slug);
-        if (blogEntry.isEmpty()) {
-            throw new WebApplicationException(RestResponse.StatusCode.NOT_FOUND);
-        }
-        return new blogPost(blogEntry.get());
-    }
+    return Templates.blogPost(blogEntry.get());
 ```
 </details>
 
 Then we will need the template file.
+
 👀 The initial version of the template can be found in `src/main/resource/templates/Blog/blogPost.html`.
-Note that the template path is [defaulted](https://quarkus.io/guides/qute-reference#customized-template-path).
-The blog entry page again includes the `base.html` and defines the content for the title and body.
+
+
+> [!NOTE] 
+> The template path is [defaulted](https://quarkus.io/guides/qute-reference#customized-template-path).
+> The blog entry page again includes the `base.html` and defines the content for the title and body.
 
 **››› CODING TIME**
 
@@ -177,23 +161,18 @@ Let's use the `TemplateExtensions#mdToHtml(String string)` to display the conten
 <details>
 <summary>See solution</summary>
 
+In `src/main/resource/templates/Blog/blogPost.html`:
+
 ```html
-<article>
-    <header>
-      {#entryDate entry=entry/}
-    </header>
-    <img loading="lazy" src="{entry.title.randomImg}">
-    <h1>{entry.title}</h1>
-    {entry.content.mdToHtml.raw}
-  </article>
+  {entry.content.mdToHtml.raw}
 ```
 
 The `{entry.content.mdToHtml.raw}` expression is quite interesting.
 Let's take a look how it's resolved.
-The `entry` maps to the `web.lab.BlogEntry` class so during the build Qute validates that a `content` property exist.
+The `entry` maps to the `web.lab.blog.BlogEntry` class so during the build Qute validates that a `content` property exist.
 It does exist and its type is `java.lang.String`.
 Next Qute attempts to validate `mdToHtml`.
-There's no such property declared on `java.lang.String` but there is another [template extension method](https://quarkus.io/guides/qute-reference#template_extension_methods): `web.lab.TemplateExtensions#mdToHtml(String)`.
+There's no such property declared on `java.lang.String` but there is another [template extension method](https://quarkus.io/guides/qute-reference#template_extension_methods): `web.lab.blog.TemplateExtensions#mdToHtml(String)`.
 Therefore the validation was successful.
 Finally, the `raw` property is used to render an [unescaped value:](https://quarkus.io/guides/qute-reference#character-escapes).
 By default, for HTML and XML templates the `'`, `"`, `<`, `>`, `&` characters are escaped.
@@ -204,17 +183,19 @@ By default, for HTML and XML templates the `'`, `"`, `<`, `>`, `&` characters ar
 
 ### User-defined tags
 
-You may have noticed that we always display `UNKNOWN` month for each blog entry.
+You may have noticed that we always display `FIXME` month for each blog entry.
 Both `index.html` and `Blog/blogPost.html` call a [user-defined tag](https://quarkus.io/guides/qute-reference#user_tags) to display the date of publishing.
 👀 This tag is located in `src/main/resource/templates/tags/entryDate.html`.
 However, the "month" part is missing.
 
 **››› CODING TIME**
 
-We will create a template extension method in the `web.lab.TemplateExtensions` class and use it the tag to display the month value in the template.
+We will create a template extension method in the `web.lab.blog.TemplateExtensions` class and use it the tag to display the month value in the template.
 
 <details>
 <summary>See solution</summary>
+
+In `src/main/java/web/lab/blog/TemplateExtensions.java`, add this:
 
 ```java
 public static String monthStr(LocalDate date) {
@@ -222,23 +203,25 @@ public static String monthStr(LocalDate date) {
 }
 ```
 
+in `src/main/resources/templates/tags/entryDate.html`, replace `FIXME`:
+
 ```html
-{@web.lab.BlogEntry entry}
-<div class="date">
-  <div class="number">{entry.published.getDayOfMonth}</div>
   <div>{entry.published.monthStr}</div>
-</div>
 ```
 
 </details>
 
 🚀 And the month appears!
 
-### Generate a static website (optional)
+You achieved the Blog part 🤩, time to allow commenting on blog posts: [Part 3 - The Comments](../3-comments).
+
+---
+
+### (Optional) Generate a static website 
 
 Once edited, there is no point of reloading all the data from the db and rendering it, we could just export the content and use it from a static server (like GitHub Pages).
 
-👀 Have a look to `src/main/java/web/lab/Statiq` and `src/main/resources/application.properties`, you will find the statiq configuration (what needs to be exported).
+👀 Have a look to `src/main/java/web/lab/blog/Statiq` and `src/main/resources/application.properties`, you will find the statiq configuration (what needs to be exported).
 
 Statiq will generate files in `target/statiq`.
 

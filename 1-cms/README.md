@@ -1,6 +1,4 @@
-## The CMS
-
-For now we need to use Quarkus 3.11.0.CR1
+## 1- The CMS (~60m)
 
 ### Extensions
 
@@ -11,9 +9,14 @@ For now we need to use Quarkus 3.11.0.CR1
 
 ### Get the initial app
 
-We could start from scratch, but it is nicer to start with a few things ready.
+We could start from scratch, but it is nicer to start with a few things ready. If you haven't already, [set up your environment and clone this repository](../README.md#getting-your-environment-ready).
 
-The directory which contains this README also contains the _initial version_ of the app.
+The directory which contains this README also contains the _initial version_ of the app. Use GitHub or a markdown viewer to read this with the best experience.
+
+```shell
+cd 1-cms
+```
+
 There are some comments starting with `TODO:` in the code.
 It's up to you to remove these comments with appropriate code!
 
@@ -22,7 +25,7 @@ It's time to start Quarkus dev:
 ./mvnw quarkus:dev
 ```
 
-🚀 Press `w` and observe your web page.
+🚀 Press `w` and observe your web page, it should be poor for now.
 
 ### Let's have a look to the Quarkus config
 
@@ -39,6 +42,7 @@ contains our main entity for the lab, representing a blog entry. It will have th
 
 - Title (must be unique)
 - Slug (derived from the title)
+- Picture (picture file name located in `src/main/resources/web/static/assets/blog/pictures`, e.g. eat-cheese.jpg)
 - Content (the blog contents, in Markdown)
 - Published (the publication date)
 
@@ -65,6 +69,8 @@ Use `BlogEntry.listAll` combined with `Sort.by("published").descending()`
 <details>
 <summary>See solution</summary>
 
+In `src/main/java/model/BlogEntry.java`:
+
 ```java
     public static List<BlogEntry> listAllSortedByPublished() {
         return BlogEntry.listAll(Sort.by("published").descending());
@@ -72,7 +78,7 @@ Use `BlogEntry.listAll` combined with `Sort.by("published").descending()`
 ```
 </details>
 
-🚀 On the browser you should now have a list of "foo", let's show the actual posts.
+🚀 On the browser, after manually refreshing, you should now have a list of "foo", let's show the actual posts.
 
 In Renarde, by default, all views live in `templates/<Controller>/<method>.html`, so for `Cms.index` we need to
 open `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
@@ -94,6 +100,8 @@ Use `{blogEntry.field}` to print a field value.
 <details>
 <summary>See solution</summary>
 
+In `src/main/resources/templates/Cms/index.html`, add this:
+
 ```html
 {blogEntry.published}: {blogEntry.title}
 ```
@@ -107,6 +115,22 @@ Use `{blogEntry.field}` to print a field value.
 Now let's use mvnpm to download NPM modules packaged as Maven modules, so that Bootstrap in our application.
 
 **››› COPYING TIME 🫣**
+
+We must reference the `cms` bundle from our main template
+in order to get it injected in every page's `<head>` element.
+
+Add this to the start of your `src/main/resources/templates/main.html`:
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{#insert title/}</title>
+        {#bundle key="cms"/}
+    </head>
+```
+
+🚀🔑 Refresh your browser, nothing new? You just unlocked browser live-reload, no more manual refresh 😇
 
 Add the bootstrap dependencies to the `pom.xml`:
 
@@ -125,22 +149,7 @@ Add the bootstrap dependencies to the `pom.xml`:
         </dependency>
 ```
 
-The last bit missing is that we must reference the `cms` bundle from our main template
-in order to get it injected in every page's `<head>` element.
-
-Add this to the start of your `src/main/resources/templates/main.html`:
-
-```html
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{#insert title/}</title>
-        {#bundle key="cms"/}
-    </head>
-```
-
 🚀 Now observe in the browser, better right 🎉?
-
 
 Thanks to Web Bundler, we can write our style in SCSS, and it will be compiled on-the-fly to CSS. We also added a configuration to auto-import web dependencies scripts and style when it is possible. So nothing more to do.
 
@@ -184,18 +193,21 @@ Use one of the `BlogEntry` static methods to find the right entry and `notFoundI
 <details>
 <summary>See solution</summary>
 
+In ``src/main/java/rest/Cms.java`, find the `editBlogEntry` and replace what's needed: 
+
 ```java
-    public TemplateInstance editBlogEntry(@RestPath Long id) {
-        BlogEntry blogEntry = BlogEntry.findById(id);
-        notFoundIfNull(blogEntry);
-        return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
-    }
+// Find the blog entry
+BlogEntry blogEntry = BlogEntry.findById(id);
+// Fail if null
+notFoundIfNull(blogEntry);
+// Show the index with the given entry in the editor
+return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
 ```
 </details>
 
 Even if there is already a base `<form>` to get you started, nothing should change in the browser because we didn't add the link to access this.
 
-Let's add it in `src/main/resources/templates/Cms/index.html` (where we added the title previously):
+Let's add it in `src/main/resources/templates/Cms/index.html` (where we added the date and name previously):
 <details>
 <summary>See hint</summary>
 
@@ -207,6 +219,8 @@ in order to create a URI to an endpoint method, making it extra easy to create l
 
 <details>
 <summary>See solution</summary>
+
+In `src/main/resources/templates/Cms/index.html, find, the blog post date and name in the loop and replace with a link:
 
 ```html
     <a href="{uri:Cms.editBlogEntry(blogEntry.id)}">{blogEntry.published}: {blogEntry.title}</a>
@@ -230,7 +244,7 @@ sure all forms are not subject to CSRF attacks.
 You can use it like any Qute tag: `{#BlogEditor id=... name=... value=... /}`
 
 > [!NOTE] 
-> This BlogEditor uses 'Easymde'  to provide the Markdown editor.
+> This BlogEditor uses 'Easymde' web library to provide the Markdown editor.
 > 'Stimulus' a light library to help binding the Markdown editor with dom lifecycle (in the js file), it requires some initialization done in app.js.
 > Both of those libraries are in the pom.xml and already bundled through the Quarkus Web Bundler.
 
@@ -248,6 +262,9 @@ Use the `{#BlogEditor /}` in the edition `<form>`.
 
 <details>
 <summary>See solution</summary>
+
+In `src/main/resources/templates/Cms/index.html, find the content edition part of the form and replace with this:
+ 
 
 ```html
      {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
@@ -317,15 +334,27 @@ Edit the `saveBlogEntry` method in `src/main/java/rest/Cms.java`:
 <details>
 <summary>See solution</summary>
 
+Find `saveBlogEntry` in `src/main/java/rest/Cms.java`.
+
+Redirect in case of validation error (errors will be stored in flash by `validationFailed`):
+
 ```java
     if (validationFailed()) {
         editBlogEntry(id);
+        // Redirect to this blog entry (no need to return, this will stop here)
     }
+```
+
+Set the blog entry with the new values:
+
+```java
     blogEntry.title = title;
     blogEntry.content = content;
     blogEntry.published = published;
     blogEntry.slug = Slug.toSlug(title);
     // save is automatic for managed entities
+
+    // Now that it's saved, redirect to the same editor with updated data
     editBlogEntry(id);
 }
 ```
@@ -333,7 +362,7 @@ Edit the `saveBlogEntry` method in `src/main/java/rest/Cms.java`:
 
 Now, make sure we tell our `<form>` where to find its action `{uri:Cms.saveBlogEntry(currentBlogEntry.id)}` in `src/main/resources/templates/Cms/index.html`. As you can see it's already done, and it also deals with new post creation (the next part).
 
-🚀 Go observe the page, save, try validation!
+🚀 Go observe the page, save!
 
 ### Now let's do the action to create new post
 
@@ -376,14 +405,16 @@ Calling `persist()` on your hibernate entity will make it persisted
 <summary>See solution</summary>
 
 ```java 
-    BlogEntry blogEntry = new BlogEntry(title, content, published);
+    BlogEntry blogEntry = new BlogEntry(title, picture, content, published);
     // make it persistent
     blogEntry.persist();
+    
+    //  it now exists, let's keep the editor open
     editBlogEntry(blogEntry.id);
 ```
 </details>
 
-🚀 In the browser, now, add some content and save your first new post 🍿
+🚀 In the browser, now, add some content (use `well-done.jpg` as picture) and save your first new post 🍿
 
 ### Add a way to delete entries
 
@@ -422,6 +453,8 @@ Now add the action to your view at `src/main/resources/templates/Cms/index.html`
 <details>
 <summary>See solution</summary>
 
+Just after the link `</a>` the edit the blog post, add this:
+
 ```html
 <form action="{uri:Cms.deleteBlogEntry(blogEntry.id)}" method="post" onsubmit="return confirm('Do you really want to delete this blog post?');">
   {#authenticityToken/}
@@ -435,13 +468,11 @@ Now add the action to your view at `src/main/resources/templates/Cms/index.html`
 
 🚀 Go play with your homemade CMS!
 
-You achieved the CMS part 👍, time to show the content in a blog website.
-
-
+You achieved the CMS part 👍, time to show the content in a blog website [Part 2 - The Blog](../2-blog).
 
 ---
 
-### Make it HTMX
+### (Optional) Make it HTMX
 
 _If you feel like it, we added an extra section to add HTMX power to your CMS. This part is not as detailed, this is more something to play with at home._
 

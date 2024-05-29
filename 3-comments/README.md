@@ -1,4 +1,6 @@
-## Comments
+## 3- Comments (~30m)
+
+If you haven't, complete the [CMS part](../1-cms) and [Blog part](../2-blog) before this.
 
 The comments microservice will allow users to comment on blog entries. We will build a Microfrontend component to be added to the 
 bottom of a blog entry. This component will allow users to comment and also display all existing comments. We will allow writing a comment
@@ -11,6 +13,11 @@ using Markdown.
 We don't start from scratch.
 The directory which contains this README also contains the _initial version_ of the app.
 
+Open a new tab in your terminal in the project root (and keep the CMS and Blog running):
+
+```shell
+cd 3-comments
+```
 
 ### Start the app in the [dev mode](https://quarkus.io/guides/dev-mode-differences)
 
@@ -18,9 +25,9 @@ The directory which contains this README also contains the _initial version_ of 
 ./mvnw quarkus:dev
 ```
 
-🚀 Press `w` and observe your web page, press `d` and see the Quarkus Dev UI.
+🚀 Press `w` and observe your web page you should see `TODO`.
 
-The app runs on port 7070 so that it does not conflict with other parts of the Lab. You can see the Dev UI on http://localhost:7070/q/dev-ui
+The app runs on port 7070 so that it does not conflict with other parts of the Lab.
 
 ### Backend
 
@@ -76,7 +83,8 @@ We are going to use Lit[https://lit.dev/] to build a web component. You can navi
 
 👀 Have a look to the `pom.xml`, we declared Lit and some ready-to-use web-components to help us.
 
-> **_NOTE:_** The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
+> **_NOTE:_**
+> The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
 
 👀 Now we can start with a basic component. In `src/main/resources/web/app`, see a file called `comment-box.js`;
 
@@ -91,9 +99,9 @@ This is the basic structure of a Lit component:
 
 #### Test
 
-👀 This component will be used on the static site, but to do some manual testing, we created a page that use this in `src/main/resources/web/test.html`.
+👀 This component will be used on the static site, but to do some manual testing, we created a page that use this in `src/main/resources/web/index.html`.
 
-🚀 Throughout the workshop, you can check the http://localhost:7070/test.html page to see the progress
+🚀 Throughout the workshop, you can check the http://localhost:7070/ page to see the progress
 
 #### Allow the component to take a ref param
 
@@ -107,8 +115,7 @@ to indicate the reference to the blog entry
 
 ```js
 static properties = {
-    ref: { type: String },
-    _comments: {state: true}
+    ref: { type: String }
 };
 
 constructor() {
@@ -121,7 +128,7 @@ constructor() {
 ```
 </details>
 
-This will allow users of this component to use it in the `test.html` page :
+This will allow users of this component to use it in the `index.html` page :
 
 <details>
 <summary>See hint</summary>
@@ -302,6 +309,12 @@ _postComment() {
         }
     );
 }
+
+_clear(){
+    // Let's make sure to reset the fields after adding a comment
+    this.shadowRoot.getElementById('name').value = "";
+    this.shadowRoot.getElementById('comment').value = "";
+}
 ```
 
 Here we post a new Comment Object to the `/comment` endpoint in Json format.
@@ -407,7 +420,9 @@ Now when add this ⬇️ to the blog page 'src/main/resources/templates/Blog/blo
 
 🥳🎉 You just finished the lab!
 
-#### Add markdown support (optional)
+---
+
+#### (Optional) Add markdown support
 
 We want users to be able to comment using markdown and then render the markup.
 
