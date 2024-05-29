@@ -41,7 +41,7 @@ OpenJDK Runtime Environment (Red_Hat-21.0.3.0.9-1) (build 21.0.3+9)
 OpenJDK 64-Bit Server VM (Red_Hat-21.0.3.0.9-1) (build 21.0.3+9, mixed mode, sharing)
  ```
 
-### Git
+### Git (Optional)
 
 Install Git (to get the code from the lab, alternatively, you can download the starter project as a zip from GitHub)
 
