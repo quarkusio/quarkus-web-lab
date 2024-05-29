@@ -1,6 +1,8 @@
 # quarkus-web-lab
 
-This lab contains 3 parts to do in order.
+This ![qr-code](https://github.com/quarkusio/quarkus-web-lab/assets/6836179/91f45d34-a0c0-4093-a3e2-2428c66f9d23)
+
+lab contains 3 parts to do in order.
 
 ### 1 - The CMS (~60m)
 
