@@ -1,19 +1,18 @@
 # quarkus-web-lab
 
-This lab contains 3 parts
+This lab contains 3 parts to do in order.
 
-## The CMS
+### 1 - The CMS (~60m)
 
-Here we allow an blogger to create new blog entries. [Read more...](./1-cms/README.md)
+Here we allow bloggers to manage blog entries. [Read more...](./1-cms/README.md)
 
-## The Blog
+### 2 - The Blog (~30m)
 
 Here we show the blog created by the CMS. [Read more...](./2-blog/README.md)
 
-## The Comments
+### 3- The Comments (~30m)
 
 Here we allow users to add comments on the blog. [Read more...](./3-comments/README.md)
-
 
 ## Getting your environment ready
 
@@ -21,7 +20,8 @@ To get the most out of this lab, make sure you have the following working on you
 
 - JDK (17+)
 - Git
-- IDE
+- Java IDE
+- (Optional) Quarkus IDE Tooling: https://quarkus.io/guides/ide-tooling
 
 ### JDK
 

@@ -12,7 +12,7 @@ import jakarta.ws.rs.WebApplicationException;
 @Path("/")
 public class Blog {
 
-    // TODO: define a type-safe template
+    // TODO: here define a type-safe template (@CheckedTemplate)
 
     @Path("/blog/{slug}")
     @GET
