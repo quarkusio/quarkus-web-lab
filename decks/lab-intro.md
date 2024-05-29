@@ -6,6 +6,11 @@
 
 ---
 
+![Web Lab](deck-assets/web-lab.png)<!-- .element width="100%"  -->
+
+
+---
+
 🚀 Demo of the solution
 
 ---
