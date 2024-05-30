@@ -70,14 +70,33 @@ Its advanced and versatile stack makes it the best choice for your Web projects!
 
 [red.ht/one-two-three-quarkus-jcon](red.ht/one-two-three-quarkus-jcon)
 
+--
+
+## One Two Three Quarkus
+
+Dashboard:
+
+`Renarde MVC` + `Qute` + `Web Bundler` + `htmx` 
+
+Mobile App: 
+
+`Web Bundler` + `React`
+
+Communication: 
+
+`Kafka` + `REST` + `SSE`
+
 ---
 
 ## Web Bundler
 
-`zero conf` bundling and minification for:
+Bundle your:
+
 - web dependencies in `pom.xml` (Lit, Htmx, Bootstrap, React, ...)
 - scripts (js, ts, jsx, tsx)
 - and styles (css, scss, sass).
+
+### => ZERO CONFIGURATION 🤞
 
 --
 
