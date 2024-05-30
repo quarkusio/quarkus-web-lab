@@ -1,12 +1,14 @@
 ![Quarkus](deck-assets/hero_worldtour.png)
 
+## Quarkus for the Web `the hitch-hiker's guide`
+
 ---
 
-## Quarkus for the Web : the hitch-hiker's guide
+# 👻
 
-- Andy Damevin
-- Martin Kouba
-- Stéphane Epardaud
+- Martin Kouba `@martunek`
+- Stéphane Epardaud `@UnFroMage`
+- Andy Damevin `@ia3andy`
 
 ---
 
@@ -29,21 +31,24 @@
 
 ### What is an extension?
 
-- Adds _functionality_ to a Quarkus application
-- Not just a "plain" dependency
-- Consists of two parts: _build-time_ module and _runtime_ module
+- Adds `functionality` to a Quarkus application
+- Not just a `plain` dependency
+- Consists of two parts:
+  - `build-time` module (hidden)
+  - `runtime` module
 
 --
 
 ### Where can I find extensions?
 
-https://quarkus.io/extensions/ can be used to search the Quarkus ecosystem for extensions. 
+
+quarkus.io/extensions
 
 --
 
 ### Can I contribute a new extension?
 
-Yes, meet the Quarkiverse Hub!
+Yes, meet the [Quarkiverse Hub](https://github.com/quarkiverse)!
 
 A GitHub organization that provides repository hosting (including build, CI and release publishing setup) for Quarkus extensions contributed by the community.
 
@@ -70,14 +75,27 @@ Its advanced and versatile stack makes it the best choice for your Web projects!
 ## Web Bundler
 
 `zero conf` bundling and minification for:
-- your web app scripts (js, ts, jsx, tsx)
-- dependencies (Lit, Htmx, Bootstrap, React, ...)
+- web dependencies in `pom.xml` (Lit, Htmx, Bootstrap, React, ...)
+- scripts (js, ts, jsx, tsx)
 - and styles (css, scss, sass).
 
 --
 
 ![QWB](deck-assets/web-bundler.png)<!-- .element width="100%"  -->
 
+
+---
+
+## Quinoa
+<br/>
+<div style="display: flex; align-items: center;justify-content: center;gap:30px ">
+<img src="./deck-assets/quarkus.png" width="67" height="70" > ➕ <img src="./deck-assets/npm.png" height="70" >
+</div>
+<br/>
+
+- with `package.json` 
+- integrated proxy for `dev`
+- framework detection (React, Angular, Vue, ...)
 
 ---
 
@@ -586,22 +604,6 @@ public class Cms extends HxController {
 - Declare the fragments in your controller
 - Define partial-rendering outcomes from your endpoints
 - Profit!
-
----
-
-## Quinoa
-
-<div style="display: flex; align-items: center;justify-content: center;gap:30px ">
-<img src="./deck-assets/quarkus.png" width="67" height="70" > ➕ <img src="./deck-assets/npm.png" height="70" >
-</div>
-
---
-
-![Quiona](deck-assets/quinoa-dev.png)
-
---
-
-![Quiona](deck-assets/quinoa-build.png)<!-- .element width="70%"  -->
 
 ---
 
