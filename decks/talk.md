@@ -10,10 +10,6 @@
 
 ---
 
-## Intro
-
----
-
 ### What is Quarkus?
 
 - Open Source framework for…
@@ -39,15 +35,16 @@
 
 --
 
-### Where can I find extentions?
+### Where can I find extensions?
 
-Various dev tools (CLI, Maven/Gradle plugins, [code.quarkus.io](http://code.quarkus.io)) can be used to search the Quarkus ecosystem for extensions. 
+https://quarkus.io/extensions/ can be used to search the Quarkus ecosystem for extensions. 
 
 --
 
 ### Can I contribute a new extension?
 
 Yes, meet the Quarkiverse Hub!
+
 A GitHub organization that provides repository hosting (including build, CI and release publishing setup) for Quarkus extensions contributed by the community.
 
 ---
@@ -61,6 +58,12 @@ Its advanced and versatile stack makes it the best choice for your Web projects!
 --
 
 ![Quarkus for the Web](deck-assets/quarkus-web-dev.png)<!-- .element width="70%"  -->
+
+--
+
+![](deck-assets/code-jcon.png)<!-- .element width="60%"  -->
+
+[red.ht/one-two-three-quarkus-jcon](red.ht/one-two-three-quarkus-jcon)
 
 ---
 
@@ -129,9 +132,7 @@ public static String toMonthStr(LocalDate date) {
 
 The goal is to catch user errors during the build and fail fast.
 
-There are several ways to bind the "type info" to output expressions...
-
----
+--
 
 ### Qute - type-safe templates
 
@@ -146,7 +147,7 @@ There are several ways to bind the "type info" to output expressions...
 </html>
 ```
 
----
+--
 
 ### Qute - type-safe templates
 
@@ -159,7 +160,7 @@ class Templates {
 }
 ```
 
----
+--
 
 ### Qute - type-safe templates
 
@@ -169,7 +170,7 @@ class Templates {
 record Hello(String name) implements TemplateInstance {}
 ```
 
----
+--
 
 ### Qute - type-safe templates
 
@@ -182,12 +183,6 @@ record Hello(String name) implements TemplateInstance {}
 </body>
 </html>
 ```
-
----
-
-### Qute - type-safe templates
-
-#5 - `@TemplateData`, `@TemplateEnum`, `@TemplateGlobal`, ...
 
 --
 
@@ -610,12 +605,13 @@ public class Cms extends HxController {
 
 ---
 
-## Lab Demo
+## Conclusion
 
-TBD
+1. Use Quarkus 
+2. Add Web
+3. ?!?!
+4. Profit
 
 ---
 
-## Conclusion
-
-Everyone
+Any questions?
