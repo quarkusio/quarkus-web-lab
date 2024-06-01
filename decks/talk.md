@@ -41,8 +41,9 @@
 
 ### Where can I find extensions?
 
+<br>
 
-quarkus.io/extensions
+### `extensions.quarkus.io`
 
 --
 

@@ -1,1 +1,0 @@
-![Quarkus](deck-assets/hero_worldtour.png)
