@@ -29,10 +29,10 @@ To get the most out of this lab, make sure you have the following working on you
 
 ### JDK
 
-Choose any JDK, example:
+Choose any JDK, like:
 
-- [Red Hat OpenJDK](https://developers.redhat.com/products/openjdk/download)
-- [Oracle OpenJDK](https://www.oracle.com/java/technologies/downloads/)
+- [Eclipse Temurin](https://adoptium.net/temurin/)
+- [Red Hat build of OpenJDK](https://developers.redhat.com/products/openjdk/download)
 
 After you installed the JDK, make sure java is available on your Path, example:
 
