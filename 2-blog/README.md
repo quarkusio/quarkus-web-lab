@@ -6,7 +6,7 @@ In this part, we are going to prepare:
 - the index page with all the blog posts
 - the detail page to show the content of a blog post
 
-Then we are going to use the Statiq extension to generate a static website which could be deployed on any static server (like GitHub Pages). 
+Then we are going to use the Roq extension to generate a static website which could be deployed on any static server (like GitHub Pages). 
 
 In our case, we will just serve all static pages using a [Jbang](https://www.jbang.dev/) script. 
 
@@ -17,7 +17,7 @@ In our case, we will just serve all static pages using a [Jbang](https://www.jba
  - [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
  - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
  - [JDBC driver for H2](https://quarkus.io/guides/datasource)
- - [Statiq](https://github.com/quarkiverse/quarkus-statiq)
+ - [Roq](https://github.com/quarkiverse/quarkus-roq)
 
 #### The initial app
 
@@ -221,24 +221,19 @@ You achieved the Blog part 🤩, time to allow commenting on blog posts: [Part 3
 
 Once edited, there is no point of reloading all the data from the db and rendering it, we could just export the content and use it from a static server (like GitHub Pages).
 
-👀 Have a look to `src/main/java/web/lab/blog/Statiq` and `src/main/resources/application.properties`, you will find the statiq configuration (what needs to be exported).
+👀 Have a look to `src/main/java/web/lab/blog/Roq` and `src/main/resources/application.properties`, you will find the Roq configuration (what needs to be exported).
 
-Statiq will generate files in `target/statiq`.
+Roq will generate files in `target/roq`.
 
-Restart Quarkus Dev without live reload:
+Start Roq Generator:
 ```shell
-./mvnw quarkus:dev -Dquarkus.web-bundler.browser-live-reload=false
+QUARKUS_ROQ_GENERATOR_BATCH=true mvn package quarkus:run -DskipTests
 ```
-
-Now in the Dev UI (press `d` in your terminal):
-- click on `Statiq files` in the `statiq` extension box.
-- have a look to the list of file to generate.
-- Click on Generate
 
 🚀 Now try to serve them locally with a local static server:
 ```shell
-$ jbang app install --verbose --fresh --force statiq@quarkiverse/quarkus-statiq
-$ statiq                                                                                                                         decks->!+(ia3andy/decks)
-Serving: target/statiq/
+$ jbang app install --verbose --fresh --force roq@quarkiverse/quarkus-roq
+$ roq                                                                                                                         decks->!+(ia3andy/decks)
+Serving: target/roq/
 Server started on port http://localhost:8181
 ```
