@@ -65,6 +65,9 @@ You can use any IDE you want, example:
 - [VS Code](https://code.visualstudio.com/)
 - [Netbeans](https://netbeans.apache.org)
 
+Install Quarkus tools:
+https://quarkus.io/guides/ide-tooling
+
 ### Getting the code:
 
 To get started with the code, checkout the lab using Git:
