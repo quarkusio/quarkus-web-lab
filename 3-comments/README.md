@@ -86,7 +86,7 @@ We are going to use Lit[https://lit.dev/] to build a web component. You can navi
 > **_NOTE:_**
 > The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
 
-👀 Now we can start with a basic component. In `src/main/resources/web/app`, see a file called `comment-box.js`;
+👀 Now we can start with a basic component. In `src/main/resources/web/app`, see a file called `comment-box.ts`;
 
 This is the basic structure of a Lit component:
 
@@ -96,6 +96,9 @@ This is the basic structure of a Lit component:
  - constructor: here we set the initial values for properties
  - connectedCallback: this gets called when the element is added to the DOM. Here we can make calls to the server to fetch initial values for state properties
  - render: this gets called to render the element (or re-render in case a state property change)
+
+> **_NOTE:_**
+> Typescript is supported out of the box with the Web Bundler, it is possible to override the default tsconfig.json if needed. In this case, it is needed to allow using annotations.
 
 #### Test
 
@@ -113,18 +116,16 @@ to indicate the reference to the blog entry
 <details>
 <summary>See solution</summary>
 
-```js
-static properties = {
-    ref: { type: String }
-};
+```typescript
 
-constructor() {
-    super();
-    this.serverUrl = SERVER_URL;  // This is defined through web-bundler envs in application.properties
-    this.ref = null;
+class CommentBox extends LitElement {
+    // ...
     
+    @property()
+    ref: string;
+    
+    // ...
 }
-
 ```
 </details>
 
@@ -150,38 +151,41 @@ You may now use your component like a normal html tag `<comment-box .../>`, use 
 
 **››› CODING TIME**
 
-Add a new string state property called `_comments` that will contain the comments.
+Add a new string state property called `comments` that will contain the comments.
 
 <details>
 <summary>See solution</summary>
 
-```js
-static properties = {
-    ref: { type: String },
-    _comments: {state: true}
-};
+```typescript
+class CommentBox extends LitElement {
+    // ...
 
-constructor() {
-    super();
-    this.serverUrl = SERVER_URL;  // This is defined through web-bundler envs in application.properties
-    this.ref = null;
-    this._comments = [];
+    @state()
+    private comments: Comment[] = [];
+
+    // ...
 }
 ```
 </details>
 
 
 
-Add a method that call the REST endpoint to fetch all comments, the set the `_comments` state property to the response. Changing the state will automatically trigger a new `render()`.
+Add a method that call the REST endpoint to fetch all comments, the set the `comments` state property to the response. Changing the state will automatically trigger a new `render()`.
 
 <details>
 <summary>See solution</summary>
 
-```js
-_fetchAllComments(){
-    fetch(`${this.serverUrl}/comment/${this.ref}`)
-        .then(response => response.json())
-        .then(response => this._comments = response);
+```typescript
+class CommentBox extends LitElement {
+    // ...
+    
+    fetchAllComments() {
+        fetch(`${this.serverUrl}/comment/${this.ref}`)
+            .then(response => response.json())
+            .then(response => this.comments = response as Comment[]);
+    }
+
+    // ...
 }
 ```
 </details>
@@ -192,10 +196,16 @@ Now call that method in the `connectedCallback`:
 <details>
 <summary>See solution</summary>
 
-```js
-connectedCallback() {
-    super.connectedCallback();
-    this._fetchAllComments();
+```typescript
+class CommentBox extends LitElement {
+    // ...
+    
+    connectedCallback() {
+        super.connectedCallback();
+        this.fetchAllComments();
+    }
+    
+    // ...
 }
 ```
 </details>
@@ -206,21 +216,30 @@ Now we have the comments for a certain blog reference when the component is adde
 <details>
 <summary>See solution</summary>
 
-```js
-render(){
-    if(this._comments){
-        return html`${this._comments.map((comment) =>
-            html`<div class="existingcomment">
-                    <div class="comment">${comment.comment}</div>
-                    <div class="right">
-                        <div class="commentByAndTime">
-                            by ${comment.name} on ${comment.time}
+```typescript
+class CommentBox extends LitElement {
+    // ...
+
+    render() {
+        if(this.comments){
+            return html`${this.comments.map((comment) =>
+                html`<div class="existingcomment">
+                        <div class="comment">${this.renderMarkdownComment(comment)}</div>
+                        <div class="right">
+                            <div class="commentByAndTime">
+                                by ${comment.name}
+                                <relative-time datetime="${comment.time}" class="time">
+                                    ${comment.time}
+                                </relative-time>
+                            </div>
                         </div>
-                    </div>
-                </div>`
-        )}
-        `;
+                    </div>`
+            )}
+            `;
+        }
     }
+
+    // ...
 }
 ```
 </details>
@@ -232,46 +251,57 @@ render(){
 
 Change the current `render` method to rather call 2 methods. One to render the "add comment", and another with the "existing comments".
 
-
-
 <details>
 <summary>See hint</summary>
 
-Move the current `render` to `_renderExistingComments` and add a new `_renderNewComment` with this html content:
+Move the current `render` to `renderExistingComments` and add a new `renderNewComment` with this html content:
 ```html
 <div class="comment-box">
-    <input id="name" class="input" type="text" placeholder="Your name">
-    <textarea id="comment" class="input" placeholder="Your comment. You can use Markdown for formatting" rows="5"></textarea>
+    <input id="name" class="input" type="text" placeholder="Your name" .value=${this.name} @input="${this.nameChanged}">
+    <textarea id="comment" class="input" placeholder="Your comment" rows="5" .value=${this.comment} @input="${this.commentChanged}"></textarea>
     <button class="button" @click="${this._postComment}"><fas-icon icon="comment-dots" color="white"></fas-icon> Post Comment</button>
 </div>
 ```
+
+You will also need to create the `nameChanged` and `commentChanged` to set the state when on input change.
+
 </details>
 
 <details>
 <summary>See solution</summary>
 
-```js
-render() {
-    return html`${this._renderNewComment()}
-                ${this._renderExistingComments()}
-      `;
-}
+```typescript
+class CommentBox extends LitElement {
+    // ...
+
+    render() {
+        return html`${this.renderNewComment()}
+                    ${this.renderExistingComments()}`;
+    }
 
 
-_renderNewComment() {
-    return html`
-      <div class="comment-box">
-        <input id="name" class="input" type="text" placeholder="Your name">
-        <textarea id="comment" class="input" placeholder="Your comment. You can use Markdown for formatting" rows="5"></textarea>
-        <button class="button" @click="${this._postComment}"><fas-icon icon="comment-dots" color="white"></fas-icon> Post Comment</button>
-      </div>
-    `;
-}
+    private renderNewComment() {
+        return html`
+          <div class="comment-box">
+            <input id="name" class="input" type="text" placeholder="Your name" .value=${this.name} @input="${this.nameChanged}" >
+            <textarea id="comment" class="input" placeholder="Your comment" rows="5" .value=${this.comment} @input="${this.commentChanged}" ></textarea>
+            <button class="button" @click="${this.postComment}"><fas-icon icon="comment-dots" color="white"></fas-icon> Post Comment</button>
+          </div>
+        `;
+    }
 
-_renderExistingComments(){
-    if(this._comments){
-        return html`${this._comments.map((comment) =>
-            html`<div class="existingcomment">
+    private nameChanged(e: any) {
+        this.name = e.target.value;
+    }
+
+    private commentChanged(e: any) {
+        this.comment = e.target.value;
+    }
+
+    private renderExistingComments(){
+        if(this._comments){
+            return html`${this._comments.map((comment) =>
+                html`<div class="existingcomment">
                     <div class="comment">${comment.comment}</div>
                     <div class="right">
                         <div class="commentByAndTime">
@@ -279,41 +309,50 @@ _renderExistingComments(){
                         </div>
                     </div>
                 </div>`
-        )}
+            )}
         `;
+        }
     }
+    
+    // ...
 }
+
+
+
 ```
 </details>
 
 Add a method to do a POST when the button is clicked (we already added a `@click` handler to the button)
 
-```js
-_postComment() {
-    let comment = new Object();
-    comment.ref = this.ref;
-    comment.name = this.shadowRoot.getElementById('name').value;
-    comment.comment = this.shadowRoot.getElementById('comment').value;
-
-    fetch(`${this.serverUrl}/comment`, {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(comment),
-    })
-    .then(response => response.json())
-    .then(response => {
-            this._comments = response;
-            this._clear();
-        }
-    );
-}
-
-_clear(){
-    // Let's make sure to reset the fields after adding a comment
-    this.shadowRoot.getElementById('name').value = "";
-    this.shadowRoot.getElementById('comment').value = "";
+```typescript
+class CommentBox extends LitElement {
+    // ...
+    private postComment() {
+        let comment = {
+            ref: this.ref,
+            name: this.name,
+            comment: this.comment
+        } as Comment;
+        
+        fetch(`${this.serverUrl}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(comment),
+        })  .then(response => response.json())
+            .then(response => {
+                this.comments = response as Comment[];
+                this.clear();
+            }
+        );
+    }
+    
+    private clear(){
+    this.name = "";
+    this.comment = "";
+    }
+// ...
 }
 ```
 
@@ -328,7 +367,7 @@ The POST method return the list of (new) responses, so we can set the `_comments
 
 #### CSS
 
-Add some CSS to make the layout better:
+Add some CSS to make the layout better (in the end of the comment-box element):
 
 ```css
 static styles = css`

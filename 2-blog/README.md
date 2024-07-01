@@ -221,7 +221,7 @@ You achieved the Blog part 🤩, time to allow commenting on blog posts: [Part 3
 
 Once edited, there is no point of reloading all the data from the db and rendering it, we could just export the content and use it from a static server (like GitHub Pages).
 
-👀 Have a look to `src/main/java/web/lab/blog/Roq` and `src/main/resources/application.properties`, you will find the Roq configuration (what needs to be exported).
+👀 Have a look to `src/main/java/web/lab/blog/Blog#produceRoqSelection` and `src/main/resources/application.properties`, you will find the Roq configuration (what needs to be exported).
 
 Roq will generate files in `target/roq`.
 

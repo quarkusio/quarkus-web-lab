@@ -1,13 +1,17 @@
 package web.lab.blog;
 
-import java.util.Optional;
-
-import org.jboss.resteasy.reactive.RestResponse;
-
+import io.quarkiverse.roq.generator.runtime.RoqSelection;
+import io.quarkiverse.roq.generator.runtime.SelectedPath;
 import io.quarkus.qute.TemplateInstance;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import org.jboss.resteasy.reactive.RestResponse;
+
+import java.util.Optional;
 
 @Path("/")
 public class Blog {
@@ -23,6 +27,13 @@ public class Blog {
         }
         // TODO: use the type-safe template to render the blog post
         return null;
+    }
+
+    @Produces
+    @Singleton
+    @Transactional
+    RoqSelection produceRoqSelection() {
+        return new RoqSelection(BlogEntry.<BlogEntry>listAll().stream().map(e -> SelectedPath.builder().html("/blog/" + e.slug + "/").build()).toList());
     }
 
 }
