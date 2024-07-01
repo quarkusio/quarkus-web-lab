@@ -11,11 +11,13 @@ interface Comment {
     time?: string;
 }
 
-
+@customElement('comment-box')
 class CommentBox extends LitElement {
 
     @property()
     serverUrl: string = SERVER_URL;
+
+    // TODO: add properties and states here
 
     connectedCallback() {
         super.connectedCallback();
