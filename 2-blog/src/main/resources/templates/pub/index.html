@@ -2,9 +2,9 @@
 {#title}My Quarkus Blog{/title}
 <main class="articles">
   <div>
-  <!-- TODO: iterate over all blog entries sorted by the published date in desc order -->
-  <!-- start of the loop -->
-  <article>
+    <!-- TODO: iterate over all blog entries sorted by the published date in desc order -->
+    <!-- start of the loop -->
+    <article>
       <header>
         <img loading="lazy" src="/static/assets/blog/pictures/{entry.picture}">
         {#entryDate entry=entry/}
@@ -13,6 +13,6 @@
       <p>{entry.toAbstract}</p>
       <a href="/blog/{entry.slug}">Read more</a>
     </article>
-   <!-- end of the loop -->
+    <!-- end of the loop -->
   </div>
 </main>

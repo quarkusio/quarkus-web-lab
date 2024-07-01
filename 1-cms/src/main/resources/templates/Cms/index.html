@@ -1,46 +1,52 @@
 {#include main.html}
 {#title}Quarkus Blogger CMS{/title}
 <div class="left-bar d-flex justify-content-between">
-    <div class="p-2">
-        <div class="mb-3 d-flex">
-            <!-- TODO: A link to create a new post class="btn btn-outline-dark" -->
-            <i class="bi bi-plus"></i> Post
-        </div>
+  <div class="p-2">
+    <div class="mb-3 d-flex">
+      <!-- TODO: A link to create a new post class="btn btn-outline-dark" -->
+      <i class="bi bi-plus"></i> Post
+    </div>
 
-        {#fragment id="blogEntries"}
-        <ul id="blogEntries" class="blogEntries list-group">
-            {#for blogEntry in blogEntries}
-              <li class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center" >
-                <!-- TODO: Use "title: published" as content -->
-                Foo
-              </li>
-            {/for}
-        </ul>
-        {/fragment}
-    </div>
-    <div id="blog-editor" class="flex-grow-1 p-2">
-        {#if currentBlogEntry}
-            {#fragment id="blogEntryForm"}
-                <form action="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}" method="post" class="blogEntry-form">
-                    {#authenticityToken/}
-                    <div class="editor-wrapper">
-                        {#field name="title"}
-                          <input name="title" class="form-control {#ifError 'title'}is-invalid{/}" value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
-                        {/field}
-                        {#field name="published"}
-                          <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}" value="{inject:flash.get('published') ?: currentBlogEntry.published}" />
-                        {/field}
-                        {#field name="picture"}
-                          <input name="picture" class="form-control {#ifError 'picture'}is-invalid{/}" value="{inject:flash.get('picture') ?: currentBlogEntry.picture}" placeholder="Enter picture name" required/>
-                        {/field}
-                        {#field name="content"}
-                          <!-- TODO: Use Markdown qute-component -->
-                          {currentBlogEntry.content}
-                        {/field}
-                    </div>
-                    <button class="btn btn-primary">Save</button>
-                </form>
-            {/fragment}
-        {/if}
-    </div>
+    {#fragment id="blogEntries"}
+    <ul id="blogEntries" class="blogEntries list-group">
+      {#for blogEntry in blogEntries}
+      <li
+        class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center">
+        <!-- TODO: Use "title: published" as content -->
+        Foo
+      </li>
+      {/for}
+    </ul>
+    {/fragment}
+  </div>
+  <div id="blog-editor" class="flex-grow-1 p-2">
+    {#if currentBlogEntry}
+    {#fragment id="blogEntryForm"}
+    <form action="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}"
+          method="post" class="blogEntry-form">
+      {#authenticityToken/}
+      <div class="editor-wrapper">
+        {#field name="title"}
+        <input name="title" class="form-control {#ifError 'title'}is-invalid{/}"
+               value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
+        {/field}
+        {#field name="published"}
+        <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}"
+               value="{inject:flash.get('published') ?: currentBlogEntry.published}"/>
+        {/field}
+        {#field name="picture"}
+        <input name="picture" class="form-control {#ifError 'picture'}is-invalid{/}"
+               value="{inject:flash.get('picture') ?: currentBlogEntry.picture}" placeholder="Enter picture name"
+               required/>
+        {/field}
+        {#field name="content"}
+        <!-- TODO: Use Markdown qute-component -->
+        {currentBlogEntry.content}
+        {/field}
+      </div>
+      <button class="btn btn-primary">Save</button>
+    </form>
+    {/fragment}
+    {/if}
+  </div>
 </div>

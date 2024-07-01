@@ -2,7 +2,7 @@
 {#title}My Quarkus Blog{/title}
 <main class="articles">
   <div>
-  {#for entry in BlogEntry:listAllSortedByPublished}
+    {#for entry in BlogEntry:listAllSortedByPublished}
     <article>
       <header>
         <img src="/static/assets/blog/pictures/{entry.picture}" loading="lazy">
@@ -12,6 +12,6 @@
       <p>{entry.toAbstract}</p>
       <a href="/blog/{entry.slug}">Read more</a>
     </article>
-  {/for}
+    {/for}
   </div>
 </main>
