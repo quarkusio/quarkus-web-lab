@@ -18,9 +18,9 @@ jobs:
       - name: Build & Generate
         working-directory: solution/2-blog
         run: QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B package quarkus:run -Dquarkus.profile=gh-pages -DskipTests
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
           path: solution/2-blog/target/roq
   deploy:
     environment:
