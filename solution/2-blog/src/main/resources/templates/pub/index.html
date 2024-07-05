@@ -5,12 +5,12 @@
     {#for entry in BlogEntry:listAllSortedByPublished}
     <article>
       <header>
-        <img src="/static/assets/blog/pictures/{entry.picture}" loading="lazy">
+        <img src="static/assets/blog/pictures/{entry.picture}" loading="lazy">
         {#entryDate entry=entry/}
       </header>
-      <h3><a href="/blog/{entry.slug}">{entry.title}</a></h3>
+      <h3><a href="blog/{entry.slug}">{entry.title}</a></h3>
       <p>{entry.toAbstract}</p>
-      <a href="/blog/{entry.slug}">Read more</a>
+      <a href="blog/{entry.slug}">Read more</a>
     </article>
     {/for}
   </div>
