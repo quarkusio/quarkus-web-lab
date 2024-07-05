@@ -44,7 +44,7 @@
   <div id="blog-editor" class="flex-grow-1 p-2">
     {#if currentBlogEntry}
     {#fragment id="blogEntryForm"}
-    <form hx-post="{ currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry() }"
+    <form hx-post="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}"
           class="blogEntry-form"
           hx-encoding='multipart/form-data'
           hx-target="this"

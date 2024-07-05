@@ -44,3 +44,6 @@ nb-configuration.xml
 
 # Web Bundler
 node_modules/
+
+gh-pages.trace.db
+gh-pages.lock.db
