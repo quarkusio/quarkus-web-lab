@@ -24,7 +24,7 @@ jobs:
         run: QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B package quarkus:run -Dquarkus.profile=gh-pages -DskipTests
       - uses: actions/upload-artifact@v4
         with:
-          name: gh-pages
+          name: github-pages
           path: solution/2-blog/target/roq
   deploy:
     environment:
