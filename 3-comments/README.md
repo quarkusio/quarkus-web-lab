@@ -224,7 +224,7 @@ class CommentBox extends LitElement {
         if(this.comments){
             return html`${this.comments.map((comment) =>
                 html`<div class="existingcomment">
-                        <div class="comment">${this.renderMarkdownComment(comment)}</div>
+                        <div class="comment">${comment.comment}</div>
                         <div class="right">
                             <div class="commentByAndTime">
                                 by ${comment.name}
