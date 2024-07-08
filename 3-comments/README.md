@@ -453,7 +453,7 @@ static styles = css`
 
 
 
-👀 check the `application.properties` provided that static server runs on 8080, it makes sure this can be used from the static server application.
+👀 check the `application.properties` provided that static server runs on 7070, it makes sure this can be used from the static server application.
 
 Now when add this ⬇️ to the blog page 'src/main/resources/templates/Blog/blogPost.html' (just after the `</main>).
 
