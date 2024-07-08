@@ -299,8 +299,8 @@ class CommentBox extends LitElement {
     }
 
     private renderExistingComments(){
-        if(this._comments){
-            return html`${this._comments.map((comment) =>
+        if(this.comments){
+            return html`${this.comments.map((comment) =>
                 html`<div class="existingcomment">
                     <div class="comment">${comment.comment}</div>
                     <div class="right">
@@ -358,10 +358,10 @@ class CommentBox extends LitElement {
 
 Here we post a new Comment Object to the `/comment` endpoint in Json format.
 
-The POST method return the list of (new) responses, so we can set the `_comments` state property that will result in a re-render with the updated info.
+The POST method return the list of (new) responses, so we can set the `comments` state property that will result in a re-render with the updated info.
 
 > **_NOTE:_** 
-> Technically, the more correct REST way to do this is to not return data on a POST, but add a header that contains where the newly added comment can be found. You can then make another call to fetch the latest comment and update the `_comments` array.
+> Technically, the more correct REST way to do this is to not return data on a POST, but add a header that contains where the newly added comment can be found. You can then make another call to fetch the latest comment and update the `comments` array.
 
 🚀 Go observe the test page, you should be able to post comments.
 
@@ -498,8 +498,8 @@ Change the `_renderExistingComments` method to use above:
 
 ```js
 render(){
-    if(this._comments){
-        return html`${this._comments.map((comment) =>
+    if(this.comments){
+        return html`${this.comments.map((comment) =>
             html`<div class="existingcomment">
                     <div class="comment">${this._renderMarkdownComment(comment)}</div>
                     <div class="right">
@@ -613,12 +613,12 @@ Import:
 import '@github/relative-time-element';
 ```
 
-Update the `_renderExistingComments()` method:
+Update the `renderExistingComments()` method:
 
 ```js
-_renderExistingComments(){
-    if(this._comments){
-        return html`${this._comments.map((comment) =>
+renderExistingComments(){
+    if(this.comments){
+        return html`${this.comments.map((comment) =>
             html`<div class="existingcomment">
                     <div class="comment">${this._renderMarkdownComment(comment)}</div>
                     <div class="right">
