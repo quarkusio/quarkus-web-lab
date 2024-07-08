@@ -274,6 +274,14 @@ You will also need to create the `nameChanged` and `commentChanged` to set the s
 class CommentBox extends LitElement {
     // ...
 
+    @state()
+    private name: string = "";
+
+    @state()
+    private comment: string = "";
+  
+    // ...
+
     render() {
         return html`${this.renderNewComment()}
                     ${this.renderExistingComments()}`;
