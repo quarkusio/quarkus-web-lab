@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: registry.redhat.io/rhel9/postgresql-16:latest
+          resources:
+            limits:
+              memory: 150Mi
+          volumeMounts:
+            - mountPath: /var/lib/pgsql/data
+              name: postgresql-data
+          env:
+            - name: POSTGRESQL_DATABASE
+              value: quarkus
+            - name: POSTGRESQL_USER
+              value: quarkus
+            - name: POSTGRESQL_PASSWORD
+              value: quarkus
+            - name: POSTGRESQL_VOLUME_CAPACITY
+              value: 1Gi
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  type: LoadBalancer
+  ports:
+    - port: 5432
+      targetPort: 5432
