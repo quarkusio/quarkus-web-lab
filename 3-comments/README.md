@@ -479,17 +479,14 @@ To render the markup we will use [Markdown-it](https://github.com/markdown-it/ma
 
 We can import it:
 
-```js
+```typescript
 import MarkdownIt from 'markdown-it';
 ```
 
-and create an instance in the constructor:
+and create a new field:
 
-```js
- constructor() {
-    [...]
-    this.md = new MarkdownIt({breaks: true});
- }
+```typescript
+ private md = new MarkdownIt({breaks: true});
 ```
 
 > **_NOTE:_**
@@ -497,8 +494,8 @@ and create an instance in the constructor:
 
 Create a new method that will render an existing comment using Markup:
 
-```js
-_renderMarkdownComment(comment){
+```typescript
+renderMarkdownComment(comment: Comment){
     const htmlContent = this.md.render(comment.comment);
     return html`${unsafeHTML(htmlContent)}`;
 }
@@ -506,12 +503,12 @@ _renderMarkdownComment(comment){
 
 Change the `_renderExistingComments` method to use above:
 
-```js
+```typescript
 render(){
     if(this.comments){
         return html`${this.comments.map((comment) =>
             html`<div class="existingcomment">
-                    <div class="comment">${this._renderMarkdownComment(comment)}</div>
+                    <div class="comment">${this.renderMarkdownComment(comment)}</div>
                     <div class="right">
                         <div class="commentByAndTime">
                             by ${comment.name} on ${comment.time}
@@ -544,11 +541,11 @@ import '@github/markdown-toolbar-element';
 And add it under the comment textarea:
 
 ```js
-_renderNewComment() {
+renderNewComment() {
     return html`
       <div class="comment-box">
-        <input id="name" class="input" type="text" placeholder="Your name">
-        <textarea id="comment" class="input" placeholder="Your comment. You can use Markdown for formatting" rows="5"></textarea>
+        <input id="name" class="input" type="text" placeholder="Your name" .value=${this.name} @input="${this.nameChanged}">
+        <textarea id="comment" class="input" placeholder="Your comment. You can use Markdown for formatting" rows="5" .value=${this.comment} @input="${this.commentChanged}"></textarea>
         <markdown-toolbar for="comment">
             <md-bold>B</md-bold>
             <md-header>H</md-header>
@@ -630,7 +627,7 @@ renderExistingComments(){
     if(this.comments){
         return html`${this.comments.map((comment) =>
             html`<div class="existingcomment">
-                    <div class="comment">${this._renderMarkdownComment(comment)}</div>
+                    <div class="comment">${this.renderMarkdownComment(comment)}</div>
                     <div class="right">
                         <div class="commentByAndTime">
                             by ${comment.name}
