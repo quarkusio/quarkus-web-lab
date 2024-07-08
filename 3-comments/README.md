@@ -254,6 +254,8 @@ Change the current `render` method to rather call 2 methods. One to render the "
 <details>
 <summary>See hint</summary>
 
+Add two `@state()`, `name` and `comment` initialized with `""` as default value.
+
 Move the current `render` to `renderExistingComments` and add a new `renderNewComment` with this html content:
 ```html
 <div class="comment-box">
