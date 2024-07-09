@@ -10,7 +10,8 @@
     <h1>{entry.title}</h1>
     {entry.content.mdToHtml.raw}
   </article>
-
+  <script crossorigin src="{config:star-rating-service}" type="module"></script>
+  <star-rating ref="{entry.slug}"></star-rating>
   <script crossorigin src="{config:comment-service}" type="module"></script>
   <comment-box ref="{entry.slug}"></comment-box>
 </main>
