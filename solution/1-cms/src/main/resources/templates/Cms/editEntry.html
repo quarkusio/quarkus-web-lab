@@ -1,0 +1,26 @@
+<form hx-post="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}"
+      class="blogEntry-form"
+      hx-encoding='multipart/form-data'
+      hx-target="this"
+      hx-push-url="true"
+>
+  <div class="editor-wrapper">
+    {#field name="title"}
+    <input name="title" class="form-control {#ifError 'title'}is-invalid{/}"
+           value="{inject:flash.get('title') ?: currentBlogEntry.title}" placeholder="Enter new title"/>
+    {/field}
+    {#field name="published"}
+    <input name="published" type="date" class="form-control {#ifError 'published'}is-invalid{/}"
+           value="{inject:flash.get('published') ?: currentBlogEntry.published}"/>
+    {/field}
+    {#field name="picture"}
+    <input name="picture" class="form-control {#ifError 'picture'}is-invalid{/}"
+           value="{inject:flash.get('picture') ?: currentBlogEntry.picture}" placeholder="Enter picture name"
+           required/>
+    {/field}
+    {#field name="content"}
+    {#BlogEditor id="blogEntry-content" name="content" value=inject:flash.get('content').or(currentBlogEntry.content) /}
+    {/field}
+  </div>
+  <button class="btn btn-primary">Save</button>
+</form>

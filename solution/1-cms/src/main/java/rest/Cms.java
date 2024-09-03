@@ -32,24 +32,24 @@ public class Cms extends HxController {
          */
         public static native TemplateInstance index(List<BlogEntry> blogEntries, BlogEntry currentBlogEntry);
 
-        public static native TemplateInstance index$blogEntries(List<BlogEntry> blogEntries, BlogEntry currentBlogEntry);
+        public static native TemplateInstance entryList(List<BlogEntry> blogEntries, BlogEntry currentBlogEntry);
 
-        public static native TemplateInstance index$blogEntryForm(BlogEntry currentBlogEntry);
+        public static native TemplateInstance editEntry(BlogEntry currentBlogEntry);
     }
 
     // set up our blog index page at /cms
     @Path("")
     public TemplateInstance index() {
         if (isHxRequest()) {
-            return Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null);
+            return Templates.entryList(BlogEntry.listAllSortedByPublished(), null);
         }
         return Templates.index(BlogEntry.listAllSortedByPublished(), null);
     }
 
     public TemplateInstance newBlogEntry() {
         if (isHxRequest()) {
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), null),
-                    Templates.index$blogEntryForm(new BlogEntry()));
+            return concatTemplates(Templates.entryList(BlogEntry.listAllSortedByPublished(), null),
+                    Templates.editEntry(new BlogEntry()));
         }
     	return Templates.index(BlogEntry.listAllSortedByPublished(), new BlogEntry());
     }
@@ -58,8 +58,8 @@ public class Cms extends HxController {
         BlogEntry blogEntry = BlogEntry.findById(id);
         notFoundIfNull(blogEntry);
         if (isHxRequest()) {
-            return concatTemplates(Templates.index$blogEntries(BlogEntry.listAllSortedByPublished(), blogEntry),
-                    Templates.index$blogEntryForm(blogEntry));
+            return concatTemplates(Templates.entryList(BlogEntry.listAllSortedByPublished(), blogEntry),
+                    Templates.editEntry(blogEntry));
         }
         return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
     }

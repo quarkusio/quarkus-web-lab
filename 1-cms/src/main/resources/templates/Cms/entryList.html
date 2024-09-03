@@ -1,0 +1,9 @@
+<ul id="blogEntries" class="blogEntries list-group">
+  {#for blogEntry in blogEntries}
+  <li
+    class="{#if blogEntry.id == currentBlogEntry.id??}active {/if}list-group-item blogEntry d-flex justify-content-between align-items-center">
+    <!-- TODO: Use "title: published" as content -->
+    Foo
+  </li>
+  {/for}
+</ul>

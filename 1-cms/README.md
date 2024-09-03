@@ -1,15 +1,8 @@
 ## 1- The CMS (~60m)
 
-### Extensions
-
- - [Renarde](https://docs.quarkiverse.io/quarkus-renarde/dev/index.html)
- - [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
- - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
- - [JDBC driver for H2](https://quarkus.io/guides/datasource)
-
 ### Get the initial app
 
-We could start from scratch, but it is nicer to start with a few things ready. If you haven't already, [set up your environment and clone this repository](../README.md#getting-your-environment-ready).
+We could start from scratch using https://code.quarkus.io, but we preferred preparing the base to get you started. If you haven't already, [set up your environment and clone this repository](../README.md#getting-your-environment-ready).
 
 The directory which contains this README also contains the _initial version_ of the app. Use GitHub or a markdown viewer to read this with the best experience.
 
@@ -17,8 +10,17 @@ The directory which contains this README also contains the _initial version_ of 
 cd 1-cms
 ```
 
-There are some comments starting with `TODO:` in the code.
-It's up to you to remove these comments with appropriate code!
+The project already contains those extensions:
+
+- [Renarde](https://docs.quarkiverse.io/quarkus-renarde/dev/index.html)
+- [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
+- [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
+- [JDBC driver for H2](https://quarkus.io/guides/datasource)
+
+We will start by doing a tour of the initial code to help you find your mark.
+
+After the tour, we added some comments starting with `TODO:` in the code.
+It will be up to you to remove these comments with appropriate code!
 
 It's time to start Quarkus dev:
 ```shell
@@ -27,10 +29,11 @@ It's time to start Quarkus dev:
 
 🚀 Press `w` and observe your web page, it should be poor for now.
 
-### Let's have a look to the Quarkus config
+The Renarde extension is our Model-View-Controller framework.
 
-👀  Open the `src/main/resources/application.properties` file, those setting are allowing
+👀  The `src/main/resources/application.properties` file defines settings to allow
 us to run on a custom port, connect to a shared H2 database, and update our schema when needed.
+
 
 ### The Model
 
