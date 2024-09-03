@@ -16,7 +16,7 @@
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
         <quarkus-web-bundler.version>1.7.1</quarkus-web-bundler.version>
-        <quarkus-roq.version>0.0.2</quarkus-roq.version>
+        <quarkus-roq.version>0.0.3</quarkus-roq.version>
     </properties>
 
     <dependencyManagement>

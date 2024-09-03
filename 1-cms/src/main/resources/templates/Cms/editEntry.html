@@ -1,3 +1,5 @@
+{@model.BlogEntry currentBlogEntry}
+
 <form action="{currentBlogEntry.id ? uri:Cms.saveBlogEntry(currentBlogEntry.id) : uri:Cms.saveNewBlogEntry()}"
       method="post" class="blogEntry-form">
   {#authenticityToken/}

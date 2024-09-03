@@ -17,10 +17,9 @@ The project already contains those extensions:
 - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
 - [JDBC driver for H2](https://quarkus.io/guides/datasource)
 
-We will start by doing a tour of the initial code to help you find your mark.
+We will incrementally add missing pieces in place of `TODO:` placed in the code. Each todo will help you learn about a specific feature. 
 
-After the tour, we added some comments starting with `TODO:` in the code.
-It will be up to you to remove these comments with appropriate code!
+Following our instructions, it will be up to you to remove these comments with appropriate code!
 
 It's time to start Quarkus dev:
 ```shell
@@ -45,15 +44,13 @@ contains our main entity for the lab, representing a blog entry. It will have th
 
 - Title (must be unique)
 - Slug (derived from the title)
-- Picture (picture file name located in `src/main/resources/web/static/assets/blog/pictures`, e.g. eat-cheese.jpg)
+- Picture (picture file name, e.g. eat-cheese.jpg)
 - Content (the blog contents, in Markdown)
 - Published (the publication date)
 
 This is a Panache entity, so it extends `PanacheEntity` to get a lot of useful methods, and its fields
 are public. We will need a default constructor and a constructor with `title`, `content`, and optionally
-`publishedDate`. 
-
-### Time to show blog posts (The View)
+`publishedDate`.
 
 👀 The app is set up with initial data. Traditionally, startup actions belong in a `util/Startup` class (`src/main/java/util/Startup.java`), and we can use that to create and
 save test database values. To that end, we mark the method as `@Transactional`, and only create
@@ -83,15 +80,19 @@ In `src/main/java/model/BlogEntry.java`:
 
 🚀 On the browser, after manually refreshing, you should now have a list of "foo", let's show the actual posts.
 
-In Renarde, by default, all views live in `templates/<Controller>/<method>.html`, so for `Cms.index` we need to
-open `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
-structure, we recommend using template composition, so every endpoint template extends a main template called
-`main.html` by convention (`src/main/resources/templates/main.html`):
+### Time to show blog posts (The View)
+
+Qute templates are located in the resources `src/main/resources/templates`.
+
+In Renarde, by default, all views live in `templates/<Controller>/<view>.html`, For the `Cms.index`, open `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
+structure, we recommend using template composition, so every endpoint template extends a base template called
+`base.html` by convention (`src/main/resources/templates/base.html`):
 
 For this:
 
 - open `src/main/resources/templates/Cms/index.html`
-- find the blog posts `{#for}` loop
+- find the blog entries list, as you can see it is in an `{#include Cms/entryList /}`
+- open `src/main/resources/templates/Cms/entryList.html` and find the `{#for}` loop
 - add the Qute expressions to print something like "2024-03-02: My blog post"  in the loop
 
 <details>
@@ -103,7 +104,7 @@ Use `{blogEntry.field}` to print a field value.
 <details>
 <summary>See solution</summary>
 
-In `src/main/resources/templates/Cms/index.html`, add this:
+In `src/main/resources/templates/Cms/entryList.html`, add this:
 
 ```html
 {blogEntry.published}: {blogEntry.title}
@@ -115,27 +116,26 @@ In `src/main/resources/templates/Cms/index.html`, add this:
 
 ### Style it up
 
-Now let's use mvnpm to download NPM modules packaged as Maven modules, so that Bootstrap in our application.
+The Web Bundler will allow to:
+- gather your own scripts and styles
+- add wrapped npm packages directly in your pom.xml
+- bundle everything together to be ready for production
+
+To enable it in our CMS we must reference the generated bundle in our base template.
 
 **››› COPYING TIME 🫣**
 
-We must reference the `cms` bundle from our main template
-in order to get it injected in every page's `<head>` element.
-
-Add this to the start of your `src/main/resources/templates/main.html`:
-
-```html
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{#insert title/}</title>
-        {#bundle key="cms"/}
-    </head>
-```
+Simply insert the `{#bundle /}` tag to the `<head>` of your `src/main/resources/templates/base.html`. It will be converted to the relevant `<script>` and `<style>` tag by Qute.
 
 🚀🔑 Refresh your browser, nothing new? You just unlocked browser live-reload, no more manual refresh 😇
 
-Add the bootstrap dependencies to the `pom.xml`:
+👀 If you look at the browser developer console, you can have a look to what's generated in place of the bundle tag.
+
+**Spoiler alert, this is my favorite moment 🤩 👇**
+
+Now let's use mvnpm.org to get NPM modules packaged as Maven modules. In our case we want Bootstrap in our application.
+
+Add the Bootstrap dependencies to the `pom.xml`:
 
 ```xml
         <dependency>
@@ -152,13 +152,13 @@ Add the bootstrap dependencies to the `pom.xml`:
         </dependency>
 ```
 
-🚀 Now observe in the browser, better right 🎉?
+🚀 Now observe in the browser (it can take ~1s), better right 🎉?
 
 Thanks to Web Bundler, we can write our style in SCSS, and it will be compiled on-the-fly to CSS. We also added a configuration to auto-import web dependencies scripts and style when it is possible. So nothing more to do.
 
-In our case, we generate a `cms` bundle, so our styles and javascript must go under `web/cms` resources.
+In our case, for the default `main` bundle, styles and javascript must go under `web/app` resources.
 
-👀 Have a look to `src/main/resources/web/cms/app.scss`, there is already a few things there.
+👀 Have a look to `src/main/resources/web/app/app.scss`, there is already a few things there. You can try to change the background color to see what happens in the browser...
 
 ### Editing blog entries (The Controller)
 
@@ -210,7 +210,7 @@ return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
 
 Even if there is already a base `<form>` to get you started, nothing should change in the browser because we didn't add the link to access this.
 
-Let's add it in `src/main/resources/templates/Cms/index.html` (where we added the date and name previously):
+Let's add it in `src/main/resources/templates/Cms/entryList.html` (where we added the date and name previously):
 <details>
 <summary>See hint</summary>
 
@@ -223,7 +223,7 @@ in order to create a URI to an endpoint method, making it extra easy to create l
 <details>
 <summary>See solution</summary>
 
-In `src/main/resources/templates/Cms/index.html, find, the blog post date and name in the loop and replace with a link:
+In `src/main/resources/templates/Cms/entryList.html, find, the blog post date and name in the loop and replace with a link:
 
 ```html
     <a href="{uri:Cms.editBlogEntry(blogEntry.id)}">{blogEntry.published}: {blogEntry.title}</a>
@@ -239,12 +239,15 @@ _So far so good, you are doing great, keep up 👍!_
 
 Now let's display the blog entry's markdown editor.
 
-> [!WARNING]  
+👀 The entry editor form is located in `src/main/resources/templates/Cms/editEntry.html`. As you can see there is a TODO for adding a qute-component.
+
+> [!INFO]  
 > The `{#authenticityToken/}` is required in the `<form>` to make
 sure all forms are not subject to CSRF attacks.
 
 👀 If you have a look to `src/main/resources/web/cms/BlogEditor/`, you will find a style, html and js for what we call a qute-component. 
-You can use it like any Qute tag: `{#BlogEditor id=... name=... value=... /}`
+
+Once implemented, you can use it like any other Qute tag: `{#BlogEditor id=... name=... value=... /}`
 
 > [!NOTE] 
 > This BlogEditor uses 'Easymde' web library to provide the Markdown editor.
@@ -266,7 +269,7 @@ Use the `{#BlogEditor /}` in the edition `<form>`.
 <details>
 <summary>See solution</summary>
 
-In `src/main/resources/templates/Cms/index.html, find the content edition part of the form and replace with this:
+In `src/main/resources/templates/Cms/editEntry.html`, find the content edition part of the form and replace with this:
  
 
 ```html
@@ -342,15 +345,19 @@ Find `saveBlogEntry` in `src/main/java/rest/Cms.java`.
 Redirect in case of validation error (errors will be stored in flash by `validationFailed`):
 
 ```java
+    // ...
     if (validationFailed()) {
         editBlogEntry(id);
         // Redirect to this blog entry (no need to return, this will stop here)
     }
+    // ...
 ```
 
 Set the blog entry with the new values:
 
 ```java
+    // ...
+
     blogEntry.title = title;
     blogEntry.content = content;
     blogEntry.published = published;
@@ -363,7 +370,7 @@ Set the blog entry with the new values:
 ```
 </details>
 
-Now, make sure we tell our `<form>` where to find its action `{uri:Cms.saveBlogEntry(currentBlogEntry.id)}` in `src/main/resources/templates/Cms/index.html`. As you can see it's already done, and it also deals with new post creation (the next part).
+👀 Now, make sure we tell our `<form>` where to find its action `{uri:Cms.saveBlogEntry(currentBlogEntry.id)}` in `src/main/resources/templates/Cms/editEntry.html`. As you can see it's already done, and it also deals with new post creation (the next part).
 
 🚀 Go observe the page, save!
 
@@ -451,7 +458,7 @@ Call `delete()` on your hibernate entity to delete it and redirect to index.
 ```
 </details>
 
-Now add the action to your view at `src/main/resources/templates/Cms/index.html`:
+Now add the action to your view at `src/main/resources/templates/Cms/entryList.html`:
 
 <details>
 <summary>See solution</summary>
@@ -488,7 +495,7 @@ Add this dependency to your `pom.xml` to make it part of your bundle:
         <dependency>
             <groupId>org.mvnpm</groupId>
             <artifactId>htmx.org</artifactId>
-            <version>1.9.11</version>
+            <version>1.9.12</version>
             <scope>provided</scope>
         </dependency>
 ```
@@ -501,7 +508,7 @@ For example, the `hx-ext` attribute allows us to define a transition for when co
 > Due to the CSRF mitigation explained before, we have to protect our AJAX/HTMX calls, and because `{#authenticityToken/}`
 > only works with regular `form` elements, we have to set up CSRF mitigation using headers, via the `hx-headers` attribute.
 
-Replace the `body` tag in `src/main/resources/templates/main.html`:
+Replace the `body` tag in `src/main/resources/templates/base.html`:
 
 ```html
     <body hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
@@ -530,14 +537,9 @@ always rendered as normal.
 
 See solution in: [../solution/1-cms/src/main/resources/templates/Cms/index.html](../solution/1-cms/src/main/resources/templates/Cms/index.html)
 
-Our controller now has to be updated for HTMX. For convenience, we make it extend `HxController`, which has a number
-of useful methods to help.
+Our controller now has to be updated for HTMX. For convenience, we make it extend `HxController`, which has a number of useful methods to help.
 
-We start by defining signatures for our template fragments. The convention is that they will be named `<view>$<fragment-id>`,
-so for example we have `index$blogEntries`, and again we define which parameters they take.
-
-Then, we have to alter some of our endpoints so they can do partial rendering. You can use the `isHxRequest()` method to
-check if we're doing a full page load, or a partial update. For HTMX requests, you can render fragments. You can also use
+Then, we have to alter some of our endpoints, so they can do partial rendering. You can use the `isHxRequest()` method to check if we're doing a full page load, or a partial update. For HTMX requests, you can render fragments. You can also use
 `concatTemplates` to render more than one fragment. HTMX will then place one fragment where specified by `hx-target`,
 and the other will find its place using `hx-swap-oob`: this technique is called "out-of-bounds" replacement, and is very
 handy to update several parts of the page at once.
