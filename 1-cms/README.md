@@ -362,6 +362,7 @@ Set the blog entry with the new values:
     blogEntry.content = content;
     blogEntry.published = published;
     blogEntry.slug = Slug.toSlug(title);
+    blogEntry.picture = picture;
     // save is automatic for managed entities
 
     // Now that it's saved, redirect to the same editor with updated data
