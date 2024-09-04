@@ -495,7 +495,7 @@ Add this dependency to your `pom.xml` to make it part of your bundle:
         <dependency>
             <groupId>org.mvnpm</groupId>
             <artifactId>htmx.org</artifactId>
-            <version>1.9.12</version>
+            <version>2.0.2</version>
             <scope>provided</scope>
         </dependency>
 ```
