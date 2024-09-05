@@ -25,7 +25,7 @@ To get the most out of this lab, make sure you have the following working on you
 - JDK (17+)
 - Git
 - Java IDE
-- (Optional) Quarkus IDE Tooling: https://quarkus.io/guides/ide-tooling
+- (Optional but recommended) Quarkus IDE Tooling: https://quarkus.io/guides/ide-tooling
 
 ### JDK
 
