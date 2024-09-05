@@ -85,8 +85,8 @@ In `src/main/java/model/BlogEntry.java`:
 Qute templates are located in the resources `src/main/resources/templates`.
 
 In Renarde, by default, all views live in `templates/<Controller>/<view>.html`, For the `Cms.index`, open `templates/Cms/index.html`. In order to make sure all your web pages have the same style and
-structure, we recommend using template composition, so every endpoint template extends a base template called
-`base.html` by convention (`src/main/resources/templates/base.html`):
+structure, we recommend using [template inheritance](https://quarkus.io/guides/qute-reference#include_helper), so every endpoint template extends a base template called
+`base.html` by convention (`src/main/resources/templates/base.html`).
 
 For this:
 

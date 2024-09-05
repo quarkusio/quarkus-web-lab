@@ -2,13 +2,15 @@
 
 If you haven't, complete the [CMS part](../1-cms) before this.
 
-In this part, we are going to prepare:
+In this part, we are going to do raw server-side-rendering with Qute Web and explore more Qute features.
+
+In that spirit, we will prepare:
 - the index page with all the blog posts
 - the detail page to show the content of a blog post
 
-Then we are going to use the Roq extension to generate a static website which could be deployed on any static server (like GitHub Pages). 
+Then we are going to use the Roq Generator extension to generate a static website which could be deployed on any static server (like GitHub Pages). 
 
-In our case, we will just serve all static pages using a [Jbang](https://www.jbang.dev/) script. 
+In our case, we will just serve all static pages using a [Jbang](https://www.jbang.dev/) script.
 
 ### Extensions
 
@@ -17,11 +19,11 @@ In our case, we will just serve all static pages using a [Jbang](https://www.jba
  - [Web Bundler](https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html)
  - [Hibernate ORM with Panache](https://quarkus.io/guides/hibernate-orm-panache)
  - [JDBC driver for H2](https://quarkus.io/guides/datasource)
- - [Roq](https://github.com/quarkiverse/quarkus-roq)
+ - [Roq Generator](https://github.com/quarkiverse/quarkus-roq)
 
 #### The initial app
 
-We don't start from scratch.
+Again, we prepared the base code with the model ready.
 The directory which contains this README also contains the _initial version_ of the app.
 
 Open a new tab in your terminal in the project root (and keep the CMS running):
@@ -44,21 +46,19 @@ It's time to start Quarkus dev:
 
 🚀 Press `w` and observe your web page.
 
-**You should see a `TemplateException`, it's part of the plan :)**
+**You should see a `TemplateException`, no worries, it is part of the plan :)**
 
 ### Base template
 
-First, we'll need a _base_ template.
-All other templates will extend this template and provide the content for the `title` and `body` insert sections.
-This feature is called _template inheritance_ and makes it possible to reuse template layouts.
+First, same as with Renarde, we'll need a _base_ template.
 
-👀 This file is located in `src/main/resource/templates/base.html`.
+👀 This file is already available in `src/main/resource/templates/base.html`.
 
 `{#insert /}` defines no name and so the main block of the relevant `{#include}` section is used.
 
 ### Index page
 
-For the index page we'll use the `quarkus-qute-web` extension that exposes the Qute templates located in the `src/main/resource/templates/pub` directory automatically.
+For the index page, the `quarkus-qute-web` extension exposes the Qute templates located in the `src/main/resource/templates/pub` directory out of the box.
 
 👀 Let's take a look how the initial `src/main/resource/templates/pub/index.html` template looks like.
 
@@ -100,12 +100,14 @@ That's why we need to annotate the `BlogEntry` with `@TemplateData(namespace = "
 
 </details>
 
-🚀 You should see the list of blog post in the browser!
+🚀 You should see the list of blog post in the browser! 
+
+👀 Have a look at `src/main/resources/web/app/app.scss`, same as in the CMS we use the Web Bundler to deal with scripts and styles.
 
 ### Blog entry page
 
 For the blog entry page we'll need a simple JAX-RS resource.
-This controller will use a [_type-safe template_](https://quarkus.io/guides/qute-reference#typesafe_templates).
+This resource will use a [_type-safe template_](https://quarkus.io/guides/qute-reference#typesafe_templates).
 Parameters of type-safe templates are used to bind type-safe expressions which are then validated at build time.
 In our case, the parameter has name `entry` and type `web.lab.blog.BlogEntry`.
 Therefore, any top-level expression that starts with `entry` will be validated against the `web.lab.blog.BlogEntry` type (and additional template extension methods).
@@ -185,6 +187,7 @@ By default, for HTML and XML templates the `'`, `"`, `<`, `>`, `&` characters ar
 
 You may have noticed that we always display `FIXME` month for each blog entry.
 Both `index.html` and `Blog/blogPost.html` call a [user-defined tag](https://quarkus.io/guides/qute-reference#user_tags) to display the date of publishing.
+
 👀 This tag is located in `src/main/resource/templates/tags/entryDate.html`.
 However, the "month" part is missing.
 
