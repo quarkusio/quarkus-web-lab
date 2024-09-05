@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import io.quarkiverse.roq.generator.runtime.RoqSelection;
 import io.quarkiverse.roq.generator.runtime.SelectedPath;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Produces;
@@ -16,6 +17,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
 
 @Path("/")
+@Blocking
 public class Blog {
 
     // You can also use template records with JDK 14+

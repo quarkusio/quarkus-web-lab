@@ -3,6 +3,7 @@ package web.lab.blog;
 import io.quarkiverse.roq.generator.runtime.RoqSelection;
 import io.quarkiverse.roq.generator.runtime.SelectedPath;
 import io.quarkus.qute.TemplateInstance;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
@@ -14,6 +15,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.Optional;
 
 @Path("/")
+@Blocking
 public class Blog {
 
     // TODO: here define a type-safe template (@CheckedTemplate)
