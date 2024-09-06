@@ -245,7 +245,7 @@ class CommentBox extends LitElement {
 
 #### Allow adding a comment
 
-Change the current `render` method to rather call 2 methods. One to render the "add comment", and another with the "existing comments".
+To allow adding a comment, we need to add the form. For this, change the current `render` method to rather call 2 methods. One to render the "add comment", and another with the list of comments.
 
 <details>
 <summary>See hint</summary>
@@ -268,6 +268,8 @@ You will also need to create the `nameChanged` and `commentChanged` to set the s
 <details>
 <summary>See solution</summary>
 
+Add two `@state()`, `name` and `comment` initialized with `""` as default value.
+
 ```typescript
 class CommentBox extends LitElement {
     // ...
@@ -279,13 +281,20 @@ class CommentBox extends LitElement {
     private comment: string = "";
   
     // ...
+  
+```
+
+Replace the render() with this:
+
+```typescript
+class CommentBox extends LitElement {
+    // ...
 
     render() {
         return html`${this.renderNewComment()}
                     ${this.renderExistingComments()}`;
     }
-
-
+    
     private renderNewComment() {
         return html`
           <div class="comment-box">
@@ -322,9 +331,6 @@ class CommentBox extends LitElement {
     
     // ...
 }
-
-
-
 ```
 </details>
 
@@ -447,8 +453,9 @@ static styles = css`
 `;    
 ```
 
-#### CORS
+🚀 Go observe the test page, the designers added their touch 😍
 
+#### CORS
 
 
 👀 check the `application.properties` provided that static server runs on 7070, it makes sure this can be used from the static server application.
@@ -461,13 +468,14 @@ Now when add this ⬇️ to the blog page 'src/main/resources/templates/Blog/blo
 <comment-box ref="{entry.slug}"></comment-box>
 ```
 
-🚀 Open the blog in dev or static mode, you now have comments for the blog posts !!!
+🚀 Open the blog in dev or static mode, you now have comments for the blog posts with state !!!
 
 🥳🎉 You just finished the lab!
 
 ---
-
 #### (Optional) Add markdown support
+
+**THIS IS NOT TESTED AND SHOULD BE UPDATED**
 
 We want users to be able to comment using markdown and then render the markup.
 
