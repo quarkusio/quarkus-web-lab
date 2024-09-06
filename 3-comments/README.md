@@ -2,16 +2,14 @@
 
 If you haven't, complete the [CMS part](../1-cms) and [Blog part](../2-blog) before this.
 
-The comments microservice will allow users to comment on blog entries. We will build a Microfrontend component to be added to the 
-bottom of a blog entry. This component will allow users to comment and also display all existing comments. We will allow writing a comment
-using Markdown. 
+The comments microservice will allow users to comment and also display all existing comments on blog entries. We will build a component to be added to the 
+in a blog post. All together this is a full-stack microservice.
 
 ![screenshot](screenshot.png)
 
 ### Get the initial app
 
-We don't start from scratch.
-The directory which contains this README also contains the _initial version_ of the app.
+Again, we won't start from scratch, the directory which contains this README also contains the _initial version_ of the app.
 
 Open a new tab in your terminal in the project root (and keep the CMS and Blog running):
 
@@ -39,15 +37,14 @@ and
 
 👀 The database entity: `src/main/java/workshop/comments/Comment.java`
 
-#### Extensions used for the backend
-
+The list of extensions used for the backend:
 - [REST and Jackson](https://quarkus.io/guides/rest#json-serialisation)
 - [Bean validation](https://quarkus.io/guides/validation)
 - [Hibernate and Panache](https://quarkus.io/guides/hibernate-orm-panache)
 - [H2](https://quarkus.io/guides/datasource)
 
 
-This gives us two REST Api's to use:
+This gives us two REST endpoints to use.
 
 **››› COMMAND TIME**
 
@@ -75,13 +72,13 @@ curl -X 'GET' \
   -H 'accept: application/json'
 ```
 
-### The UI (Workshop really starts here)
+### The UI (Lab part really starts here)
 
 #### Lit 
 
-We are going to use Lit[https://lit.dev/] to build a web component. You can navigate to mvnpm[https://mvnpm.org] to find any UI library:
+We are going to use [Lit](https://lit.dev/) to build a web component. You can navigate to [mvnpm](https://mvnpm.org) to find any UI library:
 
-👀 Have a look to the `pom.xml`, we declared Lit and some ready-to-use web-components to help us.
+👀 Have a look to the `pom.xml`, we declared Lit and some other ready-to-use web-components to help us.
 
 > **_NOTE:_**
 > The scope can be provided, as the bundler will bundle the needed js into your bundle, and there is not need to have the whole lib during runtime.
@@ -93,7 +90,6 @@ This is the basic structure of a Lit component:
  - extends LitElement (that extends HTMLElement)
  - styles css: here we can add CSS
  - properties: here we can add element attributes and state properties
- - constructor: here we set the initial values for properties
  - connectedCallback: this gets called when the element is added to the DOM. Here we can make calls to the server to fetch initial values for state properties
  - render: this gets called to render the element (or re-render in case a state property change)
 

@@ -240,3 +240,6 @@ $ roq                                                                           
 Serving: target/roq/
 Server started on port http://localhost:8181
 ```
+
+If you are interested, we are developing a full-featured Static Site Generator (similar to Jekyll) on top of Quarkus:
+https://pages.quarkiverse.io/quarkus-roq/
