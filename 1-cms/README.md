@@ -185,7 +185,29 @@ we want to display.
 
 **››› CODING TIME**
 
-Open the `src/main/java/rest/Cms.java` and look at `editBlogEntry`.. nothing wrong?
+Let's first add the link to the form in `src/main/resources/templates/Cms/entryList.html` (where we added the date and name previously):
+<details>
+<summary>See hint</summary>
+
+In Renarde, you can use `uri:Controller.method(parameters)`
+in order to create a URI to an endpoint method, making it extra easy to create links.
+
+`{uri:Cms.editBlogEntry(blogEntry.id)}` resolves to the link of the blog entry edition.
+</details>
+
+<details>
+<summary>See solution</summary>
+
+In `src/main/resources/templates/Cms/entryList.html, find, the blog post date and name in the loop and replace with a link:
+
+```html
+    <a href="{uri:Cms.editBlogEntry(blogEntry.id)}">{blogEntry.published}: {blogEntry.title}</a>
+```
+</details>
+
+🚀 On your browser, you should now have a link to blog entries.. but they are empty 😬
+
+Let's fix this. Open the `src/main/java/rest/Cms.java` and look at `editBlogEntry`.. nothing wrong?
 
 <details>
 <summary>See hint</summary>
@@ -208,29 +230,9 @@ return Templates.index(BlogEntry.listAllSortedByPublished(), blogEntry);
 ```
 </details>
 
-Even if there is already a base `<form>` to get you started, nothing should change in the browser because we didn't add the link to access this.
 
-Let's add it in `src/main/resources/templates/Cms/entryList.html` (where we added the date and name previously):
-<details>
-<summary>See hint</summary>
 
-In Renarde, you can use `uri:Controller.method(parameters)`
-in order to create a URI to an endpoint method, making it extra easy to create links.
-
-`{uri:Cms.editBlogEntry(blogEntry.id)}` resolves to the link of the blog entry edition.
-</details>
-
-<details>
-<summary>See solution</summary>
-
-In `src/main/resources/templates/Cms/entryList.html, find, the blog post date and name in the loop and replace with a link:
-
-```html
-    <a href="{uri:Cms.editBlogEntry(blogEntry.id)}">{blogEntry.published}: {blogEntry.title}</a>
-```
-</details>
-
-🚀 Hop over to your browser, click on one blog post, you should see the editor now (with the content printed for now).
+🚀 Hop over to your browser, click on one blog post, you should see the data now (with the content printed for now).
 
 _So far so good, you are doing great, keep up 👍!_
 
