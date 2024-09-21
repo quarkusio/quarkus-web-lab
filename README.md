@@ -10,6 +10,8 @@ This lab contains 3 parts to do in order.
 
 Here we allow bloggers to manage blog entries. [Read more...](./1-cms/README.md)
 
+If you want to see in a more interactive way, see how we ran part one of the workshop at [Quarkus Insights #178 here](https://www.youtube.com/watch?v=JNmHNSmK180).
+
 ### 2 - The Blog (~30m)
 
 Here we show the blog created by the CMS. [Read more...](./2-blog/README.md)

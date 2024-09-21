@@ -46,7 +46,8 @@ It's time to start Quarkus dev:
 
 🚀 Press `w` and observe your web page.
 
-**You should see a `TemplateException`, no worries, it is part of the plan :)**
+> [!NOTE]
+> **You should see a `TemplateException`, no worries, it is part of the plan :)**
 
 ### Base template
 
